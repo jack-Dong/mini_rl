@@ -1,0 +1,424 @@
+W1114 15:01:15.338000 26263 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1114 15:01:15.338000 26263 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1114 15:01:15.339000 26263 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+[vLLM TIM] device=cuda | model=Qwen/Qwen3-0.6B | steps=80
+(MainProcess pid=26263) INFO 11-14 15:01:20 [startup.py:96] non-default args: {'dtype': 'float16', 'max_model_len': 512, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.18, 'max_logprobs': 132, 'disable_log_stats': True, 'enforce_eager': True}
+(MainProcess pid=26263) WARNING 11-14 15:01:20 [arg_utils.py:1984] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.
+(MainProcess pid=26263) INFO 11-14 15:01:21 [model.py:744] Resolved architecture: Qwen3ForCausalLM
+(MainProcess pid=26263) WARNING 11-14 15:01:21 [model.py:2516] Casting torch.bfloat16 to torch.float16.
+(MainProcess pid=26263) INFO 11-14 15:01:21 [model.py:2170] Using max model len 512
+(MainProcess pid=26263) INFO 11-14 15:01:21 [scheduler.py:310] Chunked prefill is enabled with max_num_batched_tokens=8192.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+(MainProcess pid=26263) WARNING 11-14 15:01:21 [vllm.py:1778] Enforce eager set, disabling torch.compile, CUDAGraphs, and JIT kernel warmup. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none and --kernel_config.enable_jit_warmup=False
+(MainProcess pid=26263) WARNING 11-14 15:01:21 [vllm.py:1802] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+(MainProcess pid=26263) INFO 11-14 15:01:21 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=26263) INFO 11-14 15:01:21 [vllm.py:2005] Cudagraph is disabled under eager mode
+(MainProcess pid=26263) INFO 11-14 15:01:21 [compilation.py:317] Enabled custom fusions: norm_quant, act_quant
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]Fetching 9 files: 100%|██████████| 9/9 [00:00<00:00, 1574.50it/s]
+(MainProcess pid=26263) INFO 11-14 15:01:25 [core.py:139] Initializing a V1 LLM engine (v0.33.0) with config: model='Qwen/Qwen3-0.6B', speculative_config=None, tokenizer='Qwen/Qwen3-0.6B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=main, tokenizer_revision=main, trust_remote_code=False, dtype=torch.float16, max_seq_len=512, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=True, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, custom_histogram_buckets=None, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=Qwen/Qwen3-0.6B, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'cudagraph_decoder_replay': True, 'decoder_replay_cudagraph_capture_sizes': [], 'decoder_replay_trim_threshold': 768, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_rocm_segmented_attn_autotune=False, enable_cutedsl_warmup=True, enable_jit_warmup=False, monokernel=False, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(MainProcess pid=26263) INFO 11-14 15:01:26 [parallel_state.py:1929] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_e033543a524d4e5f85fef13d9963766d backend=nccl
+(MainProcess pid=26263) INFO 11-14 15:01:26 [parallel_state.py:2385] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(MainProcess pid=26263) INFO 11-14 15:01:26 [gpu_worker.py:513] Using V2 Model Runner
+(MainProcess pid=26263) INFO 11-14 15:01:28 [model_runner.py:399] Loading model from scratch...
+(MainProcess pid=26263) INFO 11-14 15:01:29 [cuda.py:508] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(MainProcess pid=26263) INFO 11-14 15:01:29 [flash_attn.py:1122] Using FlashAttention version 2
+(MainProcess pid=26263) INFO 11-14 15:01:29 [base_loader.py:82] Initializing model took 0.905131 seconds
+(MainProcess pid=26263) INFO 11-14 15:01:29 [weight_utils.py:1144] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 1.40 GiB. Available RAM: 78.53 GiB.
+(MainProcess pid=26263) INFO 11-14 15:01:29 [weight_utils.py:1167] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight lm_head.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight embed_tokens.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.0.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.0.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.0.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.0.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.0.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.0.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.1.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.1.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.1.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.1.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.1.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.1.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.10.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.10.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.10.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.10.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.10.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.10.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.11.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.11.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.11.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.11.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.11.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.11.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.12.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.12.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.12.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.12.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.12.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.12.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.13.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.13.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.13.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.13.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.13.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.13.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.14.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.14.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.14.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.14.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.14.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.14.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.15.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.15.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.15.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.15.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.15.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.15.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.16.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.16.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.16.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.16.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.16.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.16.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.17.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.17.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.17.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.17.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.17.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.17.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.18.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.18.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.18.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.18.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.18.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.18.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.19.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.19.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.19.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.19.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.19.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.19.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.2.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.2.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.2.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.2.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.2.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.2.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.20.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.20.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.20.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.20.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.20.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.20.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.21.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.21.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.21.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.21.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.21.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.21.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.22.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.22.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.22.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.22.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.22.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.22.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.23.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.23.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.23.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.23.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.23.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.23.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.24.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.24.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.24.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.24.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.24.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:29 [utils.py:333] Attempted to load weight layers.24.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.25.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.25.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.25.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.25.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.25.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.25.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.26.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.26.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.26.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.26.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.26.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.26.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.27.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.27.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.27.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.27.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.27.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.27.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.3.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.3.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.3.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.3.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.3.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.3.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.4.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.4.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.4.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.4.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.4.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.4.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.5.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.5.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.5.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.5.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.5.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.5.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.6.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.6.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.6.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.6.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.6.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.6.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.7.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.7.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.7.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.7.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.7.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.7.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.8.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.8.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.8.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.8.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.8.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.8.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.9.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.9.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.9.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.9.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.9.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight layers.9.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=26263) WARNING 11-14 15:01:30 [utils.py:333] Attempted to load weight norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  1.28it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  1.28it/s]
+
+(MainProcess pid=26263) INFO 11-14 15:01:30 [default_loader.py:506] Loading weights took 0.81 seconds
+(MainProcess pid=26263) INFO 11-14 15:01:32 [model_runner.py:428] Model loading took 1.12 GiB memory and 4.987653 seconds
+(MainProcess pid=26263) INFO 11-14 15:01:32 [topk_topp_sampler.py:149] Using FlashInfer for top-p & top-k sampling.
+(MainProcess pid=26263) INFO 11-14 15:01:32 [torch_utils.py:281] Reducing Torch threads from 6 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(MainProcess pid=26263) INFO 11-14 15:01:32 [utils.py:381] Using LBNHC KV cache layout.
+(MainProcess pid=26263) INFO 11-14 15:01:36 [gpu_worker.py:772] Available KV cache memory: 5.29 GiB
+(MainProcess pid=26263) INFO 11-14 15:01:36 [kv_cache_utils.py:1147] GPU KV cache size: 49,488 tokens, Maximum concurrency for 512 tokens per request: 96.66x
+(MainProcess pid=26263) INFO 11-14 15:01:36 [gpu_worker.py:1066] Free memory on device (38.97/39.49 GiB) on startup. Desired GPU memory utilization is (0.18, 7.11 GiB). Actual usage is 1.3 GiB for consumed memory (weights + non-torch), 0.52 GiB for peak activation, and 0.0 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=5519309046` (5.14 GiB) to fit into requested memory, or `--kv-cache-memory=39725944832` (37.0 GiB) to fully utilize gpu memory. Current kv cache memory in use is 5.29 GiB.
+(MainProcess pid=26263) INFO 11-14 15:01:36 [core.py:412] init engine (profile, create kv cache, warmup model) took 3.99 s
+(MainProcess pid=26263) INFO 11-14 15:01:37 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:33,  3.30it/s]Loading weights:  93%|█████████▎| 290/311 [00:00<00:00, 924.58it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 744.64it/s]
+(MainProcess pid=26263) INFO 11-14 15:01:43 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Probe] {"sampler_engine": "vLLM V1 (float16, PagedAttention+FlashInfer, staleness=2, sigma=0.015)", "trainer_engine": "HF FP32 master + BF16 eager parallel forward", "mean_abs_logp_diff": 0.03275809437036514, "max_abs_logp_diff": 0.7792298793792725, "initial_kl_samp_train": 0.0027126946952193975, "initial_max_is_ratio": 2.179792881011963}
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:40,  3.08it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 886.81it/s]
+(MainProcess pid=26263) INFO 11-14 15:01:52 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:01:57 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM PG (Vanilla)          ] step=  0/80 | train=  0.0% | eval= 17.2% | kl=+0.0020 | gnorm=0.000 | max_r=1.62 | len=83.1
+(MainProcess pid=26263) INFO 11-14 15:02:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:03:09 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:03:47 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:04:01 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:04:06 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM PG (Vanilla)          ] step= 10/80 | train= 37.5% | eval= 12.5% | kl=-0.0059 | gnorm=9.045 | max_r=3.61 | len=82.6
+(MainProcess pid=26263) INFO 11-14 15:04:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:04:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:05:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:05:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:05:56 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM PG (Vanilla)          ] step= 20/80 | train= 25.0% | eval= 21.9% | kl=+0.0232 | gnorm=7.478 | max_r=6.06 | len=116.9
+(MainProcess pid=26263) INFO 11-14 15:06:09 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:06:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:07:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:07:59 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:08:04 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM PG (Vanilla)          ] step= 30/80 | train= 62.5% | eval= 43.8% | kl=+0.0191 | gnorm=10.830 | max_r=1.76 | len=72.4
+(MainProcess pid=26263) INFO 11-14 15:08:37 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:09:16 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:09:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:10:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:10:09 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM PG (Vanilla)          ] step= 40/80 | train= 37.5% | eval= 18.8% | kl=+0.0117 | gnorm=10.006 | max_r=2.78 | len=88.2
+(MainProcess pid=26263) INFO 11-14 15:10:31 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:11:11 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:11:44 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:12:01 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:12:06 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM PG (Vanilla)          ] step= 50/80 | train=  0.0% | eval= 37.5% | kl=+0.0118 | gnorm=0.000 | max_r=2.60 | len=77.8
+(MainProcess pid=26263) INFO 11-14 15:12:16 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:12:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:13:13 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:13:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:13:55 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM PG (Vanilla)          ] step= 60/80 | train= 25.0% | eval= 35.9% | kl=+0.0041 | gnorm=7.260 | max_r=3.40 | len=130.5
+(MainProcess pid=26263) INFO 11-14 15:14:33 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:15:12 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:15:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:16:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:16:09 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM PG (Vanilla)          ] step= 70/80 | train= 25.0% | eval= 39.1% | kl=+0.0282 | gnorm=8.510 | max_r=2.90 | len=119.9
+(MainProcess pid=26263) INFO 11-14 15:16:36 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:17:07 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:17:42 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:17:55 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:18:01 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM PG (Vanilla)          ] step= 79/80 | train= 62.5% | eval= 35.9% | kl=+0.0258 | gnorm=11.067 | max_r=2.96 | len=114.4
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:44,  2.96it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 767.13it/s]
+(MainProcess pid=26263) INFO 11-14 15:18:17 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:18:22 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Naive IS              ] step=  0/80 | train=  0.0% | eval= 17.2% | kl=+0.0020 | gnorm=0.000 | max_r=1.62 | len=83.1
+(MainProcess pid=26263) INFO 11-14 15:18:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:19:33 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:20:11 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:20:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:20:28 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Naive IS              ] step= 10/80 | train= 12.5% | eval= 14.1% | kl=-0.0078 | gnorm=5.325 | max_r=2.68 | len=68.6
+(MainProcess pid=26263) INFO 11-14 15:20:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:21:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:21:58 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:22:21 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:22:27 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Naive IS              ] step= 20/80 | train= 62.5% | eval= 25.0% | kl=+0.0183 | gnorm=8.637 | max_r=1.93 | len=92.5
+(MainProcess pid=26263) INFO 11-14 15:22:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:23:12 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:23:48 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:24:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:24:27 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Naive IS              ] step= 30/80 | train= 37.5% | eval= 50.0% | kl=+0.0081 | gnorm=8.380 | max_r=2.67 | len=121.0
+(MainProcess pid=26263) INFO 11-14 15:25:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:25:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:26:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:26:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:26:44 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Naive IS              ] step= 40/80 | train= 50.0% | eval= 51.6% | kl=+0.0047 | gnorm=15.242 | max_r=4.94 | len=93.8
+(MainProcess pid=26263) INFO 11-14 15:27:06 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:27:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:28:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:28:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:28:55 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Naive IS              ] step= 50/80 | train= 50.0% | eval= 45.3% | kl=+0.0162 | gnorm=6.731 | max_r=2.19 | len=138.6
+(MainProcess pid=26263) INFO 11-14 15:29:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:29:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:30:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:31:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:31:16 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Naive IS              ] step= 60/80 | train= 25.0% | eval= 46.9% | kl=+0.0101 | gnorm=4.924 | max_r=2.50 | len=139.5
+(MainProcess pid=26263) INFO 11-14 15:31:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:32:36 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:33:15 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:33:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:33:31 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Naive IS              ] step= 70/80 | train= 50.0% | eval= 50.0% | kl=+0.0154 | gnorm=8.558 | max_r=4.00 | len=112.0
+(MainProcess pid=26263) INFO 11-14 15:33:58 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:34:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:35:12 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:35:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:35:31 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM Naive IS              ] step= 79/80 | train= 75.0% | eval= 50.0% | kl=+0.0095 | gnorm=9.910 | max_r=1.93 | len=97.6
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:41,  3.05it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 828.95it/s]
+(MainProcess pid=26263) INFO 11-14 15:35:47 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:35:52 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS                   ] step=  0/80 | train=  0.0% | eval= 17.2% | kl=+0.0020 | gnorm=0.000 | max_r=1.62 | len=83.1
+(MainProcess pid=26263) INFO 11-14 15:36:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:37:02 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:37:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:37:47 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:37:52 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS                   ] step= 10/80 | train= 50.0% | eval= 21.9% | kl=+0.0042 | gnorm=10.766 | max_r=2.80 | len=66.9
+(MainProcess pid=26263) INFO 11-14 15:38:12 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:38:41 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:39:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:39:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:39:22 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS                   ] step= 20/80 | train= 25.0% | eval= 26.6% | kl=+0.0231 | gnorm=6.689 | max_r=2.11 | len=60.4
+(MainProcess pid=26263) INFO 11-14 15:39:30 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:39:48 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:40:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:40:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:40:39 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS                   ] step= 30/80 | train= 75.0% | eval= 32.8% | kl=+0.0037 | gnorm=11.487 | max_r=2.77 | len=45.9
+(MainProcess pid=26263) INFO 11-14 15:40:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:41:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:41:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:41:53 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:41:57 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS                   ] step= 40/80 | train= 62.5% | eval= 35.9% | kl=+0.0251 | gnorm=11.580 | max_r=7.28 | len=42.0
+(MainProcess pid=26263) INFO 11-14 15:42:09 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:42:33 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:42:58 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:43:14 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:43:17 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS                   ] step= 50/80 | train= 12.5% | eval= 39.1% | kl=+0.0478 | gnorm=7.600 | max_r=2.13 | len=50.8
+(MainProcess pid=26263) INFO 11-14 15:43:24 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:43:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:44:05 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:44:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:44:37 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS                   ] step= 60/80 | train= 12.5% | eval= 35.9% | kl=+0.0021 | gnorm=9.060 | max_r=2.13 | len=77.0
+(MainProcess pid=26263) INFO 11-14 15:45:07 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:45:40 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:46:11 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:46:24 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:46:29 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS                   ] step= 70/80 | train= 25.0% | eval= 46.9% | kl=+0.0099 | gnorm=8.625 | max_r=4.76 | len=89.6
+(MainProcess pid=26263) INFO 11-14 15:46:53 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:47:24 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:47:53 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:48:05 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:48:11 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS                   ] step= 79/80 | train= 50.0% | eval= 45.3% | kl=+0.0140 | gnorm=8.277 | max_r=2.75 | len=102.2
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:48,  2.86it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 779.09it/s]
+(MainProcess pid=26263) INFO 11-14 15:48:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:48:32 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS + Score Centering ] step=  0/80 | train=  0.0% | eval= 17.2% | kl=+0.0020 | gnorm=0.000 | max_r=1.62 | len=83.1
+(MainProcess pid=26263) INFO 11-14 15:49:06 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:49:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:50:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:50:30 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:50:35 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS + Score Centering ] step= 10/80 | train= 25.0% | eval= 15.6% | kl=+0.0044 | gnorm=7.211 | max_r=3.77 | len=77.5
+(MainProcess pid=26263) INFO 11-14 15:50:58 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:51:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:51:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:52:17 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:52:23 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS + Score Centering ] step= 20/80 | train= 25.0% | eval= 40.6% | kl=+0.0143 | gnorm=10.820 | max_r=2.89 | len=82.0
+(MainProcess pid=26263) INFO 11-14 15:52:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:53:09 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:53:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:54:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:54:23 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS + Score Centering ] step= 30/80 | train= 50.0% | eval= 35.9% | kl=+0.0163 | gnorm=8.783 | max_r=2.11 | len=94.6
+(MainProcess pid=26263) INFO 11-14 15:54:58 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:55:33 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:56:07 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:56:21 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:56:26 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS + Score Centering ] step= 40/80 | train= 62.5% | eval= 42.2% | kl=+0.0094 | gnorm=10.481 | max_r=2.53 | len=95.2
+(MainProcess pid=26263) INFO 11-14 15:56:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:57:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:58:03 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:58:27 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:58:33 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS + Score Centering ] step= 50/80 | train= 25.0% | eval= 35.9% | kl=+0.0126 | gnorm=5.466 | max_r=3.61 | len=106.4
+(MainProcess pid=26263) INFO 11-14 15:58:45 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:59:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 15:59:53 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:00:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:00:34 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS + Score Centering ] step= 60/80 | train= 37.5% | eval= 40.6% | kl=+0.0001 | gnorm=10.058 | max_r=1.83 | len=84.8
+(MainProcess pid=26263) INFO 11-14 16:01:11 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:01:47 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:02:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:02:35 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:02:40 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS + Score Centering ] step= 70/80 | train= 37.5% | eval= 31.2% | kl=+0.0145 | gnorm=7.505 | max_r=3.28 | len=110.8
+(MainProcess pid=26263) INFO 11-14 16:03:05 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:03:37 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:04:13 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:04:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=26263) INFO 11-14 16:04:30 [block_pool.py:905] Successfully reset prefix cache
+[vLLM TIM TIS + Score Centering ] step= 79/80 | train= 25.0% | eval= 37.5% | kl=+0.0092 | gnorm=6.826 | max_r=4.36 | len=94.6
+Saved /content/exp2/results.json and /content/exp2/plot.png

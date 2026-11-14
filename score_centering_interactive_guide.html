@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Score Centering 交互式图解教程 — arXiv:2609.20807</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+      color-scheme: light dark;
+    }
+    body {
+      color-scheme: light dark;
+      accent-color: var(--primary);
+    }
+    .sc-form-scope {
+      accent-color: var(--primary);
+      color-scheme: light dark;
+    }
+    .heavy-component {
+      content-visibility: auto;
+      contain-intrinsic-size: auto none auto 420px;
+    }
+    .math-box {
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    }
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 2px;
+      line-height: 1.1;
+      font-size: 0.92em;
+    }
+    .frac > span:first-child {
+      border-bottom: 1px solid currentColor;
+      padding: 0 3px 1px;
+    }
+    .frac > span:last-child {
+      padding: 1px 3px 0;
+    }
+    .code-line {
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    /* Progressive enhancement fallback when accent-color is not supported */
+    @supports not (accent-color: var(--primary)) {
+      input[type="range"].sc-range {
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        height: 18px;
+      }
+      input[type="range"].sc-range::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(to right, var(--primary) var(--progress, 50%), var(--border) var(--progress, 50%));
+        border-radius: 999px;
+      }
+      input[type="range"].sc-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        margin-top: -5px;
+      }
+      input[type="range"].sc-range::-moz-range-track {
+        width: 100%;
+        height: 6px;
+        background: var(--border);
+        border-radius: 999px;
+      }
+      input[type="range"].sc-range::-moz-range-progress {
+        background-color: var(--primary);
+        height: 6px;
+        border-radius: 999px;
+      }
+      input[type="range"].sc-range::-moz-range-thumb {
+        height: 16px;
+        width: 16px;
+        border: none;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+      }
+      input[type="checkbox"].visually-hidden {
+        position: absolute !important;
+        clip-path: inset(50%) !important;
+        overflow: hidden !important;
+        width: 1px !important;
+        height: 1px !important;
+        margin: -1px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        white-space: nowrap !important;
+      }
+      label.sc-check-label {
+        position: relative;
+        padding-left: 1.6rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+      }
+      input[type="checkbox"].visually-hidden + span::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid var(--border);
+        background: var(--card);
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      input[type="checkbox"].visually-hidden:focus-visible + span::before {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+      input[type="checkbox"].visually-hidden:checked + span::before {
+        background-color: var(--primary);
+        border-color: var(--primary);
+      }
+      input[type="checkbox"].visually-hidden:checked + span::after {
+        content: "✓";
+        position: absolute;
+        left: 0.18rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary-foreground);
+        font-weight: bold;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased m-0 p-0 sc-form-scope">
+  <!-- Top Sticky Navigation -->
+  <header class="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--background)]/95 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex items-center justify-center w-7 h-7 rounded-md font-bold text-xs bg-[var(--primary)] text-[var(--primary-foreground)]">SC</span>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold leading-tight">Score Centering 零基础交互式图解教程</h1>
+          <p class="text-xs text-[var(--muted-foreground)]">Together AI · arXiv:2609.20807 · 彻底解决大模型 RL 中的推理-训练不匹配漂移</p>
+        </div>
+      </div>
+      <nav class="flex flex-wrap items-center gap-1.5 text-xs">
+        <a href="#sec-background" class="px-2.5 py-1 rounded border border-[var(--border)] hover:bg-[var(--secondary)] text-[var(--foreground)]">1. 前因后果</a>
+        <a href="#sec-lab" class="px-2.5 py-1 rounded border border-[var(--border)] hover:bg-[var(--secondary)] text-[var(--foreground)]">2. 交互实验室</a>
+        <a href="#sec-math" class="px-2.5 py-1 rounded border border-[var(--border)] hover:bg-[var(--secondary)] text-[var(--foreground)]">3. 逐行公式推导</a>
+        <a href="#sec-code" class="px-2.5 py-1 rounded border border-[var(--border)] hover:bg-[var(--secondary)] text-[var(--foreground)]">4. PyTorch 源码点读</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 space-y-8">
+    <!-- Hero Intro Card -->
+    <section class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 sm:p-6 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-2 text-xs font-medium px-2.5 py-0.5 rounded-full border border-[var(--border)] text-[var(--muted-foreground)]">
+            <span>📄 Score Centering Stabilizes Off-policy Reinforcement Learning</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold tracking-tight">一句话先看懂：Score Centering 到底在修什么 Bug？</h2>
+        </div>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <a href="https://arxiv.org/abs/2609.20807" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-md border border-[var(--border)] hover:bg-[var(--secondary)] font-medium">arXiv 原论文 ↗</a>
+          <a href="https://github.com/martin-marek/score-centering" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 font-medium">GitHub 源码 ↗</a>
+        </div>
+      </div>
+
+      <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">
+        训练大模型做强化学习（比如 GRPO、PPO）时，为了追求速度，我们让<strong class="text-[var(--foreground)]">高速推理引擎（Sampler，<i>q</i><sub>θ</sub>）</strong>去“做题写答案”，再把答案交给<strong class="text-[var(--foreground)]">高精度训练引擎（Trainer，<i>p</i><sub>θ</sub>）</strong>去“打分改参数”。但因为量化（FP8/INT4）、算子误差或网络延迟，两个引擎对同一个词的概率判断总有一点点偏差（<strong class="text-[var(--foreground)]">Training-Inference Mismatch, TIM</strong>）。
+        这篇论文发现：哪怕这一点点偏差很小，也会像一只看不见的手一样，在每一步训练里产生一个固定方向的推力，把模型参数活活推崩——作者把这个现象命名为 <strong class="text-[var(--error)]">Drift（梯度漂移）</strong>。而 <strong class="text-[var(--success)]">Score Centering</strong> 只需要用一道简单的减法，就能把这股歪风邪气完美抵消掉。
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+        <div class="p-3.5 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-1">
+          <div class="text-xs font-semibold text-[var(--error)]">❌ 痛点：漂移 (Drift) 而不是单纯噪声</div>
+          <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">以前大家以为 TIM 只是让梯度抖动变大，其实它制造的是<strong>方向一致的系统性偏置</strong>，每步都在累加，最终让词分布坍塌。</p>
+        </div>
+        <div class="p-3.5 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-1">
+          <div class="text-xs font-semibold text-[var(--warning)]">⚠️ 老办法：重要性采样 (IS / TIS) 两难</div>
+          <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">乘以权重 <code>p/q</code> 在深度量化下会让方差爆炸；一截断（如 TIS 限制上限 2.0）又破坏了无偏性，残余漂移卷土重来。</p>
+        </div>
+        <div class="p-3.5 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-1">
+          <div class="text-xs font-semibold text-[var(--success)]">✅ 新办法：Score Centering (零超参可叠加)</div>
+          <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">直接在梯度里减去推理引擎下的期望 Score，像消除天平零点误差一样把 Drift 清零，且能和 TIS/MIS 自由组合。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 1: Background & Cause/Effect Animation -->
+    <section id="sec-background" class="heavy-component bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 sm:p-6 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--card-border)] pb-3">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-[var(--primary)]">模块 01 · 前因后果与直觉动画</span>
+          <h2 class="text-lg sm:text-xl font-bold mt-0.5">为什么“左右手概率差一点”，模型就会练崩？</h2>
+        </div>
+        <div class="flex items-center gap-2 text-xs">
+          <button id="bgSceneSyncBtn" type="button" class="px-2.5 py-1 rounded border border-[var(--border)] font-medium cursor-pointer">理想 On-policy (q = p)</button>
+          <button id="bgSceneTimBtn" type="button" class="px-2.5 py-1 rounded border border-[var(--border)] font-medium cursor-pointer">真实工程 TIM (q ≠ p)</button>
+          <button id="bgSceneScBtn" type="button" class="px-2.5 py-1 rounded border border-[var(--border)] font-medium cursor-pointer">开启 Score Centering</button>
+        </div>
+      </div>
+
+      <!-- 3 Prerequisite Steps -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs leading-relaxed">
+        <div class="p-3.5 rounded-lg border border-[var(--card-border)] space-y-1.5">
+          <div class="font-bold text-sm flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] inline-flex items-center justify-center text-xs">1</span>
+            大模型 RL 的两套系统
+          </div>
+          <p class="text-[var(--muted-foreground)]">
+            推理（生成几千字思维链）极耗显存带宽，训练（算反向传播）极耗算力。所以业界标配拆成两套引擎：<br/>
+            • <strong>Sampler (<i>q</i><sub>θ</sub>)</strong>：如 vLLM / SGLang，常用 FP8/INT4 量化图快。<br/>
+            • <strong>Trainer (<i>p</i><sub>θ</sub>)</strong>：如 FSDP / Megatron，用 BF16/FP32 精确算梯度。
+          </p>
+        </div>
+        <div class="p-3.5 rounded-lg border border-[var(--card-border)] space-y-1.5">
+          <div class="font-bold text-sm flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] inline-flex items-center justify-center text-xs">2</span>
+            什么是“盲目夸奖测试”？
+          </div>
+          <p class="text-[var(--muted-foreground)]">
+            想象一个极简思想实验：假设<strong>不管模型输出 Token A 还是 Token B，我们每次都给出完全相同的奖励 <i>R</i> = +1</strong>。<br/>
+            既然大家都得满分，没有任何一个词比另一个词更优秀，<strong>模型概率分布理论上应该保持原地不动（期望梯度 = 0）！</strong>
+          </p>
+        </div>
+        <div class="p-3.5 rounded-lg border border-[var(--card-border)] space-y-1.5">
+          <div class="font-bold text-sm flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] inline-flex items-center justify-center text-xs">3</span>
+            Drift 是怎么酿成大祸的？
+          </div>
+          <p class="text-[var(--muted-foreground)]">
+            假设 Trainer 觉得 A 和 B 概率都是 50%，但因为量化误差，Sampler 把 A 算成了 65%、B 算成了 35%。<br/>
+            结果收到的样本里 A 占了大头！Trainer 每收到一个样本就夸一次它，<strong>导致 A 被夸的次数远多于 B</strong>——模型就像被偏心眼骗了一样，不断把 A 推向 100%，训练直接崩塌！
+          </p>
+        </div>
+      </div>
+
+      <!-- Animated Pipeline Canvas -->
+      <div class="rounded-lg border border-[var(--card-border)] overflow-hidden">
+        <canvas id="bgCanvas" class="block w-full" style="height: 280px;"></canvas>
+      </div>
+      <div id="bgCaption" class="text-xs text-[var(--muted-foreground)] bg-[var(--background)]/60 px-3.5 py-2.5 rounded-lg border border-[var(--card-border)]">
+        当前模式提示将在此显示。
+      </div>
+    </section>
+
+    <!-- MODULE 2: Interactive Drift & Score Centering Canvas Lab -->
+    <section id="sec-lab" class="heavy-component bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 sm:p-6 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--card-border)] pb-3">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-[var(--primary)]">模块 02 · 交互式拔河实验室</span>
+          <h2 class="text-lg sm:text-xl font-bold mt-0.5">亲手调参观察：5 种方法如何对抗 Drift 与方差？</h2>
+        </div>
+        <div class="flex items-center gap-2 text-xs">
+          <button id="labPlayBtn" type="button" class="px-3 py-1.5 rounded bg-[var(--primary)] text-[var(--primary-foreground)] font-medium cursor-pointer">暂停动画</button>
+          <button id="labResetBtn" type="button" class="px-3 py-1.5 rounded border border-[var(--border)] hover:bg-[var(--secondary)] font-medium cursor-pointer">重置粒子</button>
+        </div>
+      </div>
+
+      <!-- Controls Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <div class="lg:col-span-5 space-y-3 bg-[var(--background)]/50 p-4 rounded-lg border border-[var(--card-border)] text-xs">
+          <div class="space-y-1.5">
+            <span class="font-semibold text-[var(--foreground)] block">选择 RL 修正算法：</span>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+              <button type="button" data-labmode="pg" class="lab-mode-btn px-2 py-1.5 rounded border text-left font-medium cursor-pointer">1. 无修正 PG</button>
+              <button type="button" data-labmode="is" class="lab-mode-btn px-2 py-1.5 rounded border text-left font-medium cursor-pointer">2. 原始 IS</button>
+              <button type="button" data-labmode="tis" class="lab-mode-btn px-2 py-1.5 rounded border text-left font-medium cursor-pointer">3. 截断 TIS (≤2)</button>
+              <button type="button" data-labmode="sc" class="lab-mode-btn px-2 py-1.5 rounded border text-left font-medium cursor-pointer">4. 纯 Score Centering</button>
+              <button type="button" data-labmode="tis_sc" class="lab-mode-btn px-2 py-1.5 rounded border text-left font-medium cursor-pointer col-span-2 sm:col-span-2">5. TIS + Score Centering</button>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-1 border-t border-[var(--card-border)]">
+            <label class="flex items-center justify-between gap-2">
+              <span class="text-[var(--muted-foreground)]">推理偏差 / 量化噪声 (TIM Δ):</span>
+              <span id="labDeltaVal" class="font-mono font-semibold">0.22</span>
+            </label>
+            <input id="labDelta" type="range" min="0" max="0.35" step="0.01" value="0.22" class="sc-range w-full cursor-pointer" />
+
+            <label class="flex items-center justify-between gap-2">
+              <span class="text-[var(--muted-foreground)]">Trainer Logit A 偏移:</span>
+              <span id="labLogitAVal" class="font-mono font-semibold">0.25</span>
+            </label>
+            <input id="labLogitA" type="range" min="-1.0" max="1.2" step="0.05" value="0.25" class="sc-range w-full cursor-pointer" />
+
+            <label class="flex items-center justify-between gap-2">
+              <span class="text-[var(--muted-foreground)]">奖励 / 优势值 R (Advantage):</span>
+              <span id="labAdvVal" class="font-mono font-semibold">+1.0</span>
+            </label>
+            <input id="labAdv" type="range" min="-2" max="2" step="0.5" value="1" class="sc-range w-full cursor-pointer" />
+          </div>
+
+          <div class="pt-2 border-t border-[var(--card-border)] flex flex-wrap items-center justify-between gap-2">
+            <label class="sc-check-label text-[var(--muted-foreground)] flex items-center gap-2 cursor-pointer">
+              <input id="labShowVectors" type="checkbox" class="visually-hidden" checked />
+              <span>显示单步力向量（红=原始，蓝=减去的中心项）</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Lab Canvas -->
+        <div class="lg:col-span-7 space-y-2">
+          <div class="rounded-lg border border-[var(--card-border)] overflow-hidden">
+            <canvas id="labCanvas" class="block w-full" style="height: 310px;"></canvas>
+          </div>
+          <div id="labVerdict" class="text-xs px-3 py-2 rounded border border-[var(--card-border)] bg-[var(--background)]/50"></div>
+        </div>
+      </div>
+
+      <!-- Live Numeric Verification Table -->
+      <div class="space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-sm font-bold">实时数值透视表（3 词表具体每一步怎么算的）</h3>
+          <span class="text-xs text-[var(--muted-foreground)]">观察最后一行“期望净梯度”：只要不为 0，训练就在发生 Drift！</span>
+        </div>
+        <div class="overflow-x-auto rounded-lg border border-[var(--card-border)]">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="border-b border-[var(--card-border)] bg-[var(--background)]/70 text-[var(--muted-foreground)]">
+                <th class="py-2 px-3">采样词 y</th>
+                <th class="py-2 px-3 font-mono">Trainer p(y)</th>
+                <th class="py-2 px-3 font-mono">Sampler q(y)</th>
+                <th class="py-2 px-3 font-mono">比率 r = p/q</th>
+                <th class="py-2 px-3 font-mono">权重 w(y)</th>
+                <th class="py-2 px-3 font-mono">原始 Score(A) = 1[y=A]-pA</th>
+                <th class="py-2 px-3 font-mono">减去的中心项 c(A)</th>
+                <th class="py-2 px-3 font-mono">净梯度 g(A)</th>
+                <th class="py-2 px-3 font-mono">概率加权贡献 q(y)·g(A)</th>
+              </tr>
+            </thead>
+            <tbody id="labTableBody" class="divide-y divide-[var(--card-border)] font-mono tabular-nums"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 3: Step-by-Step Math Derivation -->
+    <section id="sec-math" class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 sm:p-6 space-y-5">
+      <div class="border-b border-[var(--card-border)] pb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[var(--primary)]">模块 03 · 零跳步数学推导</span>
+        <h2 class="text-lg sm:text-xl font-bold mt-0.5">每个公式的基础原理与 7 步完整推理</h2>
+        <p class="text-xs text-[var(--muted-foreground)] mt-1">点击下方步骤标签，从大白话微积分一路推到论文的 Top-k 工程实现公式。</p>
+      </div>
+
+      <!-- Stepper Tabs -->
+      <div class="flex flex-wrap gap-1.5" id="mathStepTabs" role="tablist">
+        <button type="button" data-step="0" class="math-tab px-2.5 py-1.5 rounded text-xs font-medium border cursor-pointer">Step 1: 什么是 Score</button>
+        <button type="button" data-step="1" class="math-tab px-2.5 py-1.5 rounded text-xs font-medium border cursor-pointer">Step 2: 零均值恒等式</button>
+        <button type="button" data-step="2" class="math-tab px-2.5 py-1.5 rounded text-xs font-medium border cursor-pointer">Step 3: TIM 制造 Drift</button>
+        <button type="button" data-step="3" class="math-tab px-2.5 py-1.5 rounded text-xs font-medium border cursor-pointer">Step 4: IS 与 TIS 的困境</button>
+        <button type="button" data-step="4" class="math-tab px-2.5 py-1.5 rounded text-xs font-medium border cursor-pointer">Step 5: Score Centering 原理</button>
+        <button type="button" data-step="5" class="math-tab px-2.5 py-1.5 rounded text-xs font-medium border cursor-pointer">Step 6: 一行 Loss 与 stop_grad</button>
+        <button type="button" data-step="6" class="math-tab px-2.5 py-1.5 rounded text-xs font-medium border cursor-pointer">Step 7: Top-k 尾部近似推导</button>
+      </div>
+
+      <!-- Step Content Panels -->
+      <div id="mathPanels" class="space-y-4">
+        <!-- Step 1 -->
+        <div class="math-panel space-y-4 text-sm leading-relaxed" data-step="0">
+          <div class="p-4 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-3">
+            <h3 class="font-bold text-base">Step 1：策略梯度里为什么会出现 ∇<sub>θ</sub> log p<sub>θ</sub>(y)？</h3>
+            <p class="text-[var(--muted-foreground)]">
+              在 RL 中，我们的目标是最大化平均奖励：
+              <span class="math-box text-[var(--foreground)] font-semibold">J(θ) = E<sub>y ~ p<sub>θ</sub></sub>[R(y)] = ∑<sub>y</sub> p<sub>θ</sub>(y) · R(y)</span>。
+              问题是“采样抽词”这个动作本身不可导，但概率 <span class="math-box">p<sub>θ</sub>(y)</span> 可导！利用高中微积分求导法则 <span class="math-box">(ln f)' = f' / f</span>，即 <span class="math-box">∇<sub>θ</sub> p<sub>θ</sub> = p<sub>θ</sub> · ∇<sub>θ</sub> log p<sub>θ</sub></span>：
+            </p>
+            <div class="p-3 rounded bg-[var(--card)] border border-[var(--card-border)] math-box text-center text-base overflow-x-auto">
+              ∇<sub>θ</sub> J(θ) = ∑<sub>y</sub> R(y) · ∇<sub>θ</sub> p<sub>θ</sub>(y)
+              = ∑<sub>y</sub> p<sub>θ</sub>(y) · R(y) · ∇<sub>θ</sub> log p<sub>θ</sub>(y)
+              = E<sub>y ~ p<sub>θ</sub></sub> [ R(y) · <span class="text-[var(--primary)] font-bold">∇<sub>θ</sub> log p<sub>θ</sub>(y)</span> ]
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)]">
+              • 高亮部分 <strong class="text-[var(--primary)]">s<sub>θ</sub>(y) = ∇<sub>θ</sub> log p<sub>θ</sub>(y)</strong> 在统计学里就叫做 <strong>Score Function（得分函数）</strong>。<br/>
+              • 对于神经网络最后一层的 logits <strong>z</strong>（通过 Softmax 变成概率 p），求导结果极其简洁：<strong>∇<sub>z</sub> log p(y) = e<sub>y</sub> − p</strong>。<br/>
+              • <strong>物理直觉</strong>：如果采样到了词 A，Score 向量就是把词 A 的 logit 向上拉升 <code>(1 − p<sub>A</sub>)</code>，同时按各自概率比例把其他词往下压 <code>(−p<sub>B</sub>, −p<sub>C</sub>)</code>——因为概率总和必须保持 100%，拉高一个就必须压低其余！
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="math-panel hidden space-y-4 text-sm leading-relaxed" data-step="1">
+          <div class="p-4 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-3">
+            <h3 class="font-bold text-base">Step 2：核心基石——为什么在真实分布 p<sub>θ</sub> 下，Score 的期望恒等于 0？</h3>
+            <p class="text-[var(--muted-foreground)]">这是整篇论文的<strong>数学地基</strong>，推导只有短短 4 行，请逐行看懂：</p>
+            <ol class="space-y-2 text-xs sm:text-sm bg-[var(--card)] p-4 rounded border border-[var(--card-border)] math-box">
+              <li><strong>① 归一性公理</strong>：所有词的概率之和永远等于常数 1： &nbsp; ∑<sub>v ∈ V</sub> p<sub>θ</sub>(v) = 1</li>
+              <li><strong>② 两边同时对参数 θ 求导</strong>：常数 1 的导数为 0： &nbsp; ∇<sub>θ</sub> (∑<sub>v ∈ V</sub> p<sub>θ</sub>(v)) = ∑<sub>v ∈ V</sub> ∇<sub>θ</sub> p<sub>θ</sub>(v) = 0</li>
+              <li><strong>③ 替换导数形式</strong>：把 ∇<sub>θ</sub> p<sub>θ</sub>(v) = p<sub>θ</sub>(v) · ∇<sub>θ</sub> log p<sub>θ</sub>(v) 代入上式： &nbsp; ∑<sub>v ∈ V</sub> p<sub>θ</sub>(v) · ∇<sub>θ</sub> log p<sub>θ</sub>(v) = 0</li>
+              <li><strong>④ 写成期望形式</strong>：这就得到了大名鼎鼎的 <strong>零均值 Score 恒等式</strong>： &nbsp; <span class="text-[var(--success)] font-bold">E<sub>v ~ p<sub>θ</sub></sub>[∇<sub>θ</sub> log p<sub>θ</sub>(v)] = 0</span></li>
+            </ol>
+            <div class="p-3 rounded border border-[var(--card-border)] bg-[var(--card)] space-y-2 text-xs">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="font-semibold">🎲 互动验算器：任意随机一组概率 p，加权 Score 之和永远是 0.000000</span>
+                <button id="randomProbBtn" type="button" class="px-2.5 py-1 rounded bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer font-medium">随机生成一组概率验证</button>
+              </div>
+              <div id="zeroIdentityReadout" class="font-mono text-[var(--muted-foreground)]"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="math-panel hidden space-y-4 text-sm leading-relaxed" data-step="2">
+          <div class="p-4 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-3">
+            <h3 class="font-bold text-base">Step 3：TIM 破局——一旦换用推理引擎 q<sub>θ</sub> 采样，Drift 立刻诞生！</h3>
+            <p class="text-[var(--muted-foreground)]">
+              现在进入真实工程场景：句子不是由 <span class="math-box">p<sub>θ</sub></span> 采样的，而是由存在量化误差或滞后的推理引擎 <span class="math-box">q<sub>θ</sub></span> 采样的。再做一次“恒定奖励 R = 1 思想实验”：
+            </p>
+            <div class="p-3 rounded bg-[var(--card)] border border-[var(--card-border)] math-box text-center text-base overflow-x-auto">
+              E<sub>y ~ q<sub>θ</sub></sub> [ 1 · ∇<sub>θ</sub> log p<sub>θ</sub>(y) ]
+              = ∑<sub>v ∈ V</sub> <span class="text-[var(--error)] font-bold">q<sub>θ</sub>(v)</span> · ∇<sub>θ</sub> log p<sub>θ</sub>(v)
+              <span class="text-[var(--error)] font-bold">≠ 0</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)]">
+              • 对 Softmax 层 logits 求导代入试试看：<br/>
+              <code class="text-[var(--foreground)]">∑<sub>v</sub> q(v)(e<sub>v</sub> − p) = (∑<sub>v</sub> q(v) e<sub>v</sub>) − (∑<sub>v</sub> q(v)) p = q − p</code>！<br/>
+              • 这意味着：<strong>只要推理和训练概率差一点（q ≠ p），每一步训练都会产生一个纯属幻觉的推力 (q − p)</strong>。而且就算 Advantage 经过组内中心化（比如 GRPO 减去组均值，期望为 0），只要正负样本刚好撞上微小的推理偏差，这个系统性误差依然会沿着每一步积累，论文把这种非零期望梯度定义为 <strong>Drift（漂移）</strong>。
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="math-panel hidden space-y-4 text-sm leading-relaxed" data-step="3">
+          <div class="p-4 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-3">
+            <h3 class="font-bold text-base">Step 4：为什么传统重要性采样（IS / TIS）搞不定重度量化？</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded border border-[var(--card-border)] bg-[var(--card)] space-y-1.5">
+                <div class="font-bold text-[var(--warning)]">1. 原始 IS：理论上无偏，实际上梯度爆炸</div>
+                <p class="text-[var(--muted-foreground)]">为了把采样分布 <span class="math-box">q</span> 改回 <span class="math-box">p</span>，传统办法乘上一个修正比率 <span class="math-box">w(y) = p<sub>θ</sub>(y) / q<sub>θ</sub>(y)</span>：</p>
+                <div class="math-box text-center py-1 text-[var(--foreground)]">
+                  ∑<sub>y</sub> q(y) · <span class="frac"><span>p(y)</span><span>q(y)</span></span> ∇ log p(y) = ∑<sub>y</sub> p(y) ∇ log p(y) = 0
+                </div>
+                <p class="text-[var(--muted-foreground)]"><strong>致命伤</strong>：在 FP4/INT4 重度量化下，某个低概率词可能被量化器算成 <code>q=0.0001</code> 而 <code>p=0.02</code>，比率瞬间飙到 <strong>200 倍</strong>！偶尔采到一次就直接把梯度炸飞（方差爆炸）。</p>
+              </div>
+              <div class="p-3 rounded border border-[var(--card-border)] bg-[var(--card)] space-y-1.5">
+                <div class="font-bold text-[var(--error)]">2. 截断 IS (TIS/MIS)：压住了方差，放回了 Drift</div>
+                <p class="text-[var(--muted-foreground)]">工程上只好强行截断：<code>w(y) = min(p(y)/q(y), 2.0)</code>（TIS）或超出范围直接丢弃（MIS）。</p>
+                <div class="math-box text-center py-1 text-[var(--foreground)]">
+                  m(v) = q(v) · w(v) = min(p(v), 2 q(v)) ≠ p(v)
+                </div>
+                <p class="text-[var(--muted-foreground)]"><strong>致命伤</strong>：一旦发生截断，等效质量 <span class="math-box">m(v)</span> 不再等于 <span class="math-box">p(v)</span>！于是 <span class="math-box">∑<sub>v</sub> m(v) ∇ log p(v) ≠ 0</span>——<strong>Drift 立刻死灰复燃</strong>！量化越狠、截断越频繁，残余 Drift 越严重。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="math-panel hidden space-y-4 text-sm leading-relaxed" data-step="4">
+          <div class="p-4 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-3">
+            <h3 class="font-bold text-base">Step 5：Score Centering 的核心思想——与其乘法硬掰，不如直接减去偏置！</h3>
+            <p class="text-[var(--muted-foreground)]">
+              既然任何权重 <span class="math-box">w(y)</span> 下（包括纯 REINFORCE 时的 <span class="math-box">w=1</span>，以及 TIS 时的截断权重），每个词的等效采样质量都是 <span class="math-box">m(v) = q<sub>θ</sub>(v) · w(v)</span>，它的期望漂移就是 <span class="math-box">s̄ = ∑<sub>v</sub> m(v) ∇<sub>θ</sub> log p<sub>θ</sub>(v)</span>。<br/>
+              <strong>Score Centering 的做法极为优雅：直接在每一步的 Score 向量里把这个期望减掉（中心化归零）！</strong>
+            </p>
+            <div class="p-3 rounded bg-[var(--card)] border border-[var(--card-border)] math-box text-center text-base overflow-x-auto">
+              g<sub>SC</sub>(y) = R · <span class="text-[var(--success)] font-bold">(</span> w(y) ∇<sub>θ</sub> log p<sub>θ</sub>(y) − ∑<sub>v ∈ V</sub> m(v) ∇<sub>θ</sub> log p<sub>θ</sub>(v) <span class="text-[var(--success)] font-bold">)</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+              <div class="p-3 rounded border border-[var(--card-border)] bg-[var(--card)]">
+                <strong class="text-[var(--success)]">① 严格零漂移证明</strong><br/>
+                对 <span class="math-box">y ~ q<sub>θ</sub></span> 求期望（设 R=1）：<br/>
+                <code>E<sub>q</sub>[g<sub>SC</sub>] = ∑ q(y)w(y)∇log p(y) − ∑ m(v)∇log p(v) = s̄ − s̄ = 0</code>！无论多严重的量化与截断，Drift 永远严格等于 0！
+              </div>
+              <div class="p-3 rounded border border-[var(--card-border)] bg-[var(--card)]">
+                <strong class="text-[var(--primary)]">② On-policy 下自动隐身</strong><br/>
+                当没有偏差（<code>q = p, w = 1</code>）时，<code>m(v) = p(v)</code>，减去的项正好等于 <code>∑ p(v)∇log p(v) = 0</code>，完全变成无操作（No-op），不干扰任何正常训练。
+              </div>
+              <div class="p-3 rounded border border-[var(--card-border)] bg-[var(--card)]">
+                <strong class="text-[var(--foreground)]">③ 加性设计可自由叠加</strong><br/>
+                纯加性修正（<code>w = 1</code>）就能在重度量化下打败 TIS；而面对异步滞后（Staleness）时，还可以直接套在 TIS/MIS 外面（<code>TIS + SC</code>），兼顾低方差与无偏性。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="math-panel hidden space-y-4 text-sm leading-relaxed" data-step="5">
+          <div class="p-4 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-3">
+            <h3 class="font-bold text-base">Step 6：自动微分技巧——如何把它写进一个标量 Loss 里？</h3>
+            <p class="text-[var(--muted-foreground)]">
+              在 PyTorch/JAX 中，我们不直接手算模型所有参数的梯度向量，而是定义一个标量 <code>loss</code>，然后调用 <code>loss.backward()</code>。利用自动微分对线性求和求导的特性，Score Centering 的单 token 损失函数直接写成：
+            </p>
+            <div class="p-3.5 rounded bg-[var(--card)] border border-[var(--card-border)] math-box text-center text-base overflow-x-auto">
+              L<sub>SC</sub> = − sg(R) · [ sg(w(y<sub>t</sub>)) · log p<sub>θ</sub>(y<sub>t</sub>) − ∑<sub>v ∈ V</sub> sg(m(v)) · log p<sub>θ</sub>(v) ]
+            </div>
+            <div class="p-3 rounded border border-[var(--card-border)] bg-[var(--card)] text-xs space-y-1.5 text-[var(--muted-foreground)]">
+              <div class="font-bold text-[var(--foreground)]">🔍 为什么必须用 <code>sg(...)</code>（stop_gradient / .detach()）包住 <code>m(v)</code> 和 <code>w</code>？</div>
+              <p>1. 我们要的是 <code>m(v) · ∇<sub>θ</sub> log p<sub>θ</sub>(v)</code>，这里的 <code>m(v)</code> 只是个已知的常数权重！如果不加 <code>.detach()</code>，<code>m(v)</code> 内部如果包含了 <code>p<sub>θ</sub>(v)</code>（例如 TIS 里有 <code>p/q</code>），反向传播就会沿着 <code>m(v)</code> 对参数求导，凭空多出多余的梯度项把零漂移性质破坏掉。</p>
+              <p>2. 加上 <code>.detach()</code> 后，PyTorch 求导时把 <code>sg(m(v))</code> 当成纯数字常数，求导结果一字不差地还原为 <code>−R · (w(y)∇log p(y) − ∑ m(v)∇log p(v))</code>！</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="math-panel hidden space-y-4 text-sm leading-relaxed" data-step="6">
+          <div class="p-4 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-3">
+            <h3 class="font-bold text-base">Step 7：工程绝杀——词表有 15 万个词，怎么只算 Top-k 就等价于全词表？</h3>
+            <p class="text-[var(--muted-foreground)]">
+              推理引擎如果每个 token 都传回 150,000 个词的 logprobs，通信和显存会瞬间爆炸。论文只让推理引擎传回概率最高的 <strong>Top-k 个词（默认 k=128）</strong>，然后用极巧妙的<strong>尾部重缩放（Tail Rescaling）</strong>消除剩余 149,872 个词的求和！
+            </p>
+            <div class="space-y-2 text-xs bg-[var(--card)] p-4 rounded border border-[var(--card-border)] math-box">
+              <div><strong>① 拆分词表</strong>：把全词表 <span class="math-box">V</span> 拆成头部 <span class="math-box">H</span>（Top-k 个词）和尾部 <span class="math-box">T</span>（其余所有冷门词）。</div>
+              <div><strong>② 尾部近似假设</strong>：尾部每个词概率都很小，近似认为推理尾部概率与训练尾部成等比缩放： <span class="math-box">q<sub>v</sub> ≈ ρ · p<sub>v</sub></span>，其中总尾部质量比 <span class="math-box">ρ = q<sub>tail</sub> / p<sub>tail</sub> = (1 − ∑<sub>H</sub> q<sub>v</sub>) / (1 − ∑<sub>H</sub> p<sub>v</sub>)</span>。</div>
+              <div><strong>③ 尾部等效权重变成统一常数 α</strong>：在尾部每个词上，比率都是 <code>p<sub>v</sub> / q<sub>v</sub> = 1/ρ</code>，所以等效质量系数 <span class="math-box">α = ρ · w(1/ρ)</span> 是与词无关的常数（当不用 IS 时，<code>w=1</code>，直接就是 <code>α = ρ</code>）！</div>
+              <div><strong>④ 见证奇迹的恒等变形</strong>：再次祭出 Step 2 的法宝 <code>∑<sub>V</sub> p(v)∇log p(v) = 0</code>，得出 <code>∑<sub>T</sub> p(v)∇log p(v) = −∑<sub>H</sub> p(v)∇log p(v)</code>！于是：</div>
+              <div class="p-2.5 rounded bg-[var(--background)]/70 text-center text-sm">
+                ∑<sub>v∈V</sub> m(v)∇log p(v) = ∑<sub>v∈H</sub> m(v)∇log p(v) + α ∑<sub>v∈T</sub> p(v)∇log p(v)
+                = <span class="text-[var(--primary)] font-bold">∑<sub>v∈H</sub> (m(v) − α · p(v)) ∇log p(v)</span>
+              </div>
+              <div class="font-sans text-[var(--muted-foreground)] pt-1">
+                👉 这就是代码里 <code class="text-[var(--foreground)]">residual = q_head * head_weight - alpha * p_head</code> 与 <code class="text-[var(--foreground)]">correction = (residual.detach() * head_logp).sum(-1)</code> 的全部秘密！整个尾部梯度自动抵消，计算图只需要反传 Top-k 个元素！
+              </div>
+            </div>
+
+            <!-- Interactive Top-k Residual Explorer -->
+            <div class="p-3.5 rounded-lg border border-[var(--card-border)] bg-[var(--card)] space-y-2.5 text-xs">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="font-bold">🔬 Top-k 尾部重缩放互动计算器（假设 Head 占大头，Tail 代表其余数十万冷门词）</span>
+                <label class="flex items-center gap-2">
+                  <span class="text-[var(--muted-foreground)]">调整 Head 覆盖质量 p<sub>head</sub>：</span>
+                  <input id="topkMassSlider" type="range" min="0.50" max="0.99" step="0.01" value="0.90" class="sc-range w-28 cursor-pointer" />
+                  <span id="topkMassVal" class="font-mono font-semibold">0.90</span>
+                </label>
+              </div>
+              <div id="topkCalcOutput" class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 4: Interactive PyTorch Code Inspector -->
+    <section id="sec-code" class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 sm:p-6 space-y-4">
+      <div class="border-b border-[var(--card-border)] pb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[var(--primary)]">模块 04 · 官方源码逐行点读机</span>
+        <h2 class="text-lg sm:text-xl font-bold mt-0.5">对照公式点击代码行：看懂 GitHub 仓库的 14 行 PyTorch 实现</h2>
+        <p class="text-xs text-[var(--muted-foreground)] mt-1">来源：<code>github.com/martin-marek/score-centering</code> README 官方 PyTorch 参考实现。点击任意一行查看解释。</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <div class="lg:col-span-7 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/70 overflow-hidden font-mono text-xs">
+          <div class="px-3 py-2 border-b border-[var(--card-border)] flex items-center justify-between text-[var(--muted-foreground)]">
+            <span>score_centering_loss.py (PyTorch)</span>
+            <span>点击代码行查看对应数学含义</span>
+          </div>
+          <div id="codeLinesContainer" class="divide-y divide-[var(--card-border)]/40"></div>
+        </div>
+
+        <div class="lg:col-span-5 p-4 rounded-lg border border-[var(--card-border)] bg-[var(--background)]/50 space-y-3">
+          <div class="flex items-center justify-between">
+            <span id="codeExplainBadge" class="text-xs font-mono px-2 py-0.5 rounded bg-[var(--primary)] text-[var(--primary-foreground)]">第 1 行</span>
+            <span id="codeExplainShape" class="text-xs font-mono text-[var(--muted-foreground)]">Shape: -</span>
+          </div>
+          <h3 id="codeExplainTitle" class="text-sm font-bold">点击左侧任意代码行开始逐行精读</h3>
+          <p id="codeExplainMath" class="text-xs font-mono p-2 rounded bg-[var(--card)] border border-[var(--card-border)] text-[var(--primary)]"></p>
+          <p id="codeExplainText" class="text-xs text-[var(--muted-foreground)] leading-relaxed"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      // Standalone browser fallback: if opened directly outside IDE theme host, provide clean light/dark palette on body
+      function applyStandalonePaletteIfNeeded() {
+        if (getComputedStyle(document.documentElement).getPropertyValue('--background').trim()) return;
+        const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const palette = dark ? {
+          '--background': '#09090b',
+          '--card': '#18181b',
+          '--border': '#27272a',
+          '--card-border': '#27272a',
+          '--foreground': '#f4f4f5',
+          '--muted-foreground': '#a1a1aa',
+          '--primary': '#3b82f6',
+          '--primary-foreground': '#ffffff',
+          '--secondary': '#27272a',
+          '--secondary-foreground': '#f4f4f5',
+          '--error': '#ef4444',
+          '--success': '#22c55e',
+          '--warning': '#f59e0b'
+        } : {
+          '--background': '#f4f4f5',
+          '--card': '#ffffff',
+          '--border': '#e4e4e7',
+          '--card-border': '#e4e4e7',
+          '--foreground': '#18181b',
+          '--muted-foreground': '#71717a',
+          '--primary': '#2563eb',
+          '--primary-foreground': '#ffffff',
+          '--secondary': '#f4f4f5',
+          '--secondary-foreground': '#18181b',
+          '--error': '#dc2626',
+          '--success': '#16a34a',
+          '--warning': '#d97706'
+        };
+        Object.entries(palette).forEach(([k, v]) => document.body.style.setProperty(k, v));
+      }
+      applyStandalonePaletteIfNeeded();
+
+      // Progressive enhancement JS fallback for range sliders when accent-color is unsupported
+      if (!CSS.supports('accent-color', 'red')) {
+        document.querySelectorAll('input[type="range"].sc-range').forEach(slider => {
+          const syncProg = () => {
+            const min = parseFloat(slider.min || '0');
+            const max = parseFloat(slider.max || '100');
+            const val = parseFloat(slider.value || '0');
+            const pct = max > min ? ((val - min) / (max - min)) * 100 : 0;
+            slider.style.setProperty('--progress', `${pct}%`);
+          };
+          syncProg();
+          slider.addEventListener('input', syncProg);
+        });
+      }
+
+      function getThemeColors() {
+        const cs = getComputedStyle(document.body);
+        const val = (name, fb) => cs.getPropertyValue(name).trim() || fb;
+        const isLight = document.documentElement.classList.contains('light') ||
+          (window.matchMedia && !window.matchMedia('(prefers-color-scheme: dark)').matches);
+        return {
+          fg: val('--foreground', isLight ? '#18181b' : '#f4f4f5'),
+          muted: val('--muted-foreground', isLight ? '#71717a' : '#a1a1aa'),
+          card: val('--card', isLight ? '#ffffff' : '#18181b'),
+          bg: val('--background', isLight ? '#f4f4f5' : '#09090b'),
+          border: val('--card-border', isLight ? '#e4e4e7' : '#27272a'),
+          primary: val('--primary', '#3b82f6'),
+          primaryFg: val('--primary-foreground', '#ffffff'),
+          error: val('--error', '#ef4444'),
+          success: val('--success', '#22c55e'),
+          warning: val('--warning', '#f59e0b')
+        };
+      }
+
+      function softmax(logits) {
+        const m = Math.max(...logits);
+        const exps = logits.map(v => Math.exp(v - m));
+        const s = exps.reduce((a, b) => a + b, 0);
+        return exps.map(e => e / s);
+      }
+
+      function drawArrow(ctx, x1, y1, x2, y2, color, width = 2) {
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const len = Math.hypot(dx, dy);
+        if (len < 2) return;
+        const angle = Math.atan2(dy, dx);
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = width;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        const headLen = Math.min(9, len * 0.45);
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // ================================================================
+      // MODULE 1: Background & Drift Pipeline Animation
+      // ================================================================
+      const bgSection = document.getElementById('sec-background');
+      const bgCanvas = document.getElementById('bgCanvas');
+      const bgCtx = bgCanvas.getContext('2d');
+      const bgCaption = document.getElementById('bgCaption');
+      const bgBtns = {
+        sync: document.getElementById('bgSceneSyncBtn'),
+        tim: document.getElementById('bgSceneTimBtn'),
+        sc: document.getElementById('bgSceneScBtn')
+      };
+
+      let bgMode = 'tim';
+      let bgParticles = [];
+      let bgTilt = 0;
+      let bgRaf = null;
+      let bgPaused = false;
+      let bgTick = 0;
+
+      const BG_CAPTIONS = {
+        sync: '✅ 理想状态 (q = p)：Sampler 和 Trainer 对 Token A/B 的概率认知完全一致 (50% / 50%)。哪怕恒定奖励 R=+1，两边的推力完美抵消，天平纹丝不动！',
+        tim: '❌ 真实工程 TIM (q ≠ p)：因为低比特量化误差，Sampler 把 Token A 算成 72%、B 算成 28%。即使所有词奖励都是 +1，Trainer 收到大量 A 却按 50% 基准给奖赏，导致天平不断向 A 倾斜（Drift）！',
+        sc: '🛡️ 开启 Score Centering：Trainer 知道 Sampler 偏心（qA=72%），于是在每一步梯度里减掉 Sampler 的期望偏置 (q - p)。天平立刻恢复平衡，不发生任何无端漂移！'
+      };
+
+      function setBgMode(m) {
+        bgMode = m;
+        bgTilt = 0;
+        bgParticles = [];
+        bgCaption.textContent = BG_CAPTIONS[m];
+        Object.entries(bgBtns).forEach(([k, btn]) => {
+          const active = k === m;
+          btn.style.backgroundColor = active ? 'var(--primary)' : 'transparent';
+          btn.style.color = active ? 'var(--primary-foreground)' : 'var(--muted-foreground)';
+          btn.style.borderColor = active ? 'var(--primary)' : 'var(--border)';
+        });
+      }
+      bgBtns.sync.addEventListener('click', () => setBgMode('sync'));
+      bgBtns.tim.addEventListener('click', () => setBgMode('tim'));
+      bgBtns.sc.addEventListener('click', () => setBgMode('sc'));
+
+      function drawBgFrame() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = bgCanvas.getBoundingClientRect();
+        const W = Math.max(320, Math.floor(rect.width));
+        const H = Math.max(220, Math.floor(rect.height));
+        if (bgCanvas.width !== W * dpr || bgCanvas.height !== H * dpr) {
+          bgCanvas.width = W * dpr;
+          bgCanvas.height = H * dpr;
+        }
+        bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const c = getThemeColors();
+        bgCtx.clearRect(0, 0, W, H);
+        bgCtx.fillStyle = c.card;
+        bgCtx.fillRect(0, 0, W, H);
+
+        const boxW = Math.min(180, W * 0.24);
+        const sampX = 24;
+        const rewX = Math.floor(W * 0.5 - 56);
+        const trainX = W - boxW - 24;
+
+        bgCtx.strokeStyle = c.border;
+        bgCtx.fillStyle = c.bg;
+        bgCtx.lineWidth = 1.5;
+        bgCtx.beginPath();
+        bgCtx.roundRect(sampX, 34, boxW, H - 68, 8);
+        bgCtx.fill();
+        bgCtx.stroke();
+
+        bgCtx.fillStyle = c.fg;
+        bgCtx.font = 'bold 12px system-ui, sans-serif';
+        bgCtx.textAlign = 'center';
+        bgCtx.fillText('1. 推理引擎 Sampler (q)', sampX + boxW / 2, 56);
+        bgCtx.fillStyle = c.muted;
+        bgCtx.font = '11px system-ui, sans-serif';
+        const qA = bgMode === 'sync' ? 0.50 : 0.72;
+        bgCtx.fillText(bgMode === 'sync' ? '高精度无误差' : 'FP8/INT4 量化偏差', sampX + boxW / 2, 74);
+        bgCtx.font = '11px monospace';
+        bgCtx.fillStyle = bgMode === 'sync' ? c.success : c.warning;
+        bgCtx.fillText(`q(A)=${(qA * 100).toFixed(0)}%  q(B)=${((1 - qA) * 100).toFixed(0)}%`, sampX + boxW / 2, H - 48);
+
+        bgCtx.fillStyle = c.bg;
+        bgCtx.strokeStyle = c.border;
+        bgCtx.beginPath();
+        bgCtx.roundRect(rewX, H / 2 - 36, 112, 72, 8);
+        bgCtx.fill();
+        bgCtx.stroke();
+        bgCtx.fillStyle = c.fg;
+        bgCtx.font = 'bold 12px system-ui, sans-serif';
+        bgCtx.fillText('盲目奖励测试', rewX + 56, H / 2 - 12);
+        bgCtx.fillStyle = c.primary;
+        bgCtx.font = 'bold 14px monospace';
+        bgCtx.fillText('R = +1 (恒定)', rewX + 56, H / 2 + 12);
+        bgCtx.fillStyle = c.muted;
+        bgCtx.font = '10px system-ui, sans-serif';
+        bgCtx.fillText('对所有回答一视同仁', rewX + 56, H / 2 + 27);
+
+        bgCtx.fillStyle = c.bg;
+        bgCtx.strokeStyle = c.border;
+        bgCtx.beginPath();
+        bgCtx.roundRect(trainX, 34, boxW, H - 68, 8);
+        bgCtx.fill();
+        bgCtx.stroke();
+        bgCtx.fillStyle = c.fg;
+        bgCtx.font = 'bold 12px system-ui, sans-serif';
+        bgCtx.fillText('2. 训练引擎 Trainer (p)', trainX + boxW / 2, 56);
+        bgCtx.fillStyle = c.muted;
+        bgCtx.font = '11px monospace';
+        bgCtx.fillText('p(A)=50%  p(B)=50%', trainX + boxW / 2, 74);
+
+        const pivX = trainX + boxW / 2;
+        const pivY = H / 2 + 18;
+        const beamLen = boxW * 0.36;
+        const angle = Math.max(-0.55, Math.min(0.55, bgTilt * 0.35));
+
+        bgCtx.strokeStyle = c.muted;
+        bgCtx.lineWidth = 2;
+        bgCtx.beginPath();
+        bgCtx.moveTo(pivX - 10, pivY + 24);
+        bgCtx.lineTo(pivX, pivY);
+        bgCtx.lineTo(pivX + 10, pivY + 24);
+        bgCtx.closePath();
+        bgCtx.stroke();
+
+        const ax = pivX - Math.cos(angle) * beamLen;
+        const ay = pivY - Math.sin(angle) * beamLen;
+        const bx = pivX + Math.cos(angle) * beamLen;
+        const by = pivY + Math.sin(angle) * beamLen;
+
+        bgCtx.strokeStyle = Math.abs(bgTilt) > 0.45 ? c.error : (bgMode === 'sc' ? c.success : c.fg);
+        bgCtx.lineWidth = 3;
+        bgCtx.beginPath();
+        bgCtx.moveTo(ax, ay);
+        bgCtx.lineTo(bx, by);
+        bgCtx.stroke();
+
+        bgCtx.font = 'bold 11px system-ui, sans-serif';
+        bgCtx.fillStyle = c.primary;
+        bgCtx.fillText('A 概率', ax, ay - 10);
+        bgCtx.fillStyle = c.warning;
+        bgCtx.fillText('B 概率', bx, by - 10);
+
+        bgCtx.fillStyle = bgMode === 'tim' ? c.error : c.success;
+        bgCtx.font = 'bold 11px system-ui, sans-serif';
+        const statusStr = bgMode === 'tim'
+          ? '⚠️ 天平倾覆: A 被越推越高 (Drift!)'
+          : (bgMode === 'sc' ? '✓ 中心化抵消: 天平稳定归零' : '✓ 完美平衡: 期望梯度 = 0');
+        bgCtx.fillText(statusStr, pivX, H - 46);
+
+        bgParticles.forEach(pt => {
+          bgCtx.fillStyle = pt.tok === 'A' ? c.primary : c.warning;
+          bgCtx.beginPath();
+          bgCtx.arc(pt.x, pt.y, 7, 0, Math.PI * 2);
+          bgCtx.fill();
+          bgCtx.fillStyle = c.primaryFg;
+          bgCtx.font = 'bold 10px monospace';
+          bgCtx.fillText(pt.tok, pt.x, pt.y + 3.5);
+        });
+      }
+
+      function stepBgLoop() {
+        if (bgPaused) {
+          bgRaf = null;
+          return;
+        }
+        bgTick += 1;
+        const rect = bgCanvas.getBoundingClientRect();
+        const W = Math.max(320, Math.floor(rect.width));
+        const H = Math.max(220, Math.floor(rect.height));
+        const boxW = Math.min(180, W * 0.24);
+        const startX = 24 + boxW;
+        const endX = W - boxW - 24;
+
+        if (bgTick % 14 === 0) {
+          const qA = bgMode === 'sync' ? 0.50 : 0.72;
+          const tok = Math.random() < qA ? 'A' : 'B';
+          bgParticles.push({
+            x: startX,
+            y: H / 2 + (Math.random() - 0.5) * 34,
+            tok,
+            vx: Math.max(2.6, (endX - startX) / 65)
+          });
+        }
+
+        for (let i = bgParticles.length - 1; i >= 0; i--) {
+          const p = bgParticles[i];
+          p.x += p.vx;
+          if (p.x >= endX) {
+            if (bgMode === 'sync') {
+              bgTilt += (p.tok === 'A' ? -0.06 : 0.06);
+              bgTilt *= 0.96;
+            } else if (bgMode === 'tim') {
+              bgTilt += (p.tok === 'A' ? -0.08 : 0.08);
+              if (bgTilt < -1.5) bgTilt = -1.5;
+            } else {
+              const pA = 0.50, qA = 0.72;
+              const raw = (p.tok === 'A' ? 1 : 0) - pA;
+              const centered = raw - (qA - pA);
+              bgTilt -= centered * 0.12;
+              bgTilt *= 0.94;
+            }
+            bgParticles.splice(i, 1);
+          }
+        }
+        drawBgFrame();
+        bgRaf = requestAnimationFrame(stepBgLoop);
+      }
+
+      function startBgSim() {
+        bgPaused = false;
+        drawBgFrame();
+        if (bgRaf === null) bgRaf = requestAnimationFrame(stepBgLoop);
+      }
+
+      function stopBgSim() {
+        bgPaused = true;
+        if (bgRaf !== null) {
+          cancelAnimationFrame(bgRaf);
+          bgRaf = null;
+        }
+      }
+
+      // ================================================================
+      // MODULE 2: Interactive Drift & Score Centering Lab
+      // ================================================================
+      const labSection = document.getElementById('sec-lab');
+      const labCanvas = document.getElementById('labCanvas');
+      const labCtx = labCanvas.getContext('2d');
+      const labModeBtns = Array.from(document.querySelectorAll('.lab-mode-btn'));
+      const labDeltaEl = document.getElementById('labDelta');
+      const labDeltaVal = document.getElementById('labDeltaVal');
+      const labLogitAEl = document.getElementById('labLogitA');
+      const labLogitAVal = document.getElementById('labLogitAVal');
+      const labAdvEl = document.getElementById('labAdv');
+      const labAdvVal = document.getElementById('labAdvVal');
+      const labShowVecEl = document.getElementById('labShowVectors');
+      const labPlayBtn = document.getElementById('labPlayBtn');
+      const labResetBtn = document.getElementById('labResetBtn');
+      const labVerdict = document.getElementById('labVerdict');
+      const labTableBody = document.getElementById('labTableBody');
+
+      let labMode = 'pg';
+      let labRunning = true;
+      let labPausedByVis = false;
+      let labPos = { x: 0, y: 0 };
+      let labTrail = [{ x: 0, y: 0 }];
+      let labLastStep = null;
+      let labTick = 0;
+      let labRaf = null;
+
+      function project2D(v) {
+        return [
+          (2 * v[0] - v[1] - v[2]) / Math.sqrt(6),
+          (v[2] - v[1]) / Math.sqrt(2)
+        ];
+      }
+
+      function computeLabStats() {
+        const delta = parseFloat(labDeltaEl.value);
+        const logitA = parseFloat(labLogitAEl.value);
+        const R = parseFloat(labAdvEl.value);
+        const trainerLogits = [logitA, 0.05, -0.35];
+        const p = softmax(trainerLogits);
+        const q = softmax([
+          trainerLogits[0] + 4.5 * delta,
+          trainerLogits[1] + 0.4 * delta,
+          trainerLogits[2] - 8.5 * delta
+        ]);
+
+        const useTIS = labMode === 'tis' || labMode === 'tis_sc';
+        const useIS = labMode === 'is';
+        const useSC = labMode === 'sc' || labMode === 'tis_sc';
+
+        const weights = [];
+        const rawScores = [];
+        for (let i = 0; i < 3; i++) {
+          const r = p[i] / q[i];
+          let w = 1.0;
+          if (useIS) w = r;
+          else if (useTIS) w = Math.min(r, 2.0);
+          weights.push(w);
+          rawScores.push([0, 1, 2].map(j => (j === i ? 1 : 0) - p[j]));
+        }
+
+        const centerVec = [0, 0, 0];
+        if (useSC) {
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+              centerVec[j] += q[i] * weights[i] * R * rawScores[i][j];
+            }
+          }
+        }
+
+        const netGrads = [];
+        const expectedGrad = [0, 0, 0];
+        for (let i = 0; i < 3; i++) {
+          const g = [0, 1, 2].map(j => R * weights[i] * rawScores[i][j] - centerVec[j]);
+          netGrads.push(g);
+          for (let j = 0; j < 3; j++) {
+            expectedGrad[j] += q[i] * g[j];
+          }
+        }
+
+        let variance = 0;
+        for (let i = 0; i < 3; i++) {
+          let d2 = 0;
+          for (let j = 0; j < 3; j++) {
+            const diff = netGrads[i][j] - expectedGrad[j];
+            d2 += diff * diff;
+          }
+          variance += q[i] * d2;
+        }
+        const driftMag = Math.hypot(expectedGrad[0], expectedGrad[1], expectedGrad[2]);
+
+        return { delta, logitA, R, p, q, weights, rawScores, centerVec, netGrads, expectedGrad, driftMag, variance, useSC };
+      }
+
+      function updateLabControlsUI() {
+        const stats = computeLabStats();
+        labDeltaVal.textContent = stats.delta.toFixed(2);
+        labLogitAVal.textContent = stats.logitA.toFixed(2);
+        labAdvVal.textContent = (stats.R >= 0 ? '+' : '') + stats.R.toFixed(1);
+
+        labModeBtns.forEach(btn => {
+          const active = btn.dataset.labmode === labMode;
+          btn.style.backgroundColor = active ? 'var(--primary)' : 'transparent';
+          btn.style.color = active ? 'var(--primary-foreground)' : 'var(--muted-foreground)';
+          btn.style.borderColor = active ? 'var(--primary)' : 'var(--border)';
+        });
+
+        const d = stats.driftMag;
+        const v = stats.variance;
+        const verdictMap = {
+          pg: `无修正 REINFORCE：预期漂移 ||Drift|| = ${d.toFixed(3)}，方差 = ${v.toFixed(2)}。偏差 δ 越大，参数被固定方向推走得越快。`,
+          is: `原始 IS (w=p/q)：期望漂移为 ${d.toFixed(3)}（归零），但单步方差飙升至 ${v.toFixed(2)}！偶发采到 Token C 会把轨迹狠狠踢飞。`,
+          tis: `截断 TIS (w=min(p/q, 2))：方差被压住到 ${v.toFixed(2)}，但截断破坏了无偏性，残余漂移 ||Drift|| = ${d.toFixed(3)} 重新出现。`,
+          sc: `纯 Score Centering：无需乘危险比率！||Drift|| = ${d.toFixed(4)}（严格归零），且方差仅 ${v.toFixed(2)}，稳如泰山！`,
+          tis_sc: `TIS + Score Centering 组合：既有 TIS 的重纠偏能力，又通过 Score Centering 把截断产生的残余漂移彻底归零（||Drift|| = ${d.toFixed(4)}）！`
+        };
+        labVerdict.textContent = verdictMap[labMode];
+
+        const tokNames = ['Token A', 'Token B', 'Token C'];
+        let rowsHtml = '';
+        for (let i = 0; i < 3; i++) {
+          const ratio = stats.p[i] / stats.q[i];
+          const w = stats.weights[i];
+          const rawA = stats.R * w * stats.rawScores[i][0];
+          const centA = stats.centerVec[0];
+          const netA = stats.netGrads[i][0];
+          const contrib = stats.q[i] * netA;
+          rowsHtml += `
+            <tr class="hover:bg-[var(--background)]/40">
+              <td class="py-1.5 px-3 font-sans font-semibold">${tokNames[i]}</td>
+              <td class="py-1.5 px-3">${stats.p[i].toFixed(3)}</td>
+              <td class="py-1.5 px-3">${stats.q[i].toFixed(3)}</td>
+              <td class="py-1.5 px-3 ${ratio > 2 ? 'text-[var(--warning)] font-bold' : ''}">${ratio.toFixed(2)}×</td>
+              <td class="py-1.5 px-3">${w.toFixed(2)}</td>
+              <td class="py-1.5 px-3">${rawA >= 0 ? '+' : ''}${rawA.toFixed(3)}</td>
+              <td class="py-1.5 px-3 text-[var(--primary)]">${centA >= 0 ? '+' : ''}${centA.toFixed(3)}</td>
+              <td class="py-1.5 px-3">${netA >= 0 ? '+' : ''}${netA.toFixed(3)}</td>
+              <td class="py-1.5 px-3">${contrib >= 0 ? '+' : ''}${contrib.toFixed(4)}</td>
+            </tr>`;
+        }
+        const sumA = stats.expectedGrad[0];
+        const sumColor = Math.abs(sumA) < 0.001 ? 'text-[var(--success)]' : 'text-[var(--error)]';
+        rowsHtml += `
+          <tr class="bg-[var(--background)]/80 font-bold border-t-2 border-[var(--border)]">
+            <td colspan="8" class="py-2 px-3 text-right font-sans">求和：期望净梯度 E<sub>y~q</sub>[g(y)<sub>A</sub>] =</td>
+            <td class="py-2 px-3 ${sumColor}">${sumA >= 0 ? '+' : ''}${sumA.toFixed(4)} ${Math.abs(sumA) < 0.001 ? '(✓ 零漂移)' : '(✗ 发生漂移)'}</td>
+          </tr>`;
+        labTableBody.innerHTML = rowsHtml;
+      }
+
+      function drawLabCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = labCanvas.getBoundingClientRect();
+        const W = Math.max(320, Math.floor(rect.width));
+        const H = Math.max(240, Math.floor(rect.height));
+        if (labCanvas.width !== W * dpr || labCanvas.height !== H * dpr) {
+          labCanvas.width = W * dpr;
+          labCanvas.height = H * dpr;
+        }
+        labCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const c = getThemeColors();
+        labCtx.clearRect(0, 0, W, H);
+        labCtx.fillStyle = c.card;
+        labCtx.fillRect(0, 0, W, H);
+
+        const splitX = Math.floor(W * 0.58);
+        labCtx.strokeStyle = c.border;
+        labCtx.lineWidth = 1;
+        labCtx.beginPath();
+        labCtx.moveTo(splitX, 10);
+        labCtx.lineTo(splitX, H - 10);
+        labCtx.stroke();
+
+        const stats = computeLabStats();
+
+        const cx = Math.floor(splitX * 0.5);
+        const cy = Math.floor(H * 0.52);
+        const scale = 32;
+
+        labCtx.fillStyle = c.fg;
+        labCtx.font = 'bold 12px system-ui, sans-serif';
+        labCtx.textAlign = 'left';
+        labCtx.fillText('2D Logit 漂移轨迹与力向量分解', 12, 22);
+
+        labCtx.strokeStyle = c.border;
+        labCtx.setLineDash([3, 3]);
+        [1, 2, 3].forEach(r => {
+          labCtx.beginPath();
+          labCtx.arc(cx, cy, r * scale * 0.85, 0, Math.PI * 2);
+          labCtx.stroke();
+        });
+        labCtx.setLineDash([]);
+
+        labCtx.beginPath();
+        labCtx.moveTo(cx - 100, cy);
+        labCtx.lineTo(cx + 100, cy);
+        labCtx.moveTo(cx, cy - 100);
+        labCtx.lineTo(cx, cy + 100);
+        labCtx.stroke();
+
+        const [dx, dy] = project2D(stats.expectedGrad);
+        if (Math.hypot(dx, dy) > 0.004) {
+          drawArrow(labCtx, cx, cy, cx + dx * 150, cy + dy * 150, c.error, 2.5);
+        }
+
+        if (labTrail.length > 1) {
+          labCtx.strokeStyle = stats.driftMag < 0.002 ? c.success : (labMode === 'is' ? c.warning : c.error);
+          labCtx.lineWidth = 2;
+          labCtx.beginPath();
+          labTrail.forEach((pt, idx) => {
+            const px = Math.max(12, Math.min(splitX - 12, cx + pt.x * scale));
+            const py = Math.max(32, Math.min(H - 14, cy + pt.y * scale));
+            if (idx === 0) labCtx.moveTo(px, py);
+            else labCtx.lineTo(px, py);
+          });
+          labCtx.stroke();
+        }
+
+        const px = Math.max(12, Math.min(splitX - 12, cx + labPos.x * scale));
+        const py = Math.max(32, Math.min(H - 14, cy + labPos.y * scale));
+        if (labShowVecEl.checked && labLastStep) {
+          const r2 = labLastStep.raw;
+          const c2 = labLastStep.corr;
+          drawArrow(labCtx, px, py, px + r2[0] * 35, py + r2[1] * 35, c.error, 1.8);
+          if (Math.hypot(c2[0], c2[1]) > 0.005) {
+            drawArrow(labCtx, px + r2[0] * 35, py + r2[1] * 35, px + (r2[0] + c2[0]) * 35, py + (r2[1] + c2[1]) * 35, c.primary, 2);
+          }
+        }
+        labCtx.fillStyle = stats.driftMag < 0.002 ? c.success : c.fg;
+        labCtx.beginPath();
+        labCtx.arc(px, py, 5.5, 0, Math.PI * 2);
+        labCtx.fill();
+
+        labCtx.fillStyle = c.muted;
+        labCtx.font = '11px system-ui, sans-serif';
+        labCtx.textAlign = 'left';
+        labCtx.fillText('起点 (0,0) · 红箭=期望漂移 · 蓝箭=减去的中心项', 12, H - 10);
+
+        const rx = splitX + 16;
+        const rw = W - splitX - 30;
+        labCtx.fillStyle = c.fg;
+        labCtx.font = 'bold 12px system-ui, sans-serif';
+        labCtx.fillText('核心指标实时对比', rx, 22);
+
+        const drawMeter = (yTop, title, val, maxVal, color, okThreshold) => {
+          labCtx.fillStyle = c.fg;
+          labCtx.font = '600 12px system-ui, sans-serif';
+          labCtx.textAlign = 'left';
+          labCtx.fillText(title, rx, yTop);
+          labCtx.font = 'bold 12px monospace';
+          labCtx.textAlign = 'right';
+          labCtx.fillStyle = val <= okThreshold ? c.success : color;
+          labCtx.fillText(val.toFixed(3), rx + rw, yTop);
+
+          labCtx.fillStyle = c.bg;
+          labCtx.fillRect(rx, yTop + 8, rw, 16);
+          labCtx.strokeStyle = c.border;
+          labCtx.strokeRect(rx, yTop + 8, rw, 16);
+
+          const fillW = Math.min(rw, Math.max(2, (val / maxVal) * rw));
+          labCtx.fillStyle = val <= okThreshold ? c.success : color;
+          labCtx.fillRect(rx, yTop + 8, fillW, 16);
+        };
+
+        drawMeter(52, '系统漂移 ||Drift|| (越接近 0 越安全)', stats.driftMag, 0.55, c.error, 0.002);
+        drawMeter(110, '单步梯度方差 Var(g) (过大易爆炸)', stats.variance, 8.0, c.warning, 1.5);
+
+        labCtx.textAlign = 'left';
+        labCtx.fillStyle = c.fg;
+        labCtx.font = '600 12px system-ui, sans-serif';
+        labCtx.fillText('各词权重 w(y) = p/q 修正倍数', rx, 172);
+        const names = ['A', 'B', 'C'];
+        names.forEach((nm, idx) => {
+          const by = 190 + idx * 28;
+          labCtx.fillStyle = c.muted;
+          labCtx.font = '11px monospace';
+          labCtx.fillText(`${nm}: p=${stats.p[idx].toFixed(2)} q=${stats.q[idx].toFixed(2)}`, rx, by + 11);
+          labCtx.textAlign = 'right';
+          labCtx.fillStyle = stats.weights[idx] > 3 ? c.error : c.fg;
+          labCtx.fillText(`w = ${stats.weights[idx].toFixed(2)}×`, rx + rw, by + 11);
+          labCtx.textAlign = 'left';
+        });
+      }
+
+      function stepLabLoop() {
+        if (!labRunning || labPausedByVis) {
+          labRaf = null;
+          return;
+        }
+        labTick += 1;
+        if (labTick % 7 === 0) {
+          const stats = computeLabStats();
+          const r = Math.random();
+          let acc = 0, tok = 2;
+          for (let i = 0; i < 3; i++) {
+            acc += stats.q[i];
+            if (r <= acc) { tok = i; break; }
+          }
+          const rawVec = stats.rawScores[tok].map(v => stats.R * stats.weights[tok] * v);
+          const netVec = stats.netGrads[tok];
+          const corrVec = [netVec[0] - rawVec[0], netVec[1] - rawVec[1], netVec[2] - rawVec[2]];
+          labLastStep = { raw: project2D(rawVec), corr: project2D(corrVec) };
+
+          const net2d = project2D(netVec);
+          const lr = 0.07;
+          labPos.x += lr * net2d[0];
+          labPos.y += lr * net2d[1];
+          if (Math.hypot(labPos.x, labPos.y) > 4.0) {
+            labPos = { x: 0, y: 0 };
+            labTrail = [{ x: 0, y: 0 }];
+          } else {
+            labTrail.push({ x: labPos.x, y: labPos.y });
+            if (labTrail.length > 120) labTrail.shift();
+          }
+          drawLabCanvas();
+        }
+        labRaf = requestAnimationFrame(stepLabLoop);
+      }
+
+      function startLabSim() {
+        labPausedByVis = false;
+        drawLabCanvas();
+        if (labRunning && labRaf === null) labRaf = requestAnimationFrame(stepLabLoop);
+      }
+
+      function stopLabSim() {
+        labPausedByVis = true;
+        if (labRaf !== null) {
+          cancelAnimationFrame(labRaf);
+          labRaf = null;
+        }
+      }
+
+      function resetLab() {
+        labPos = { x: 0, y: 0 };
+        labTrail = [{ x: 0, y: 0 }];
+        labLastStep = null;
+        updateLabControlsUI();
+        drawLabCanvas();
+      }
+
+      labModeBtns.forEach(btn => btn.addEventListener('click', () => {
+        labMode = btn.dataset.labmode;
+        resetLab();
+      }));
+      [labDeltaEl, labLogitAEl, labAdvEl].forEach(el => el.addEventListener('input', () => {
+        updateLabControlsUI();
+        drawLabCanvas();
+      }));
+      labShowVecEl.addEventListener('change', drawLabCanvas);
+      labPlayBtn.addEventListener('click', () => {
+        labRunning = !labRunning;
+        labPlayBtn.textContent = labRunning ? '暂停动画' : '继续动画';
+        if (labRunning && !labPausedByVis && labRaf === null) {
+          labRaf = requestAnimationFrame(stepLabLoop);
+        } else if (!labRunning && labRaf !== null) {
+          cancelAnimationFrame(labRaf);
+          labRaf = null;
+        }
+      });
+      labResetBtn.addEventListener('click', resetLab);
+
+      // ================================================================
+      // Efficient Background Processing: contentvisibilityautostatechange
+      // with IntersectionObserver fallback
+      // ================================================================
+      const isCVSupported = 'contentVisibility' in document.documentElement.style;
+      if (isCVSupported) {
+        bgSection.addEventListener('contentvisibilityautostatechange', (event) => {
+          if (event.skipped) stopBgSim();
+          else startBgSim();
+        });
+        labSection.addEventListener('contentvisibilityautostatechange', (event) => {
+          if (event.skipped) stopLabSim();
+          else startLabSim();
+        });
+      } else {
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.target === bgSection) {
+              if (entry.isIntersecting) startBgSim();
+              else stopBgSim();
+            }
+            if (entry.target === labSection) {
+              if (entry.isIntersecting) startLabSim();
+              else stopLabSim();
+            }
+          });
+        }, { rootMargin: '200px' });
+        obs.observe(bgSection);
+        obs.observe(labSection);
+      }
+
+      // ================================================================
+      // MODULE 3: Step-by-Step Math Tabs + Interactive Calculators
+      // ================================================================
+      const mathTabs = Array.from(document.querySelectorAll('.math-tab'));
+      const mathPanels = Array.from(document.querySelectorAll('.math-panel'));
+
+      function selectMathStep(stepIdx) {
+        mathTabs.forEach((tab, idx) => {
+          const active = idx === stepIdx;
+          tab.style.backgroundColor = active ? 'var(--primary)' : 'transparent';
+          tab.style.color = active ? 'var(--primary-foreground)' : 'var(--muted-foreground)';
+          tab.style.borderColor = active ? 'var(--primary)' : 'var(--border)';
+        });
+        mathPanels.forEach((p, idx) => {
+          p.classList.toggle('hidden', idx !== stepIdx);
+        });
+      }
+      mathTabs.forEach((tab, idx) => tab.addEventListener('click', () => selectMathStep(idx)));
+
+      const randomProbBtn = document.getElementById('randomProbBtn');
+      const zeroIdentityReadout = document.getElementById('zeroIdentityReadout');
+      function verifyZeroIdentity() {
+        const logits = [Math.random() * 4 - 2, Math.random() * 4 - 2, Math.random() * 4 - 2];
+        const p = softmax(logits);
+        const s = [0, 0, 0];
+        for (let v = 0; v < 3; v++) {
+          for (let j = 0; j < 3; j++) {
+            s[j] += p[v] * ((j === v ? 1 : 0) - p[j]);
+          }
+        }
+        zeroIdentityReadout.innerHTML =
+          `随机生成 p = [${p.map(x => x.toFixed(4)).join(', ')}] (和=${p.reduce((a, b) => a + b, 0).toFixed(4)})<br/>` +
+          `加权求和 ∑ p<sub>v</sub>·∇log p<sub>v</sub> = [<span style="color:var(--success);font-weight:bold">${s.map(x => x.toFixed(6)).join(', ')}</span>]`;
+      }
+      randomProbBtn.addEventListener('click', verifyZeroIdentity);
+      verifyZeroIdentity();
+
+      const topkSlider = document.getElementById('topkMassSlider');
+      const topkMassVal = document.getElementById('topkMassVal');
+      const topkCalcOutput = document.getElementById('topkCalcOutput');
+      function updateTopkCalc() {
+        const pHeadSum = parseFloat(topkSlider.value);
+        const qHeadSum = Math.min(0.995, pHeadSum + 0.03);
+        const pTail = Math.max(1e-6, 1 - pHeadSum);
+        const qTail = Math.max(1e-6, 1 - qHeadSum);
+        const rho = qTail / pTail;
+        const alphaVanilla = rho;
+        const alphaTis = rho * Math.min(1 / rho, 2.0);
+        topkMassVal.textContent = pHeadSum.toFixed(2);
+        topkCalcOutput.innerHTML = `
+          <div class="p-2 rounded bg-[var(--background)]/60 border border-[var(--card-border)]">
+            <div class="text-[var(--muted-foreground)]">p<sub>tail</sub> = 1 − ∑p<sub>head</sub></div>
+            <div class="font-bold">${pTail.toFixed(4)}</div>
+          </div>
+          <div class="p-2 rounded bg-[var(--background)]/60 border border-[var(--card-border)]">
+            <div class="text-[var(--muted-foreground)]">q<sub>tail</sub> = 1 − ∑q<sub>head</sub></div>
+            <div class="font-bold">${qTail.toFixed(4)}</div>
+          </div>
+          <div class="p-2 rounded bg-[var(--background)]/60 border border-[var(--card-border)]">
+            <div class="text-[var(--muted-foreground)]">ρ = q<sub>tail</sub> / p<sub>tail</sub></div>
+            <div class="font-bold text-[var(--primary)]">${rho.toFixed(3)}</div>
+          </div>
+          <div class="p-2 rounded bg-[var(--background)]/60 border border-[var(--card-border)]">
+            <div class="text-[var(--muted-foreground)]">α (TIS≤2 下)</div>
+            <div class="font-bold text-[var(--success)]">${alphaTis.toFixed(3)} (纯SC=${alphaVanilla.toFixed(3)})</div>
+          </div>
+        `;
+      }
+      topkSlider.addEventListener('input', updateTopkCalc);
+      updateTopkCalc();
+
+      // ================================================================
+      // MODULE 4: Interactive PyTorch Code Walkthrough
+      // ================================================================
+      const CODE_LINES = [
+        {
+          code: 'def score_centering_loss(train_logp, samp_logp, topk_ids, sampled_token,',
+          shape: 'train_logp: [B, T, V], samp_logp: [B, T, k]',
+          title: '函数输入参数（第一部分）',
+          math: 'log pθ(v), log qθ(head), top-k IDs, sampled y_t',
+          desc: 'train_logp 是训练引擎算出的全词表对数概率；samp_logp 和 topk_ids 是推理引擎传回来的 Top-k (k=128) 对数概率与词表下标。'
+        },
+        {
+          code: '                         samp_token_logp, advantage,',
+          shape: 'samp_token_logp: [B, T], advantage: [B, 1]',
+          title: '函数输入参数（第二部分）',
+          math: 'log qθ(y_t), Advantage R',
+          desc: '注意：即使最终采到的词落在了 Top-128 之外，也要单独传回它的 samp_token_logp，这样才能算准这个 token 的重要性权重！'
+        },
+        {
+          code: '                         weight_fn=torch.ones_like, eps=1e-6):',
+          shape: 'weight_fn: r -> w(r)',
+          title: '默认超参（零超参 vs 可叠加 IS）',
+          math: 'w(r) = 1 (纯 SC) 或 w(r) = min(r, 2.0) (TIS+SC)',
+          desc: '不传 weight_fn 时默认返回全 1，即纯粹的 Score Centering；传入 tis_weight 或 mis_weight 即可无缝与重要性采样叠加。'
+        },
+        {
+          code: '    head_logp = train_logp.gather(-1, topk_ids)',
+          shape: 'head_logp: [B, T, k]',
+          title: '捞出训练引擎对应的 Top-k 对数概率',
+          math: 'log pθ(v),  v ∈ Head (|H|=k)',
+          desc: '只保留与推理引擎 Top-k ID 对应的训练对数概率（带着梯度计算图！），后面所有反向传播只通过这 k=128 个数回流。'
+        },
+        {
+          code: '    token_logp = train_logp.gather(-1, sampled_token[..., None])[..., 0]',
+          shape: 'token_logp: [B, T]',
+          title: '捞出实际采到那个词的训练对数概率',
+          math: 'log pθ(y_t)',
+          desc: '这就是标准 REINFORCE 损失函数里的主力项 log pθ(y_t)。'
+        },
+        {
+          code: '    p_head, q_head = head_logp.exp(), samp_logp.exp()',
+          shape: 'p_head, q_head: [B, T, k]',
+          title: '还原成普通概率空间 [0, 1]',
+          math: 'p_v = exp(log p_v),  q_v = exp(log q_v)',
+          desc: '算出头部这 k 个词在两个引擎下的真实概率值，准备算剩下的长尾概率总和。'
+        },
+        {
+          code: '    p_tail = (1 - p_head.sum(-1)).clamp_min(eps)',
+          shape: 'p_tail: [B, T]',
+          title: '计算训练引擎的长尾剩余概率总和',
+          math: 'p_tail = max(1 − ∑_{v∈H} p_v, ε)',
+          desc: '1 减去头部 k 个词的概率总和，就是剩下十几万冷门词的总概率；clamp_min(1e-6) 防止数值精度导致除零错误。'
+        },
+        {
+          code: '    q_tail = (1 - q_head.sum(-1)).clamp_min(eps)',
+          shape: 'q_tail: [B, T]',
+          title: '计算推理引擎的长尾剩余概率总和',
+          math: 'q_tail = max(1 − ∑_{v∈H} q_v, ε)',
+          desc: '同理算出推理引擎在尾部残留的总概率质量（不重归一化 Top-k 正是为了保留真实的 q_tail）。'
+        },
+        {
+          code: '    rho = q_tail / p_tail',
+          shape: 'rho: [B, T]',
+          title: '计算长尾放大倍数 ρ',
+          math: 'ρ = q_tail / p_tail',
+          desc: '假设尾部每个词 q_v ≈ ρ · p_v，这就是 Step 7 中推导出的尾部质量缩放比例系数。'
+        },
+        {
+          code: '    alpha = rho * weight_fn(1 / rho)',
+          shape: 'alpha: [B, T]',
+          title: '计算尾部等效缩放系数 α',
+          math: 'α = ρ · w(1/ρ)',
+          desc: '因为尾部每个词的比率 p_v/q_v ≈ 1/ρ，所以加权后的等效尾部质量比例就是 α。若不用 IS (w=1)，α 就直接等于 ρ。'
+        },
+        {
+          code: '    head_weight = weight_fn((head_logp - samp_logp).exp())',
+          shape: 'head_weight: [B, T, k]',
+          title: '计算头部 k 个词各自的重要性权重',
+          math: 'w(v) = weight_fn(p_v / q_v),  v ∈ Head',
+          desc: '在 log 空间做减法再 exp，数值最稳定地算出 Top-k 内部每个词的比率 p/q 及权重。'
+        },
+        {
+          code: '    residual = q_head * head_weight - alpha[..., None] * p_head',
+          shape: 'residual: [B, T, k]',
+          title: '核心精华：计算残差权重（自动抵消全部 15 万尾部词！）',
+          math: 'residual_v = m(v) − α · p_v,  v ∈ Head',
+          desc: '这就是 Step 7 公式的直接落地！因为 ∑_V p ∇log p = 0，把尾部系数 α·p 从头部减掉，就已经等效覆盖了整个 15 万词表！'
+        },
+        {
+          code: '    correction = (residual.detach() * head_logp).sum(-1)',
+          shape: 'correction: [B, T]',
+          title: '构造带 stop_gradient 的中心化标量修正项',
+          math: '∑_{v∈H} sg(residual_v) · log pθ(v)',
+          desc: '极其关键的 .detach()！确保反向传播只对 head_logp 求导，把 residual 当作纯常数权重，从而精准生成零漂移抵消梯度。'
+        },
+        {
+          code: '    token_weight = weight_fn((token_logp - samp_token_logp).exp())',
+          shape: 'token_weight: [B, T]',
+          title: '计算实际采样词的权重 w(y_t)',
+          math: 'w(y_t) = weight_fn(p(y_t) / q(y_t))',
+          desc: '单独用实际采到词的对数概率差算出该词的权重（同样需要 detach）。'
+        },
+        {
+          code: '    return -advantage.detach() * (token_weight.detach() * token_logp - correction)',
+          shape: 'Return loss: [B, T]',
+          title: '返回最终每个 Token 的 Score-Centered Loss！',
+          math: 'L_SC = −sg(R) · (sg(w(y_t)) · log pθ(y_t) − correction)',
+          desc: '大功告成！加负号把“最大化奖励”转成“最小化 Loss”，对 token 掩码求平均后直接 loss.backward() 即可！'
+        }
+      ];
+
+      const codeContainer = document.getElementById('codeLinesContainer');
+      const explainBadge = document.getElementById('codeExplainBadge');
+      const explainShape = document.getElementById('codeExplainShape');
+      const explainTitle = document.getElementById('codeExplainTitle');
+      const explainMath = document.getElementById('codeExplainMath');
+      const explainText = document.getElementById('codeExplainText');
+
+      const codeRowEls = [];
+      CODE_LINES.forEach((item, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'code-line w-full text-left px-3 py-1.5 flex items-start gap-2.5 cursor-pointer border-l-2 border-transparent hover:bg-[var(--card)]';
+        btn.innerHTML = `<span class="text-[var(--muted-foreground)] select-none w-5 shrink-0">${idx + 1}</span><code class="whitespace-pre overflow-x-auto">${item.code.replace(/</g, '&lt;')}</code>`;
+        btn.addEventListener('click', () => selectCodeLine(idx));
+        codeContainer.appendChild(btn);
+        codeRowEls.push(btn);
+      });
+
+      function selectCodeLine(idx) {
+        const item = CODE_LINES[idx];
+        codeRowEls.forEach((el, i) => {
+          const active = i === idx;
+          el.style.backgroundColor = active ? 'color-mix(in srgb, var(--primary) 12%, transparent)' : '';
+          el.style.borderLeftColor = active ? 'var(--primary)' : 'transparent';
+        });
+        explainBadge.textContent = `第 ${idx + 1} 行`;
+        explainShape.textContent = item.shape;
+        explainTitle.textContent = item.title;
+        explainMath.textContent = item.math;
+        explainText.textContent = item.desc;
+      }
+
+      setBgMode('tim');
+      selectMathStep(0);
+      selectCodeLine(11);
+      updateLabControlsUI();
+      drawBgFrame();
+      drawLabCanvas();
+
+      window.addEventListener('resize', () => {
+        drawBgFrame();
+        drawLabCanvas();
+      });
+      window.addEventListener('themechange', () => {
+        drawBgFrame();
+        drawLabCanvas();
+      });
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          applyStandalonePaletteIfNeeded();
+          drawBgFrame();
+          drawLabCanvas();
+        });
+      }
+
+      bgRaf = requestAnimationFrame(stepBgLoop);
+      labRaf = requestAnimationFrame(stepLabLoop);
+    })();
+  </script>
+</body>
+</html>

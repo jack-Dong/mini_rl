@@ -1,0 +1,4964 @@
+{
+  "status": "completed",
+  "args": {
+    "model_id": "Qwen/Qwen3-0.6B",
+    "methods": [
+      "pg",
+      "is",
+      "tis",
+      "tis_sc"
+    ],
+    "steps": 80,
+    "eval_every": 10,
+    "num_prompts": 8,
+    "group_size": 4,
+    "eval_prompts": 64,
+    "max_new_tokens": 160,
+    "micro_batch_size": 4,
+    "num_operands": 3,
+    "max_number": 25,
+    "max_target": 200,
+    "lr": 0.006,
+    "max_grad_norm": 1.0,
+    "staleness": 2,
+    "weight_mismatch_sigma": 0.015,
+    "topk": 128,
+    "tis_max": 1.4,
+    "reward_mode": "group_centered",
+    "seed": 0,
+    "vllm_dtype": "float16",
+    "gpu_memory_utilization": 0.18,
+    "max_model_len": 512,
+    "output_dir": "/content/exp2"
+  },
+  "engine_drift_probe": {
+    "sampler_engine": "vLLM V1 (float16, PagedAttention+FlashInfer, staleness=2, sigma=0.015)",
+    "trainer_engine": "HF FP32 master + BF16 eager parallel forward",
+    "mean_abs_logp_diff": 0.03275809437036514,
+    "max_abs_logp_diff": 0.7792298793792725,
+    "initial_kl_samp_train": 0.0027126946952193975,
+    "initial_max_is_ratio": 2.179792881011963
+  },
+  "results": [
+    {
+      "method": "pg",
+      "name": "PG (Vanilla)",
+      "elapsed_sec": 983.5265760421753,
+      "history": [
+        {
+          "step": 0.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.0019762613607528516,
+          "grad_norm": 0.0,
+          "max_is_ratio": 1.615774393081665,
+          "mean_len": 83.125,
+          "eval_reward": 0.171875
+        },
+        {
+          "step": 1.0,
+          "train_reward": 0.125,
+          "loss": 0.02750606508925557,
+          "kl_samp_train": 0.0007532980319456006,
+          "grad_norm": 8.451168060302734,
+          "max_is_ratio": 1.857332706451416,
+          "mean_len": 70.5
+        },
+        {
+          "step": 2.0,
+          "train_reward": 0.125,
+          "loss": -0.080625856295228,
+          "kl_samp_train": 0.0051009324152334855,
+          "grad_norm": 3.9003400802612305,
+          "max_is_ratio": 1.6870640516281128,
+          "mean_len": 128.25
+        },
+        {
+          "step": 3.0,
+          "train_reward": 0.25,
+          "loss": -0.04805348161607981,
+          "kl_samp_train": 0.0043637664078577465,
+          "grad_norm": 5.782551288604736,
+          "max_is_ratio": 2.4200923442840576,
+          "mean_len": 109.5
+        },
+        {
+          "step": 4.0,
+          "train_reward": 0.25,
+          "loss": -0.00931465346366167,
+          "kl_samp_train": 0.005372711087591085,
+          "grad_norm": 8.814310073852539,
+          "max_is_ratio": 10.319491386413574,
+          "mean_len": 99.5
+        },
+        {
+          "step": 5.0,
+          "train_reward": 0.125,
+          "loss": -0.0051812962628901005,
+          "kl_samp_train": -0.0007140535659106203,
+          "grad_norm": 4.553650856018066,
+          "max_is_ratio": 4.783419609069824,
+          "mean_len": 129.0
+        },
+        {
+          "step": 6.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.009837237961647165,
+          "grad_norm": 0.0,
+          "max_is_ratio": 1.8584595918655396,
+          "mean_len": 131.0
+        },
+        {
+          "step": 7.0,
+          "train_reward": 0.25,
+          "loss": -0.1888813367113471,
+          "kl_samp_train": 0.00033353773352190935,
+          "grad_norm": 7.47395658493042,
+          "max_is_ratio": 2.3723654747009277,
+          "mean_len": 90.5
+        },
+        {
+          "step": 8.0,
+          "train_reward": 0.25,
+          "loss": -0.07750537618994713,
+          "kl_samp_train": 0.01849048914455455,
+          "grad_norm": 9.605744361877441,
+          "max_is_ratio": 1.774907112121582,
+          "mean_len": 127.375
+        },
+        {
+          "step": 9.0,
+          "train_reward": 0.125,
+          "loss": -0.09360965923406184,
+          "kl_samp_train": 0.0005221272534039354,
+          "grad_norm": 3.241046190261841,
+          "max_is_ratio": 3.8408093452453613,
+          "mean_len": 120.625
+        },
+        {
+          "step": 10.0,
+          "train_reward": 0.375,
+          "loss": -0.04615810140967369,
+          "kl_samp_train": -0.005912693789434505,
+          "grad_norm": 9.045073509216309,
+          "max_is_ratio": 3.612184524536133,
+          "mean_len": 82.625,
+          "eval_reward": 0.125
+        },
+        {
+          "step": 11.0,
+          "train_reward": 0.125,
+          "loss": -0.12837752560153604,
+          "kl_samp_train": 0.0038972702940945044,
+          "grad_norm": 4.4712910652160645,
+          "max_is_ratio": 2.448958158493042,
+          "mean_len": 85.375
+        },
+        {
+          "step": 12.0,
+          "train_reward": 0.125,
+          "loss": -0.02597185969352722,
+          "kl_samp_train": 0.020219207877998874,
+          "grad_norm": 6.891802787780762,
+          "max_is_ratio": 2.202035665512085,
+          "mean_len": 73.25
+        },
+        {
+          "step": 13.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.02739790365809486,
+          "grad_norm": 0.0,
+          "max_is_ratio": 4.551770210266113,
+          "mean_len": 52.5
+        },
+        {
+          "step": 14.0,
+          "train_reward": 0.125,
+          "loss": -0.06486372044309974,
+          "kl_samp_train": 0.022204632291169923,
+          "grad_norm": 6.559610366821289,
+          "max_is_ratio": 10.038074493408203,
+          "mean_len": 66.875
+        },
+        {
+          "step": 15.0,
+          "train_reward": 0.25,
+          "loss": -0.056229556910693645,
+          "kl_samp_train": 0.027858236471362933,
+          "grad_norm": 10.935425758361816,
+          "max_is_ratio": 1.7095975875854492,
+          "mean_len": 66.375
+        },
+        {
+          "step": 16.0,
+          "train_reward": 0.375,
+          "loss": -0.19041905365884304,
+          "kl_samp_train": 0.018578030499714786,
+          "grad_norm": 11.050596237182617,
+          "max_is_ratio": 2.9915826320648193,
+          "mean_len": 95.75
+        },
+        {
+          "step": 17.0,
+          "train_reward": 0.25,
+          "loss": -0.04652023687958717,
+          "kl_samp_train": 0.025348925812152593,
+          "grad_norm": 8.65090274810791,
+          "max_is_ratio": 3.2536258697509766,
+          "mean_len": 94.125
+        },
+        {
+          "step": 18.0,
+          "train_reward": 0.125,
+          "loss": -0.09321554098278284,
+          "kl_samp_train": 0.005473171717815913,
+          "grad_norm": 4.419320106506348,
+          "max_is_ratio": 2.045929193496704,
+          "mean_len": 106.625
+        },
+        {
+          "step": 19.0,
+          "train_reward": 0.375,
+          "loss": -0.2336651049554348,
+          "kl_samp_train": 0.013265406968546849,
+          "grad_norm": 6.984090805053711,
+          "max_is_ratio": 3.516843318939209,
+          "mean_len": 127.5
+        },
+        {
+          "step": 20.0,
+          "train_reward": 0.25,
+          "loss": -0.06675061583518982,
+          "kl_samp_train": 0.023181403575734023,
+          "grad_norm": 7.477924823760986,
+          "max_is_ratio": 6.061442852020264,
+          "mean_len": 116.875,
+          "eval_reward": 0.21875
+        },
+        {
+          "step": 21.0,
+          "train_reward": 0.125,
+          "loss": 0.05921386554837227,
+          "kl_samp_train": 0.0034893444953679165,
+          "grad_norm": 7.442083358764648,
+          "max_is_ratio": 6.508488655090332,
+          "mean_len": 102.625
+        },
+        {
+          "step": 22.0,
+          "train_reward": 0.625,
+          "loss": -0.13912255316972733,
+          "kl_samp_train": 0.005099460132631884,
+          "grad_norm": 9.621350288391113,
+          "max_is_ratio": 1.9822087287902832,
+          "mean_len": 101.125
+        },
+        {
+          "step": 23.0,
+          "train_reward": 0.125,
+          "loss": -0.04154851473867893,
+          "kl_samp_train": 0.014728255835755764,
+          "grad_norm": 6.263762474060059,
+          "max_is_ratio": 3.1489715576171875,
+          "mean_len": 122.625
+        },
+        {
+          "step": 24.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.006788935947520429,
+          "grad_norm": 0.0,
+          "max_is_ratio": 2.0047426223754883,
+          "mean_len": 116.625
+        },
+        {
+          "step": 25.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.013626523048947611,
+          "grad_norm": 0.0,
+          "max_is_ratio": 1.7437491416931152,
+          "mean_len": 115.125
+        },
+        {
+          "step": 26.0,
+          "train_reward": 0.125,
+          "loss": -0.04839960020035505,
+          "kl_samp_train": 0.0072883693841252015,
+          "grad_norm": 7.365472793579102,
+          "max_is_ratio": 2.957850694656372,
+          "mean_len": 102.75
+        },
+        {
+          "step": 27.0,
+          "train_reward": 0.125,
+          "loss": -0.058436534367501736,
+          "kl_samp_train": 0.006727888834448813,
+          "grad_norm": 5.311492443084717,
+          "max_is_ratio": 3.459317207336426,
+          "mean_len": 107.75
+        },
+        {
+          "step": 28.0,
+          "train_reward": 0.25,
+          "loss": -0.07756722066551447,
+          "kl_samp_train": 0.013926269194281353,
+          "grad_norm": 6.739814758300781,
+          "max_is_ratio": 9.351167678833008,
+          "mean_len": 106.75
+        },
+        {
+          "step": 29.0,
+          "train_reward": 0.375,
+          "loss": -0.04079254437237978,
+          "kl_samp_train": 0.011573197721949749,
+          "grad_norm": 11.09414291381836,
+          "max_is_ratio": 6.718509674072266,
+          "mean_len": 92.125
+        },
+        {
+          "step": 30.0,
+          "train_reward": 0.625,
+          "loss": -0.13349825516343117,
+          "kl_samp_train": 0.01905553905045636,
+          "grad_norm": 10.829778671264648,
+          "max_is_ratio": 1.7551767826080322,
+          "mean_len": 72.375,
+          "eval_reward": 0.4375
+        },
+        {
+          "step": 31.0,
+          "train_reward": 0.375,
+          "loss": -0.0640256330370903,
+          "kl_samp_train": 0.00722885821206668,
+          "grad_norm": 9.50140380859375,
+          "max_is_ratio": 6.9754438400268555,
+          "mean_len": 97.0
+        },
+        {
+          "step": 32.0,
+          "train_reward": 0.375,
+          "loss": 0.025539474561810493,
+          "kl_samp_train": 0.019963643980543143,
+          "grad_norm": 9.775965690612793,
+          "max_is_ratio": 2.9177134037017822,
+          "mean_len": 92.25
+        },
+        {
+          "step": 33.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.010123631288838942,
+          "grad_norm": 0.0,
+          "max_is_ratio": 2.9116344451904297,
+          "mean_len": 139.75
+        },
+        {
+          "step": 34.0,
+          "train_reward": 0.375,
+          "loss": -0.12437768094241619,
+          "kl_samp_train": 0.006825361299314839,
+          "grad_norm": 7.935091018676758,
+          "max_is_ratio": 4.8103508949279785,
+          "mean_len": 119.25
+        },
+        {
+          "step": 35.0,
+          "train_reward": 0.375,
+          "loss": -0.2448067795485258,
+          "kl_samp_train": 0.007078439362737513,
+          "grad_norm": 8.876075744628906,
+          "max_is_ratio": 4.6391472816467285,
+          "mean_len": 112.125
+        },
+        {
+          "step": 36.0,
+          "train_reward": 0.5,
+          "loss": 0.05992173217236996,
+          "kl_samp_train": 0.004210458706940061,
+          "grad_norm": 10.172309875488281,
+          "max_is_ratio": 3.078630208969116,
+          "mean_len": 101.125
+        },
+        {
+          "step": 37.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.005759996041319424,
+          "grad_norm": 0.0,
+          "max_is_ratio": 8.001228332519531,
+          "mean_len": 83.125
+        },
+        {
+          "step": 38.0,
+          "train_reward": 0.25,
+          "loss": -0.07572869397699833,
+          "kl_samp_train": 0.03311262277707662,
+          "grad_norm": 6.93185567855835,
+          "max_is_ratio": 3.7561705112457275,
+          "mean_len": 91.25
+        },
+        {
+          "step": 39.0,
+          "train_reward": 0.375,
+          "loss": -0.06933118216693401,
+          "kl_samp_train": 0.010439219346222385,
+          "grad_norm": 7.8113627433776855,
+          "max_is_ratio": 2.0853559970855713,
+          "mean_len": 132.125
+        },
+        {
+          "step": 40.0,
+          "train_reward": 0.375,
+          "loss": -0.1053204108029604,
+          "kl_samp_train": 0.011682737502599235,
+          "grad_norm": 10.005914688110352,
+          "max_is_ratio": 2.7817466259002686,
+          "mean_len": 88.25,
+          "eval_reward": 0.1875
+        },
+        {
+          "step": 41.0,
+          "train_reward": 0.375,
+          "loss": -0.19623441621661186,
+          "kl_samp_train": 0.01790332386298948,
+          "grad_norm": 8.286137580871582,
+          "max_is_ratio": 4.073716163635254,
+          "mean_len": 113.25
+        },
+        {
+          "step": 42.0,
+          "train_reward": 0.5,
+          "loss": -0.22418313659727573,
+          "kl_samp_train": 0.002741193253061046,
+          "grad_norm": 7.96353006362915,
+          "max_is_ratio": 1.9905086755752563,
+          "mean_len": 115.0
+        },
+        {
+          "step": 43.0,
+          "train_reward": 0.25,
+          "loss": -0.04460814781486988,
+          "kl_samp_train": 0.003554516463562231,
+          "grad_norm": 7.819052696228027,
+          "max_is_ratio": 2.1873505115509033,
+          "mean_len": 139.25
+        },
+        {
+          "step": 44.0,
+          "train_reward": 0.375,
+          "loss": -0.10573931038379669,
+          "kl_samp_train": 0.00632154551045648,
+          "grad_norm": 8.953495979309082,
+          "max_is_ratio": 4.931508541107178,
+          "mean_len": 108.75
+        },
+        {
+          "step": 45.0,
+          "train_reward": 0.5,
+          "loss": -0.05770882032811642,
+          "kl_samp_train": 0.007022029122304055,
+          "grad_norm": 12.000575065612793,
+          "max_is_ratio": 1.9558334350585938,
+          "mean_len": 76.125
+        },
+        {
+          "step": 46.0,
+          "train_reward": 0.25,
+          "loss": -0.03895352967083454,
+          "kl_samp_train": 0.01895019539537277,
+          "grad_norm": 6.730128288269043,
+          "max_is_ratio": 1.8281092643737793,
+          "mean_len": 93.5
+        },
+        {
+          "step": 47.0,
+          "train_reward": 0.375,
+          "loss": -0.041112035512924194,
+          "kl_samp_train": 0.007407197110636993,
+          "grad_norm": 8.73345947265625,
+          "max_is_ratio": 2.7554008960723877,
+          "mean_len": 112.25
+        },
+        {
+          "step": 48.0,
+          "train_reward": 0.125,
+          "loss": -0.03420665394514799,
+          "kl_samp_train": 0.003455569703720923,
+          "grad_norm": 7.089211463928223,
+          "max_is_ratio": 3.6725690364837646,
+          "mean_len": 60.875
+        },
+        {
+          "step": 49.0,
+          "train_reward": 0.5,
+          "loss": -0.132198890671134,
+          "kl_samp_train": 0.018126159443138796,
+          "grad_norm": 9.353174209594727,
+          "max_is_ratio": 2.1053569316864014,
+          "mean_len": 72.375
+        },
+        {
+          "step": 50.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.011778244970312456,
+          "grad_norm": 0.0,
+          "max_is_ratio": 2.6038477420806885,
+          "mean_len": 77.75,
+          "eval_reward": 0.375
+        },
+        {
+          "step": 51.0,
+          "train_reward": 0.25,
+          "loss": -0.08738729683682323,
+          "kl_samp_train": 0.011357608645236666,
+          "grad_norm": 8.338617324829102,
+          "max_is_ratio": 2.281053304672241,
+          "mean_len": 77.125
+        },
+        {
+          "step": 52.0,
+          "train_reward": 0.25,
+          "loss": -0.04323124140501022,
+          "kl_samp_train": 0.012778997923198499,
+          "grad_norm": 5.732790946960449,
+          "max_is_ratio": 2.708367347717285,
+          "mean_len": 59.375
+        },
+        {
+          "step": 53.0,
+          "train_reward": 0.375,
+          "loss": -0.004980829078704119,
+          "kl_samp_train": 0.00974681680895271,
+          "grad_norm": 8.831639289855957,
+          "max_is_ratio": 2.6714882850646973,
+          "mean_len": 95.5
+        },
+        {
+          "step": 54.0,
+          "train_reward": 0.25,
+          "loss": 0.11130241770297289,
+          "kl_samp_train": 0.010256148159415895,
+          "grad_norm": 9.937527656555176,
+          "max_is_ratio": 2.2447495460510254,
+          "mean_len": 84.625
+        },
+        {
+          "step": 55.0,
+          "train_reward": 0.25,
+          "loss": -0.02864021435379982,
+          "kl_samp_train": 0.011262610884610138,
+          "grad_norm": 9.688003540039062,
+          "max_is_ratio": 16.78280258178711,
+          "mean_len": 67.75
+        },
+        {
+          "step": 56.0,
+          "train_reward": 0.25,
+          "loss": -0.0024388153105974197,
+          "kl_samp_train": 0.06001975147454723,
+          "grad_norm": 11.183460235595703,
+          "max_is_ratio": 9.269477844238281,
+          "mean_len": 58.625
+        },
+        {
+          "step": 57.0,
+          "train_reward": 0.25,
+          "loss": -0.15710052754729986,
+          "kl_samp_train": 0.013903041709490195,
+          "grad_norm": 8.003585815429688,
+          "max_is_ratio": 2.09037184715271,
+          "mean_len": 86.125
+        },
+        {
+          "step": 58.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.014533117739823612,
+          "grad_norm": 0.0,
+          "max_is_ratio": 3.1139278411865234,
+          "mean_len": 102.75
+        },
+        {
+          "step": 59.0,
+          "train_reward": 0.375,
+          "loss": -0.21503078192472458,
+          "kl_samp_train": 0.031053418743199314,
+          "grad_norm": 8.913690567016602,
+          "max_is_ratio": 2.822138547897339,
+          "mean_len": 101.5
+        },
+        {
+          "step": 60.0,
+          "train_reward": 0.25,
+          "loss": -0.051388577558100224,
+          "kl_samp_train": 0.004097492987168703,
+          "grad_norm": 7.260347366333008,
+          "max_is_ratio": 3.4032793045043945,
+          "mean_len": 130.5,
+          "eval_reward": 0.359375
+        },
+        {
+          "step": 61.0,
+          "train_reward": 0.25,
+          "loss": -0.12998728547245264,
+          "kl_samp_train": 0.012075209675671219,
+          "grad_norm": 5.851011753082275,
+          "max_is_ratio": 3.601407766342163,
+          "mean_len": 115.5
+        },
+        {
+          "step": 62.0,
+          "train_reward": 0.5,
+          "loss": -0.13336556777358055,
+          "kl_samp_train": 0.02110232885640401,
+          "grad_norm": 15.94586181640625,
+          "max_is_ratio": 6.166804313659668,
+          "mean_len": 104.0
+        },
+        {
+          "step": 63.0,
+          "train_reward": 0.5,
+          "loss": -0.18431699462234974,
+          "kl_samp_train": 0.012750779135655256,
+          "grad_norm": 7.532493591308594,
+          "max_is_ratio": 2.0301055908203125,
+          "mean_len": 124.625
+        },
+        {
+          "step": 64.0,
+          "train_reward": 0.25,
+          "loss": -0.15709951613098383,
+          "kl_samp_train": 0.0022944055010924985,
+          "grad_norm": 5.477940082550049,
+          "max_is_ratio": 3.124328851699829,
+          "mean_len": 124.375
+        },
+        {
+          "step": 65.0,
+          "train_reward": 0.375,
+          "loss": -0.12151241302490234,
+          "kl_samp_train": 0.01875755857567926,
+          "grad_norm": 8.87656307220459,
+          "max_is_ratio": 16.499191284179688,
+          "mean_len": 111.75
+        },
+        {
+          "step": 66.0,
+          "train_reward": 0.5,
+          "loss": -0.17844931595027447,
+          "kl_samp_train": 0.017054073950823617,
+          "grad_norm": 9.117668151855469,
+          "max_is_ratio": 3.4444801807403564,
+          "mean_len": 95.625
+        },
+        {
+          "step": 67.0,
+          "train_reward": 0.25,
+          "loss": -0.1833873586729169,
+          "kl_samp_train": 0.011019018129209477,
+          "grad_norm": 6.593874931335449,
+          "max_is_ratio": 6.788974285125732,
+          "mean_len": 123.25
+        },
+        {
+          "step": 68.0,
+          "train_reward": 0.5,
+          "loss": -0.10163916647434235,
+          "kl_samp_train": 0.031370956915377564,
+          "grad_norm": 9.972332954406738,
+          "max_is_ratio": 3.256927251815796,
+          "mean_len": 118.25
+        },
+        {
+          "step": 69.0,
+          "train_reward": 0.375,
+          "loss": -0.21279043797403574,
+          "kl_samp_train": 0.006692279765076959,
+          "grad_norm": 7.326505661010742,
+          "max_is_ratio": 4.740019798278809,
+          "mean_len": 116.625
+        },
+        {
+          "step": 70.0,
+          "train_reward": 0.25,
+          "loss": -0.051708159036934376,
+          "kl_samp_train": 0.028153212276812764,
+          "grad_norm": 8.510184288024902,
+          "max_is_ratio": 2.9027633666992188,
+          "mean_len": 119.875,
+          "eval_reward": 0.390625
+        },
+        {
+          "step": 71.0,
+          "train_reward": 0.25,
+          "loss": -0.053266885690391064,
+          "kl_samp_train": 0.03472101326868561,
+          "grad_norm": 6.049835681915283,
+          "max_is_ratio": 3.093559503555298,
+          "mean_len": 122.625
+        },
+        {
+          "step": 72.0,
+          "train_reward": 0.625,
+          "loss": -0.09061603806912899,
+          "kl_samp_train": 0.01869363267466707,
+          "grad_norm": 10.87142276763916,
+          "max_is_ratio": 3.9183902740478516,
+          "mean_len": 79.5
+        },
+        {
+          "step": 73.0,
+          "train_reward": 0.25,
+          "loss": -0.11366035602986813,
+          "kl_samp_train": 0.01912202302993854,
+          "grad_norm": 9.217137336730957,
+          "max_is_ratio": 6.752218246459961,
+          "mean_len": 83.875
+        },
+        {
+          "step": 74.0,
+          "train_reward": 0.5,
+          "loss": -0.04554961994290352,
+          "kl_samp_train": 0.036984009063796494,
+          "grad_norm": 9.249051094055176,
+          "max_is_ratio": 2.9223783016204834,
+          "mean_len": 75.5
+        },
+        {
+          "step": 75.0,
+          "train_reward": 0.5,
+          "loss": -0.21155456267297268,
+          "kl_samp_train": 0.00959246433698214,
+          "grad_norm": 8.188108444213867,
+          "max_is_ratio": 2.9114363193511963,
+          "mean_len": 121.875
+        },
+        {
+          "step": 76.0,
+          "train_reward": 0.375,
+          "loss": -0.07033569552004337,
+          "kl_samp_train": 0.013137555685166126,
+          "grad_norm": 10.082446098327637,
+          "max_is_ratio": 3.307034492492676,
+          "mean_len": 87.375
+        },
+        {
+          "step": 77.0,
+          "train_reward": 0.5,
+          "loss": -0.23771086148917675,
+          "kl_samp_train": 0.041342117539306986,
+          "grad_norm": 12.46066951751709,
+          "max_is_ratio": 2.5675761699676514,
+          "mean_len": 89.25
+        },
+        {
+          "step": 78.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.020585654599407383,
+          "grad_norm": 0.0,
+          "max_is_ratio": 3.7225186824798584,
+          "mean_len": 104.625
+        },
+        {
+          "step": 79.0,
+          "train_reward": 0.625,
+          "loss": -0.13768299110233784,
+          "kl_samp_train": 0.025794525957498395,
+          "grad_norm": 11.067229270935059,
+          "max_is_ratio": 2.9617767333984375,
+          "mean_len": 114.375,
+          "eval_reward": 0.359375
+        }
+      ],
+      "eval_samples": {
+        "step_0": {
+          "success": [
+            {
+              "numbers": [
+                19,
+                6,
+                3
+              ],
+              "target": 22,
+              "solution": "19 + (6 - 3)",
+              "completion": "To create an equation that equals 22 using the numbers [19, 6, 3], you can do the following:\n\n$$\n(19 - 6) + 3 = 13 + 3 = 16\n$$\n\nHowever, this does not result in 22. Let's try again.\n\n$$\n(19 - 3) = 16\n$$\n\n$$\n(16 + 6) = 22\n$$\n\nSo the correct equation is:\n\n$$\n(19 - 3) + 6 = 22\n$$\n\n<answer> (19 - 3) + 6 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                17,
+                23
+              ],
+              "target": 17,
+              "solution": "17 + (23 - 23)",
+              "completion": "To create an equation using the numbers [23, 17, 23] and basic arithmetic operations that equals 17, we can do:\n\n(17 - 23) + 23 = 17\n\n**Answer:**  \n<answer> (17 - 23) + 23 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                7,
+                14
+              ],
+              "target": 14,
+              "solution": "(7 + 14) - 7",
+              "completion": "To create an equation that equals 14 using the numbers [7, 7, 14], you can use division. Here's the solution:\n\n**Answer:**  \n<answer> (14 / 7) * 7 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                18,
+                24,
+                15
+              ],
+              "target": 57,
+              "solution": "(24 + 15) + 18",
+              "completion": "To create an equation using the numbers [18, 24, 15] and basic arithmetic operations that equals 57, we can solve it as follows:\n\n1. Add 18 and 15: $18 + 15 = 33$\n2. Add 24 to the result: $33 + 24 = 57$\n\nSo, the equation is:\n\n<answer> (18 + 15) + 24 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                13,
+                20
+              ],
+              "target": 56,
+              "solution": "(13 + 23) + 20",
+              "completion": "To create an equation using the numbers [23, 13, 20] and basic arithmetic operations that equals 56, we can solve it as follows:\n\n1. Add 20 and 13: $ 20 + 13 = 33 $  \n2. Add 33 to 23: $ 33 + 23 = 56 $\n\nSo, the equation is:\n\n$$\n(20 + 13) + 23 = 56\n$$\n\nFinal answer: <answer> (20 + 13) + 23 </answer>.",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                20,
+                25
+              ],
+              "target": 20,
+              "solution": "(15 + 25) - 20",
+              "completion": "To create an equation using the numbers [15, 20, 25] and basic arithmetic operations that equals 20, we can use:\n\n$$\n(15 - 20) + 25 = 15 - 20 + 25 = 20\n$$\n\nFinal answer: <answer> (15 - 20) + 25 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                13,
+                21
+              ],
+              "target": 54,
+              "solution": "13 + (21 + 20)",
+              "completion": "To create an equation using the numbers [20, 13, 21] and basic arithmetic operations that equals 54, we can solve it as follows:\n\n13 + 20 + 21 = 54\n\n### Final Answer:\n<answer> (13 + 20) + 21 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                3,
+                23,
+                22
+              ],
+              "target": 135,
+              "solution": "(22 + 23) * 3",
+              "completion": "To create an equation using the numbers [3, 23, 22] that equals 135, we can use the following step-by-step:\n\n1. Add 23 and 22:  \n   $ 23 + 22 = 45 $\n\n2. Multiply the result by 3:  \n   $ 45 \\times 3 = 135 $\n\nSo, the equation is:  \n**<answer> (23 + 22) * 3 </answer>**",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                6,
+                21
+              ],
+              "target": 115,
+              "solution": "(6 * 21) - 11",
+              "completion": "To create an equation using the numbers [11, 6, 21] that equals 115, we can use the following process:\n\n11 + 6 \u00d7 21 = 11 + 126 = 137\n\n115 is not equal to 137.\n\nWe can try again:\n\n21 \u00d7 6 + 11 = 126 + 11 = 137\n\nAgain, not equal to 115.\n\nLet's try using division:\n\n(21 \u00d7 6) - 11 = 126 - 11 = 115\n\nThis works.\n\n<answer> (21 \u00d7 6) - 11 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                19,
+                23,
+                19
+              ],
+              "target": 23,
+              "solution": "23 * (19 / 19)",
+              "completion": "To create an equation using the numbers [19, 23, 19] and basic arithmetic operations that equals 23, we can use:\n\n$$\n(19 - 19) + 23 = 23\n$$\n\n<answer> (19 - 19) + 23 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            }
+          ],
+          "failure": [
+            {
+              "numbers": [
+                10,
+                3,
+                1
+              ],
+              "target": 29,
+              "solution": "(3 * 10) - 1",
+              "completion": "To create an equation that equals 29 using the numbers [10, 3, 1], you can do the following:\n\n$$\n(10 - 3) \\times 1 = 7\n$$\n\nHowever, this equation doesn't equal 29. Let's try again:\n\n$$\n(3 + 10) = 13\n$$\n\nThis also doesn't equal 29. Let's try:\n\n$$\n(10 + 3) + 1 = 14\n$$\n\nStill not 29.\n\n$$\n(3 \\times 1) + (10) \\times 1 = 13\n$$\n\nAlso not 29.\n\nAfter trying other combinations, let's try:\n\n$$\n(",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                10,
+                13,
+                11
+              ],
+              "target": 14,
+              "solution": "(11 - 10) + 13",
+              "completion": "To create an equation using the numbers [10, 13, 11] and basic arithmetic operations that equals 14, we can solve it as follows:\n\n1. Add 10 and 11: $10 + 11 = 21$\n2. Subtract 13 from the result: $21 - 13 = 8$\n\nThis does not result in 14. Let's try again:\n\n1. Use only one number and add it to another: $11 + 13 = 24$\n2. Subtract the remaining number: $24 - 10 = 14$\n\nFinal equation:  \n$$\n(13 + 11) - 10 = 14\n",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                2,
+                5,
+                15
+              ],
+              "target": 65,
+              "solution": "(15 - 2) * 5",
+              "completion": "To create an equation that equals 65 using the numbers [2, 5, 15], you can do the following:\n\n$$ (15 \\times 2) + 5 = 65 $$\n\n$$ <answer> (15 \\times 2) + 5 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                5,
+                7,
+                5
+              ],
+              "target": 7,
+              "solution": "(5 * 7) / 5",
+              "completion": "To create an equation using the numbers [5, 7, 5] that equals 7, we can use division:\n\n$$\n(7 - 5) = 7\n$$\n\nSo the equation is:\n\n$$\n\\boxed{(7 - 5) = 7}\n$$",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                1,
+                18
+              ],
+              "target": 29,
+              "solution": "(18 + 11) / 1",
+              "completion": "To create an equation with the numbers [11, 1, 18] that equals 29, use the arithmetic operation:\n\n$$\n(11 - 1) + 18 = 29\n$$\n\nSo the final answer is:\n\n<answer> (11 - 1) + 18 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                1,
+                8
+              ],
+              "target": 152,
+              "solution": "(20 - 1) * 8",
+              "completion": "To create an equation with the numbers [20, 1, 8] that equals 152:\n\nWe start with the largest numbers since 20 is large, and then use multiplication.  \n$ (8 + 1) \\times 20 = 152 $\n\n**Work:**  \n$ (8 + 1) \\times 20 = 152 $\n\n<answer> (8 + 1) \u00d7 20 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                11,
+                8
+              ],
+              "target": 26,
+              "solution": "8 + (11 + 7)",
+              "completion": "To create an equation that equals 26 using the numbers [7, 11, 8], you can do the following:\n\n$$\n(7 + 11) - 8 = 18\n$$\n\nHowever, another equation using these numbers with basic arithmetic operations is:\n\n$$\n(11 + 8) - 7 = 12\n$$\n\nThis approach shows that the numbers can only be used once.\n\n$$\n\\boxed{(11 + 8) - 7 = 12}\n$$\n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                4,
+                9
+              ],
+              "target": 25,
+              "solution": "(4 * 9) - 11",
+              "completion": "To create an equation that equals 25 using the numbers [11, 4, 9], you can do the following:\n\n$$\n(11 - 4) \\times 9 = 7 \\times 9 = 63\n$$\n\nWait, that doesn't equal 25. Let's try again.\n\n$$\n(11 - 9) = 2\n$$\n\n$$\n4 \\times 2 = 8\n$$\n\nNo, that's still more than 25. Let's try using all three numbers:\n\n$$\n(11 - 9) + (4 \\times 1) = 2 + 4 = 6$$\n\nStill not right.\n\nLet's try:\n\n$$\n(11 + ",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                21,
+                13
+              ],
+              "target": 7,
+              "solution": "(15 - 21) + 13",
+              "completion": "To create an equation with the numbers [15, 21, 13] that equals 7, use the operation:\n\n$$\n(21 - 15) = 6\n$$\n\nNow add 13:\n\n$$\n6 + 13 = 19\n$$\n\nThis doesn't equal 7. Let's try:\n\n$$\n13 - 21 + 15 = 7\n$$\n\nThis works!\n\n$$\n\\boxed{13 - 21 + 15 = 7}\n$$\n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                24,
+                18
+              ],
+              "target": 4,
+              "solution": "24 / (18 - 12)",
+              "completion": "To create an equation with the numbers [12, 24, 18] that equals 4, use the operation:\n\n$$\n(24 - 18) = 6\n$$\n\nTo get 4, divide 6 by 3, but we only have 4 numbers. So instead, use:\n\n$$\n(12 + 18) = 30, \\quad \\text{then divide by (24 + 18)} = 42, \\quad \\text{and find } (30 \\div 42) = 4. (30/42 = 1.0x \\text{ fraction})$\n\nSo the correct equation is:\n\n$$\n(24 - 18)",
+              "reward": 0.0,
+              "source": "eval_main"
+            }
+          ]
+        },
+        "step_79": {
+          "success": [
+            {
+              "numbers": [
+                10,
+                13,
+                11
+              ],
+              "target": 14,
+              "solution": "(11 - 10) + 13",
+              "completion": "1. Start with the numbers: [10, 13, 11]\n\n2. Try basic operations to get close to 14:\n\n13 + 11 = 24  \n24 - 10 = 14\n\nSo the equation is:  \n**13 + 11 - 10 = 14**\n\n<answer> 13 + 11 - 10 = 14 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                17,
+                23
+              ],
+              "target": 17,
+              "solution": "17 + (23 - 23)",
+              "completion": "1. Start with the numbers: [23, 17, 23]\n\n2. Try basic operations to get close to 17:\n\n   - 23 - 17 = 6  \n   - 6 + 23 = 29  \n\nThis doesn't help directly. Let's try a different combination:\n\n3. Try:  \n   17 + 23 - 23 = 17\n\n**Final answer:**  \n<answer> 17 + 23 - 23 = 17 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                21,
+                4
+              ],
+              "target": 29,
+              "solution": "12 + (21 - 4)",
+              "completion": "**Reasoning:**  \nWe have the numbers [12, 21, 4]. We can try:\n\n$ 21 + 4 = 25 $, and then add 12:  \n$ 25 + 12 = 37 $.  \n\nThis doesn't equal 29. Let's try:\n\n$ 12 + 21 = 33 $, then subtract 4:  \n$ 33 - 4 = 29 $.  \n\n**Final answer:**  \n<answer> 12 + 21 - 4 = 29 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                18,
+                24,
+                15
+              ],
+              "target": 57,
+              "solution": "(24 + 15) + 18",
+              "completion": "1. Start with the numbers: [18, 24, 15]\n\n2. Try basic operations to add them up:\n   - 18 + 15 = 33  \n   - 33 + 24 = 57\n\n3. Final equation:  \n   <answer> (18 + 15) + 24 = 57 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                21,
+                24
+              ],
+              "target": 189,
+              "solution": "21 + (24 * 7)",
+              "completion": "1. Start with the numbers: [7, 21, 24]\n2. Multiply 7 and 24: $7 \\times 24 = 168$\n3. Add 21 to 168: $168 + 21 = 189$\n\n**Final Answer:**  \n(7 \u00d7 24) + 21 = 189\n\n<answer>(7 \u00d7 24) + 21</answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                8,
+                18,
+                8
+              ],
+              "target": 18,
+              "solution": "(8 * 18) / 8",
+              "completion": "**Reasoning:**\n\nWe can use each number once: 8, 18, 8.  \nWe want to get 18.  \nTry: $18 + 8 - 8 = 18$  \nThis equation uses each number once and equals 18.\n\n**Answer:**  \n$$\n(18 + 8) - 8 = 18\n$$\n\n<answer> (18 + 8) - 8 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                10,
+                25,
+                7
+              ],
+              "target": 42,
+              "solution": "7 + (10 + 25)",
+              "completion": "**Reasoning:**  \nWe have the numbers [10, 25, 7]. We can try:\n\n$ 25 + 7 = 32 $, and then add 10:  \n$ 32 + 10 = 42 $.\n\n**Answer:**  \n(25 + 7 + 10) = 42  \n<answer> (25 + 7 + 10) = 42 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                13,
+                20
+              ],
+              "target": 56,
+              "solution": "(13 + 23) + 20",
+              "completion": "1. Start with the numbers: [23, 13, 20]\n\n2. Try basic operations to add them up:\n   - 23 + 13 = 36  \n   - 36 + 20 = 56\n\n3. Final equation:  \n   <answer>23 + 13 + 20 = 56</answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                20,
+                25
+              ],
+              "target": 20,
+              "solution": "(15 + 25) - 20",
+              "completion": "15 + 20 = 35  \n25 - 15 = 10  \n10 + 20 = 30  \n30 - 25 = 5  \n... this doesn't use each number once.\n\nLet me try again:\n\n15 + 25 = 40  \n40 - 20 = 20  \n\nFinal answer:  \n<answer> (15 + 25) - 20 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                6,
+                17,
+                11
+              ],
+              "target": 34,
+              "solution": "17 + (6 + 11)",
+              "completion": "**Reasoning:**  \nWe have the numbers [6, 17, 11]. We can try:\n\n6 + 17 + 11 = **34**\n\n**Answer:**  \n(6 + 17) + 11 = 34  \n<answer> (6 + 17) + 11 = 34 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            }
+          ],
+          "failure": [
+            {
+              "numbers": [
+                10,
+                3,
+                1
+              ],
+              "target": 29,
+              "solution": "(3 * 10) - 1",
+              "completion": "**Reasoning:**\n\nWe can use each number once: 10, 3, 1.  \nWe want to get 29.  \nTry: $10 + 3 + 1 = 14$  \nNot enough.  \nTry: $10 + (3 \\times 1) = 13$  \nStill not enough.  \nTry: $10 + 3 + 1 = 14$ (try again).  \nActually, let's try more:\n\n**Final equation:**\n$$10 + (3 \\times 1) = 13$$  \nThis doesn't work. Let's try:\n\n**Correct equation:**\n\n$$3 \\times 1 + 10 = 13$$  \nStill no.\n\n",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                2,
+                5,
+                15
+              ],
+              "target": 65,
+              "solution": "(15 - 2) * 5",
+              "completion": "**Reasoning:**\n\nWe can use each number once: 2, 5, 15.\n\nWe try:\n\n$ 2 + 5 + 15 = 22 $ \u2014 too low\n\nTry:\n\n$ 15 \u00d7 5 = 75 $ \u2014 too high\n\nTry:\n\n$ 5 \u00d7 (2 + 15) = 5 \u00d7 17 = 85 $ \u2014 too high\n\nWait, maybe:\n\n$ 5 \u00d7 15 = 75 $ \u2014 that's already too much.\n\nLet\u2019s try:\n\n$ 2 + 5 + 15 = 22 $ \u2014 nope\n\nOkay, I can't find an equation using basic operations that equals 65 with these numbers.\n\n**Final Answer",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                5,
+                7,
+                5
+              ],
+              "target": 7,
+              "solution": "(5 * 7) / 5",
+              "completion": "**Reasoning:**  \nWe start with the numbers [5, 7, 5] and don't use them more than once.  \n2 + 5 = 7, using one '5' and one '7'.  \n\n**Answer:**  \n(5 + 7) = 12, but that doesn't work.  \n\nWait, let me try again:\n\n5 + 5 = 10  \n7 - 10 = -3  \n\nThis also doesn't work.  \n\nBut if we just use the numbers once:\n\n**Final Equation:**  \n(5 + 7) - 5 = 7  \n\n**Answer:**  \n(5 + 7) - 5 = 7  \n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                1,
+                18
+              ],
+              "target": 29,
+              "solution": "(18 + 11) / 1",
+              "completion": "**Reasoning:**  \nWe have the numbers [11, 1, 18]. We can try:\n\n**11 + 1 + 18 = 30**\n\nNot equal.  \nTry:\n\n**11 + 18 = 29**\n\n**Answer:**  \n(18 + 11) = 29  \n<answer> (18 + 11) = 29 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                19,
+                6,
+                3
+              ],
+              "target": 22,
+              "solution": "19 + (6 - 3)",
+              "completion": "**Reasoning:**\n\nWe can use each number once: 19, 6, 3.\n\nWe try:\n\n$ 19 + 6 = 25 $\n\nNow subtract 3:\n\n$ 25 - 3 = 22 $  \n\n**Answer:**\n\n$ \\boxed{(19 + 6) - 3 = 22} $  \n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                1,
+                8
+              ],
+              "target": 152,
+              "solution": "(20 - 1) * 8",
+              "completion": "**Reasoning:**  \nWe have the numbers [20, 1, 8].  \nWe can try:  \n(20 + 1) * 8 = 120, which is too big.  \n(20 + 8) * 1 = 28, which is too small.  \n(20 - 1) * 8 = 160, still too big.  \n\nNo way to get 152 using only the numbers once with basic operations.\n\n<answer> </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                11,
+                8
+              ],
+              "target": 26,
+              "solution": "8 + (11 + 7)",
+              "completion": "**Reasoning:**\n\nWe can use each number once: 7, 11, 8.\n\nWe try:\n\n$ 11 + 7 = 18 $\n\nThen add 8: $ 18 + 8 = 26 $.\n\n**Answer:**\n\n$ \\boxed{(11 + 7) + 8 = 26} $\n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                4,
+                9
+              ],
+              "target": 25,
+              "solution": "(4 * 9) - 11",
+              "completion": "**Reasoning:**\n\nWe can use each number once: 11, 4, 9.\n\nWe try:\n\n$ 11 + 4 = 15 $\n\nThen add 9: $ 15 + 9 = 24 $, not 25.\n\nTry:\n\n$ 9 + 4 = 13 $\n\nThen add 11: $ 13 + 11 = 24 $, still not.\n\nTry:\n\n$ 11 + 4 = 15 $, then $ 9 + 15 = 24 $.\n\nHmm, maybe:\n\n**Answer:** $ 9 + 11 + 4 = 24 $\n\nBut that does not equal 25.\n\nWait! Let me",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                21,
+                13
+              ],
+              "target": 7,
+              "solution": "(15 - 21) + 13",
+              "completion": "**Reasoning:**  \nWe have the numbers [15, 21, 13].  \nWe can use each once.  \nTry:  \n(13 + 15) = 28  \n(21 - 13) = 8  \nNow we have 28 + 8 = 36  \n\nWe can't use any operations again.\n\n**Final Answer:**  \n(13 + 15) + (21 - 13) = 36  \n\n<answer> (13 + 15) + (21 - 13) = 36 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                24,
+                18
+              ],
+              "target": 4,
+              "solution": "24 / (18 - 12)",
+              "completion": "**Reasoning:**  \nWe have the numbers [12, 24, 18].  \nWe can use them once each.  \nTry:  \n12 + 18 = 30  \n30 + 24 = 54 (Too big)  \n\nTry:  \n24 \u00f7 12 = 2  \nThen 2 is not 4.  \n\nWait, maybe:  \n24 \u00f7 (18 \u00f7 12) = 24 \u00f7 1.5 = 16 (too big)\n\nHmm. Let's try:\n\n**Answer (finale):**  \n(24 - 18) = 6  \n6 \u00d7 1 = 6  \n\nNot quite.  \n\nLet me try again",
+              "reward": 0.0,
+              "source": "eval_main"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "is",
+      "name": "Naive IS",
+      "elapsed_sec": 1047.1634662151337,
+      "history": [
+        {
+          "step": 0.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.0019762613607528516,
+          "grad_norm": 0.0,
+          "max_is_ratio": 1.615774393081665,
+          "mean_len": 83.125,
+          "eval_reward": 0.171875
+        },
+        {
+          "step": 1.0,
+          "train_reward": 0.125,
+          "loss": 0.029664582572877407,
+          "kl_samp_train": 0.0007532980319456006,
+          "grad_norm": 8.991835594177246,
+          "max_is_ratio": 1.857332706451416,
+          "mean_len": 70.5
+        },
+        {
+          "step": 2.0,
+          "train_reward": 0.125,
+          "loss": -0.08900795830413699,
+          "kl_samp_train": 0.002260936834426419,
+          "grad_norm": 3.7007572650909424,
+          "max_is_ratio": 1.6869992017745972,
+          "mean_len": 128.25
+        },
+        {
+          "step": 3.0,
+          "train_reward": 0.25,
+          "loss": -0.03333985060453415,
+          "kl_samp_train": -0.0005475476133723219,
+          "grad_norm": 6.974366664886475,
+          "max_is_ratio": 2.901644229888916,
+          "mean_len": 104.125
+        },
+        {
+          "step": 4.0,
+          "train_reward": 0.25,
+          "loss": 0.027086845133453608,
+          "kl_samp_train": 0.005169025004304798,
+          "grad_norm": 8.23216724395752,
+          "max_is_ratio": 1.9242104291915894,
+          "mean_len": 94.375
+        },
+        {
+          "step": 5.0,
+          "train_reward": 0.25,
+          "loss": 0.04710006155073643,
+          "kl_samp_train": 0.0015427073485900155,
+          "grad_norm": 9.962325096130371,
+          "max_is_ratio": 3.500291347503662,
+          "mean_len": 115.875
+        },
+        {
+          "step": 6.0,
+          "train_reward": 0.125,
+          "loss": -0.034794184379279613,
+          "kl_samp_train": 0.0035602745486468805,
+          "grad_norm": 6.001591205596924,
+          "max_is_ratio": 2.9889795780181885,
+          "mean_len": 128.125
+        },
+        {
+          "step": 7.0,
+          "train_reward": 0.125,
+          "loss": -0.07334059430286288,
+          "kl_samp_train": 0.038307782119705966,
+          "grad_norm": 6.533219814300537,
+          "max_is_ratio": 2.2515788078308105,
+          "mean_len": 84.75
+        },
+        {
+          "step": 8.0,
+          "train_reward": 0.25,
+          "loss": -0.15668293833732605,
+          "kl_samp_train": 0.047541915762744864,
+          "grad_norm": 7.219757080078125,
+          "max_is_ratio": 6.830401420593262,
+          "mean_len": 134.875
+        },
+        {
+          "step": 9.0,
+          "train_reward": 0.625,
+          "loss": -0.2684660842642188,
+          "kl_samp_train": -0.0004809330193660198,
+          "grad_norm": 11.54731273651123,
+          "max_is_ratio": 3.307803153991699,
+          "mean_len": 78.0
+        },
+        {
+          "step": 10.0,
+          "train_reward": 0.125,
+          "loss": -0.031020278111100197,
+          "kl_samp_train": -0.007752826630743475,
+          "grad_norm": 5.325346946716309,
+          "max_is_ratio": 2.6766276359558105,
+          "mean_len": 68.625,
+          "eval_reward": 0.140625
+        },
+        {
+          "step": 11.0,
+          "train_reward": 0.125,
+          "loss": -0.05524055892601609,
+          "kl_samp_train": 0.029783465550412946,
+          "grad_norm": 3.6286110877990723,
+          "max_is_ratio": 2.174541473388672,
+          "mean_len": 110.375
+        },
+        {
+          "step": 12.0,
+          "train_reward": 0.25,
+          "loss": -0.04930884763598442,
+          "kl_samp_train": 0.02381989654041667,
+          "grad_norm": 87.81094360351562,
+          "max_is_ratio": 25.56211280822754,
+          "mean_len": 58.25
+        },
+        {
+          "step": 13.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.032708089147070456,
+          "grad_norm": 0.0,
+          "max_is_ratio": 1.6266915798187256,
+          "mean_len": 75.75
+        },
+        {
+          "step": 14.0,
+          "train_reward": 0.125,
+          "loss": 0.011385071091353893,
+          "kl_samp_train": -0.002734542374242411,
+          "grad_norm": 6.1154656410217285,
+          "max_is_ratio": 2.7972116470336914,
+          "mean_len": 108.375
+        },
+        {
+          "step": 15.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.016889737351187345,
+          "grad_norm": 0.0,
+          "max_is_ratio": 2.1158347129821777,
+          "mean_len": 90.625
+        },
+        {
+          "step": 16.0,
+          "train_reward": 0.25,
+          "loss": 0.1407722420990467,
+          "kl_samp_train": 0.020901024120004646,
+          "grad_norm": 8.867728233337402,
+          "max_is_ratio": 1.7592930793762207,
+          "mean_len": 100.875
+        },
+        {
+          "step": 17.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.010240113480868434,
+          "grad_norm": 0.0,
+          "max_is_ratio": 2.2806897163391113,
+          "mean_len": 114.25
+        },
+        {
+          "step": 18.0,
+          "train_reward": 0.375,
+          "loss": -0.10800289921462536,
+          "kl_samp_train": 0.005829016224564058,
+          "grad_norm": 7.479821681976318,
+          "max_is_ratio": 3.0253262519836426,
+          "mean_len": 95.5
+        },
+        {
+          "step": 19.0,
+          "train_reward": 0.125,
+          "loss": -0.032737739849835634,
+          "kl_samp_train": 0.005381516702420621,
+          "grad_norm": 7.423939228057861,
+          "max_is_ratio": 2.8473334312438965,
+          "mean_len": 88.625
+        },
+        {
+          "step": 20.0,
+          "train_reward": 0.625,
+          "loss": 0.05093233473598957,
+          "kl_samp_train": 0.018320039176457636,
+          "grad_norm": 8.636785507202148,
+          "max_is_ratio": 1.9291688203811646,
+          "mean_len": 92.5,
+          "eval_reward": 0.25
+        },
+        {
+          "step": 21.0,
+          "train_reward": 0.5,
+          "loss": -0.07706849463284016,
+          "kl_samp_train": 0.003447369894228036,
+          "grad_norm": 10.513998985290527,
+          "max_is_ratio": 3.223914861679077,
+          "mean_len": 87.625
+        },
+        {
+          "step": 22.0,
+          "train_reward": 0.5,
+          "loss": -0.03909469023346901,
+          "kl_samp_train": 0.01480647642268104,
+          "grad_norm": 8.28748607635498,
+          "max_is_ratio": 6.264612197875977,
+          "mean_len": 113.375
+        },
+        {
+          "step": 23.0,
+          "train_reward": 0.375,
+          "loss": -0.12655771244317293,
+          "kl_samp_train": 0.02464030281613004,
+          "grad_norm": 13.506614685058594,
+          "max_is_ratio": 9.568826675415039,
+          "mean_len": 88.625
+        },
+        {
+          "step": 24.0,
+          "train_reward": 0.375,
+          "loss": -0.08396372850984335,
+          "kl_samp_train": 0.009602446297678766,
+          "grad_norm": 10.472249031066895,
+          "max_is_ratio": 4.373814582824707,
+          "mean_len": 79.0
+        },
+        {
+          "step": 25.0,
+          "train_reward": 0.375,
+          "loss": 0.06011012755334377,
+          "kl_samp_train": 0.015487574532909214,
+          "grad_norm": 10.091002464294434,
+          "max_is_ratio": 3.0563805103302,
+          "mean_len": 106.0
+        },
+        {
+          "step": 26.0,
+          "train_reward": 0.375,
+          "loss": -0.2207878716289997,
+          "kl_samp_train": 0.009661523654955123,
+          "grad_norm": 9.866061210632324,
+          "max_is_ratio": 3.832669973373413,
+          "mean_len": 109.75
+        },
+        {
+          "step": 27.0,
+          "train_reward": 0.5,
+          "loss": -0.014821801334619522,
+          "kl_samp_train": 0.012993444147221324,
+          "grad_norm": 12.76834774017334,
+          "max_is_ratio": 1.873636245727539,
+          "mean_len": 77.625
+        },
+        {
+          "step": 28.0,
+          "train_reward": 0.25,
+          "loss": -0.18347655795514584,
+          "kl_samp_train": 0.00489496323929365,
+          "grad_norm": 6.35429573059082,
+          "max_is_ratio": 5.881901264190674,
+          "mean_len": 125.5
+        },
+        {
+          "step": 29.0,
+          "train_reward": 0.625,
+          "loss": -0.3017743770033121,
+          "kl_samp_train": 0.029000705405836196,
+          "grad_norm": 11.267029762268066,
+          "max_is_ratio": 2.707566261291504,
+          "mean_len": 79.75
+        },
+        {
+          "step": 30.0,
+          "train_reward": 0.375,
+          "loss": -0.20168044045567513,
+          "kl_samp_train": 0.00810817311987404,
+          "grad_norm": 8.379664421081543,
+          "max_is_ratio": 2.6735928058624268,
+          "mean_len": 121.0,
+          "eval_reward": 0.5
+        },
+        {
+          "step": 31.0,
+          "train_reward": 0.5,
+          "loss": -0.2157863499596715,
+          "kl_samp_train": 0.007955649910179993,
+          "grad_norm": 8.754776000976562,
+          "max_is_ratio": 2.0816292762756348,
+          "mean_len": 109.5
+        },
+        {
+          "step": 32.0,
+          "train_reward": 0.25,
+          "loss": -0.10734199918806553,
+          "kl_samp_train": 0.006277450637521461,
+          "grad_norm": 7.319538116455078,
+          "max_is_ratio": 1.9782031774520874,
+          "mean_len": 88.625
+        },
+        {
+          "step": 33.0,
+          "train_reward": 0.375,
+          "loss": 0.0073401909321546555,
+          "kl_samp_train": 0.012201834641054957,
+          "grad_norm": 8.161742210388184,
+          "max_is_ratio": 1.9162119626998901,
+          "mean_len": 125.25
+        },
+        {
+          "step": 34.0,
+          "train_reward": 0.375,
+          "loss": -0.19151181168854237,
+          "kl_samp_train": 0.006807199834730275,
+          "grad_norm": 31.33713722229004,
+          "max_is_ratio": 9.97287654876709,
+          "mean_len": 99.625
+        },
+        {
+          "step": 35.0,
+          "train_reward": 0.375,
+          "loss": -0.17831692099571228,
+          "kl_samp_train": 0.01245834029362671,
+          "grad_norm": 7.305288791656494,
+          "max_is_ratio": 2.4027881622314453,
+          "mean_len": 141.625
+        },
+        {
+          "step": 36.0,
+          "train_reward": 0.75,
+          "loss": -0.17135353619232774,
+          "kl_samp_train": 0.009550786911402846,
+          "grad_norm": 9.213458061218262,
+          "max_is_ratio": 2.003143072128296,
+          "mean_len": 107.625
+        },
+        {
+          "step": 37.0,
+          "train_reward": 0.25,
+          "loss": -0.06647602654993534,
+          "kl_samp_train": 0.0076907674368486365,
+          "grad_norm": 6.983872413635254,
+          "max_is_ratio": 3.2264251708984375,
+          "mean_len": 120.5
+        },
+        {
+          "step": 38.0,
+          "train_reward": 0.375,
+          "loss": -0.022673672065138817,
+          "kl_samp_train": 0.018497633159786833,
+          "grad_norm": 19.326608657836914,
+          "max_is_ratio": 6.328863143920898,
+          "mean_len": 130.875
+        },
+        {
+          "step": 39.0,
+          "train_reward": 0.125,
+          "loss": -0.09090772084891796,
+          "kl_samp_train": 0.011044893002650671,
+          "grad_norm": 4.458436489105225,
+          "max_is_ratio": 2.479930877685547,
+          "mean_len": 148.375
+        },
+        {
+          "step": 40.0,
+          "train_reward": 0.5,
+          "loss": -0.0708635188639164,
+          "kl_samp_train": 0.004695695559183756,
+          "grad_norm": 15.241943359375,
+          "max_is_ratio": 4.942972660064697,
+          "mean_len": 93.75,
+          "eval_reward": 0.515625
+        },
+        {
+          "step": 41.0,
+          "train_reward": 0.375,
+          "loss": -0.09392582252621651,
+          "kl_samp_train": 0.004674470576097658,
+          "grad_norm": 17.331754684448242,
+          "max_is_ratio": 3.7029335498809814,
+          "mean_len": 68.875
+        },
+        {
+          "step": 42.0,
+          "train_reward": 0.625,
+          "loss": -0.17484666965901852,
+          "kl_samp_train": 0.0064867258689564125,
+          "grad_norm": 9.028674125671387,
+          "max_is_ratio": 3.589932680130005,
+          "mean_len": 120.625
+        },
+        {
+          "step": 43.0,
+          "train_reward": 0.5,
+          "loss": -0.2711706645786762,
+          "kl_samp_train": 0.007269954657289449,
+          "grad_norm": 14.383499145507812,
+          "max_is_ratio": 7.050740718841553,
+          "mean_len": 123.625
+        },
+        {
+          "step": 44.0,
+          "train_reward": 0.25,
+          "loss": -0.16757548227906227,
+          "kl_samp_train": 0.023060519998763507,
+          "grad_norm": 8.05958366394043,
+          "max_is_ratio": 2.905238151550293,
+          "mean_len": 136.5
+        },
+        {
+          "step": 45.0,
+          "train_reward": 0.75,
+          "loss": 0.13080099783837795,
+          "kl_samp_train": 0.0017196899138126277,
+          "grad_norm": 10.344536781311035,
+          "max_is_ratio": 5.850522994995117,
+          "mean_len": 73.875
+        },
+        {
+          "step": 46.0,
+          "train_reward": 0.375,
+          "loss": -0.11917559430003166,
+          "kl_samp_train": 0.009726525309685135,
+          "grad_norm": 8.24299144744873,
+          "max_is_ratio": 3.0072052478790283,
+          "mean_len": 114.875
+        },
+        {
+          "step": 47.0,
+          "train_reward": 0.375,
+          "loss": -0.13055372051894665,
+          "kl_samp_train": 0.021119130028824862,
+          "grad_norm": 6.950932502746582,
+          "max_is_ratio": 4.055429935455322,
+          "mean_len": 128.5
+        },
+        {
+          "step": 48.0,
+          "train_reward": 0.5,
+          "loss": -0.1481885015964508,
+          "kl_samp_train": 0.009018988078270734,
+          "grad_norm": 6.641983985900879,
+          "max_is_ratio": 2.4700090885162354,
+          "mean_len": 135.25
+        },
+        {
+          "step": 49.0,
+          "train_reward": 0.625,
+          "loss": -0.19305446185171604,
+          "kl_samp_train": 0.00422692102734494,
+          "grad_norm": 8.622274398803711,
+          "max_is_ratio": 2.216939926147461,
+          "mean_len": 113.0
+        },
+        {
+          "step": 50.0,
+          "train_reward": 0.5,
+          "loss": -0.1812452357262373,
+          "kl_samp_train": 0.01621929227607115,
+          "grad_norm": 6.73126745223999,
+          "max_is_ratio": 2.1866507530212402,
+          "mean_len": 138.625,
+          "eval_reward": 0.453125
+        },
+        {
+          "step": 51.0,
+          "train_reward": 0.375,
+          "loss": -0.12076574750244617,
+          "kl_samp_train": 0.00844885364314106,
+          "grad_norm": 5.670852184295654,
+          "max_is_ratio": 1.926668405532837,
+          "mean_len": 133.75
+        },
+        {
+          "step": 52.0,
+          "train_reward": 0.5,
+          "loss": -0.16175642516463995,
+          "kl_samp_train": 0.008507781874364772,
+          "grad_norm": 7.874070167541504,
+          "max_is_ratio": 2.0582706928253174,
+          "mean_len": 137.625
+        },
+        {
+          "step": 53.0,
+          "train_reward": 0.25,
+          "loss": -0.07951640337705612,
+          "kl_samp_train": 0.02098858444838511,
+          "grad_norm": 5.969675540924072,
+          "max_is_ratio": 3.9196863174438477,
+          "mean_len": 139.125
+        },
+        {
+          "step": 54.0,
+          "train_reward": 0.625,
+          "loss": -0.18723166175186634,
+          "kl_samp_train": 0.006045325997653627,
+          "grad_norm": 8.750462532043457,
+          "max_is_ratio": 2.3368513584136963,
+          "mean_len": 94.25
+        },
+        {
+          "step": 55.0,
+          "train_reward": 0.375,
+          "loss": -0.14507557079195976,
+          "kl_samp_train": 0.0013087453650790313,
+          "grad_norm": 8.292655944824219,
+          "max_is_ratio": 3.746718645095825,
+          "mean_len": 112.125
+        },
+        {
+          "step": 56.0,
+          "train_reward": 0.625,
+          "loss": -0.0657698456197977,
+          "kl_samp_train": 0.01599559504935082,
+          "grad_norm": 9.166440963745117,
+          "max_is_ratio": 2.5175840854644775,
+          "mean_len": 99.875
+        },
+        {
+          "step": 57.0,
+          "train_reward": 0.25,
+          "loss": -0.018616933375597,
+          "kl_samp_train": 0.008046575527095316,
+          "grad_norm": 5.303281307220459,
+          "max_is_ratio": 1.9122556447982788,
+          "mean_len": 149.25
+        },
+        {
+          "step": 58.0,
+          "train_reward": 0.375,
+          "loss": -0.043106116354465485,
+          "kl_samp_train": 0.006674302614170425,
+          "grad_norm": 6.079702377319336,
+          "max_is_ratio": 2.4224183559417725,
+          "mean_len": 140.375
+        },
+        {
+          "step": 59.0,
+          "train_reward": 0.625,
+          "loss": -0.11393352132290602,
+          "kl_samp_train": 0.00441841973839484,
+          "grad_norm": 8.051057815551758,
+          "max_is_ratio": 2.5167362689971924,
+          "mean_len": 126.625
+        },
+        {
+          "step": 60.0,
+          "train_reward": 0.25,
+          "loss": -0.11324255540966988,
+          "kl_samp_train": 0.010053691203876208,
+          "grad_norm": 4.92363977432251,
+          "max_is_ratio": 2.4992222785949707,
+          "mean_len": 139.5,
+          "eval_reward": 0.46875
+        },
+        {
+          "step": 61.0,
+          "train_reward": 0.25,
+          "loss": -0.1468827724456787,
+          "kl_samp_train": 0.005778231498410568,
+          "grad_norm": 5.090117454528809,
+          "max_is_ratio": 3.2496092319488525,
+          "mean_len": 136.375
+        },
+        {
+          "step": 62.0,
+          "train_reward": 0.5,
+          "loss": -0.17701196298003197,
+          "kl_samp_train": 0.02022984979101261,
+          "grad_norm": 8.60024642944336,
+          "max_is_ratio": 3.125382900238037,
+          "mean_len": 110.125
+        },
+        {
+          "step": 63.0,
+          "train_reward": 0.5,
+          "loss": -0.194677310064435,
+          "kl_samp_train": 0.011292582431447849,
+          "grad_norm": 7.57744836807251,
+          "max_is_ratio": 2.3033947944641113,
+          "mean_len": 121.5
+        },
+        {
+          "step": 64.0,
+          "train_reward": 0.375,
+          "loss": -0.12696686014533043,
+          "kl_samp_train": 0.007505153434780928,
+          "grad_norm": 8.198267936706543,
+          "max_is_ratio": 3.065828323364258,
+          "mean_len": 130.0
+        },
+        {
+          "step": 65.0,
+          "train_reward": 0.375,
+          "loss": -0.2693219119682908,
+          "kl_samp_train": 0.01471459014075143,
+          "grad_norm": 7.100652694702148,
+          "max_is_ratio": 1.8380175828933716,
+          "mean_len": 101.5
+        },
+        {
+          "step": 66.0,
+          "train_reward": 0.5,
+          "loss": -0.08908129017800093,
+          "kl_samp_train": 0.0031902415306146537,
+          "grad_norm": 8.707856178283691,
+          "max_is_ratio": 3.35518741607666,
+          "mean_len": 120.875
+        },
+        {
+          "step": 67.0,
+          "train_reward": 0.25,
+          "loss": -0.20987156964838505,
+          "kl_samp_train": 0.01072321956706159,
+          "grad_norm": 6.191990852355957,
+          "max_is_ratio": 2.7629847526550293,
+          "mean_len": 133.125
+        },
+        {
+          "step": 68.0,
+          "train_reward": 0.25,
+          "loss": -0.1697576055303216,
+          "kl_samp_train": 0.014808019621288356,
+          "grad_norm": 5.806468486785889,
+          "max_is_ratio": 3.1458256244659424,
+          "mean_len": 124.375
+        },
+        {
+          "step": 69.0,
+          "train_reward": 0.5,
+          "loss": -0.2117092302069068,
+          "kl_samp_train": 0.016819851111996083,
+          "grad_norm": 11.718892097473145,
+          "max_is_ratio": 2.585353136062622,
+          "mean_len": 64.5
+        },
+        {
+          "step": 70.0,
+          "train_reward": 0.5,
+          "loss": -0.1281894901767373,
+          "kl_samp_train": 0.015384108825985874,
+          "grad_norm": 8.55766487121582,
+          "max_is_ratio": 4.00219202041626,
+          "mean_len": 112.0,
+          "eval_reward": 0.5
+        },
+        {
+          "step": 71.0,
+          "train_reward": 0.125,
+          "loss": -0.14064115565270185,
+          "kl_samp_train": 0.011877539298856352,
+          "grad_norm": 2.44469952583313,
+          "max_is_ratio": 2.1149916648864746,
+          "mean_len": 141.625
+        },
+        {
+          "step": 72.0,
+          "train_reward": 0.5,
+          "loss": -0.1711756642907858,
+          "kl_samp_train": 0.009715157962623453,
+          "grad_norm": 8.995880126953125,
+          "max_is_ratio": 2.452507972717285,
+          "mean_len": 107.25
+        },
+        {
+          "step": 73.0,
+          "train_reward": 0.25,
+          "loss": -0.14839808456599712,
+          "kl_samp_train": 0.021527773949942472,
+          "grad_norm": 11.732666969299316,
+          "max_is_ratio": 3.3873865604400635,
+          "mean_len": 107.875
+        },
+        {
+          "step": 74.0,
+          "train_reward": 0.375,
+          "loss": -0.18122839089483023,
+          "kl_samp_train": 0.06473216395224295,
+          "grad_norm": 10.339547157287598,
+          "max_is_ratio": 5.0533366203308105,
+          "mean_len": 77.5
+        },
+        {
+          "step": 75.0,
+          "train_reward": 0.375,
+          "loss": -0.18747415952384472,
+          "kl_samp_train": 0.005100943291723345,
+          "grad_norm": 8.756132125854492,
+          "max_is_ratio": 2.2170491218566895,
+          "mean_len": 116.75
+        },
+        {
+          "step": 76.0,
+          "train_reward": 0.625,
+          "loss": -0.17167078144848347,
+          "kl_samp_train": 0.02405646900561723,
+          "grad_norm": 12.466896057128906,
+          "max_is_ratio": 5.840975761413574,
+          "mean_len": 88.0
+        },
+        {
+          "step": 77.0,
+          "train_reward": 0.375,
+          "loss": -0.21286199614405632,
+          "kl_samp_train": 0.06497608793581061,
+          "grad_norm": 19.11136817932129,
+          "max_is_ratio": 23.237707138061523,
+          "mean_len": 132.375
+        },
+        {
+          "step": 78.0,
+          "train_reward": 0.625,
+          "loss": -0.15708358027040958,
+          "kl_samp_train": 0.013430998493079565,
+          "grad_norm": 7.908143043518066,
+          "max_is_ratio": 1.9052037000656128,
+          "mean_len": 124.375
+        },
+        {
+          "step": 79.0,
+          "train_reward": 0.75,
+          "loss": -0.253135128878057,
+          "kl_samp_train": 0.009506419358271796,
+          "grad_norm": 9.91022777557373,
+          "max_is_ratio": 1.9292644262313843,
+          "mean_len": 97.625,
+          "eval_reward": 0.5
+        }
+      ],
+      "eval_samples": {
+        "step_0": {
+          "success": [
+            {
+              "numbers": [
+                19,
+                6,
+                3
+              ],
+              "target": 22,
+              "solution": "19 + (6 - 3)",
+              "completion": "To create an equation that equals 22 using the numbers [19, 6, 3], you can do the following:\n\n$$\n(19 - 6) + 3 = 13 + 3 = 16\n$$\n\nHowever, this does not result in 22. Let's try again.\n\n$$\n(19 - 3) = 16\n$$\n\n$$\n(16 + 6) = 22\n$$\n\nSo the correct equation is:\n\n$$\n(19 - 3) + 6 = 22\n$$\n\n<answer> (19 - 3) + 6 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                17,
+                23
+              ],
+              "target": 17,
+              "solution": "17 + (23 - 23)",
+              "completion": "To create an equation using the numbers [23, 17, 23] and basic arithmetic operations that equals 17, we can do:\n\n(17 - 23) + 23 = 17\n\n**Answer:**  \n<answer> (17 - 23) + 23 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                7,
+                14
+              ],
+              "target": 14,
+              "solution": "(7 + 14) - 7",
+              "completion": "To create an equation that equals 14 using the numbers [7, 7, 14], you can use division. Here's the solution:\n\n**Answer:**  \n<answer> (14 / 7) * 7 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                18,
+                24,
+                15
+              ],
+              "target": 57,
+              "solution": "(24 + 15) + 18",
+              "completion": "To create an equation using the numbers [18, 24, 15] and basic arithmetic operations that equals 57, we can solve it as follows:\n\n1. Add 18 and 15: $18 + 15 = 33$\n2. Add 24 to the result: $33 + 24 = 57$\n\nSo, the equation is:\n\n<answer> (18 + 15) + 24 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                13,
+                20
+              ],
+              "target": 56,
+              "solution": "(13 + 23) + 20",
+              "completion": "To create an equation using the numbers [23, 13, 20] and basic arithmetic operations that equals 56, we can solve it as follows:\n\n1. Add 20 and 13: $ 20 + 13 = 33 $  \n2. Add 33 to 23: $ 33 + 23 = 56 $\n\nSo, the equation is:\n\n$$\n(20 + 13) + 23 = 56\n$$\n\nFinal answer: <answer> (20 + 13) + 23 </answer>.",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                20,
+                25
+              ],
+              "target": 20,
+              "solution": "(15 + 25) - 20",
+              "completion": "To create an equation using the numbers [15, 20, 25] and basic arithmetic operations that equals 20, we can use:\n\n$$\n(15 - 20) + 25 = 15 - 20 + 25 = 20\n$$\n\nFinal answer: <answer> (15 - 20) + 25 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                13,
+                21
+              ],
+              "target": 54,
+              "solution": "13 + (21 + 20)",
+              "completion": "To create an equation using the numbers [20, 13, 21] and basic arithmetic operations that equals 54, we can solve it as follows:\n\n13 + 20 + 21 = 54\n\n### Final Answer:\n<answer> (13 + 20) + 21 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                3,
+                23,
+                22
+              ],
+              "target": 135,
+              "solution": "(22 + 23) * 3",
+              "completion": "To create an equation using the numbers [3, 23, 22] that equals 135, we can use the following step-by-step:\n\n1. Add 23 and 22:  \n   $ 23 + 22 = 45 $\n\n2. Multiply the result by 3:  \n   $ 45 \\times 3 = 135 $\n\nSo, the equation is:  \n**<answer> (23 + 22) * 3 </answer>**",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                6,
+                21
+              ],
+              "target": 115,
+              "solution": "(6 * 21) - 11",
+              "completion": "To create an equation using the numbers [11, 6, 21] that equals 115, we can use the following process:\n\n11 + 6 \u00d7 21 = 11 + 126 = 137\n\n115 is not equal to 137.\n\nWe can try again:\n\n21 \u00d7 6 + 11 = 126 + 11 = 137\n\nAgain, not equal to 115.\n\nLet's try using division:\n\n(21 \u00d7 6) - 11 = 126 - 11 = 115\n\nThis works.\n\n<answer> (21 \u00d7 6) - 11 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                19,
+                23,
+                19
+              ],
+              "target": 23,
+              "solution": "23 * (19 / 19)",
+              "completion": "To create an equation using the numbers [19, 23, 19] and basic arithmetic operations that equals 23, we can use:\n\n$$\n(19 - 19) + 23 = 23\n$$\n\n<answer> (19 - 19) + 23 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            }
+          ],
+          "failure": [
+            {
+              "numbers": [
+                10,
+                3,
+                1
+              ],
+              "target": 29,
+              "solution": "(3 * 10) - 1",
+              "completion": "To create an equation that equals 29 using the numbers [10, 3, 1], you can do the following:\n\n$$\n(10 - 3) \\times 1 = 7\n$$\n\nHowever, this equation doesn't equal 29. Let's try again:\n\n$$\n(3 + 10) = 13\n$$\n\nThis also doesn't equal 29. Let's try:\n\n$$\n(10 + 3) + 1 = 14\n$$\n\nStill not 29.\n\n$$\n(3 \\times 1) + (10) \\times 1 = 13\n$$\n\nAlso not 29.\n\nAfter trying other combinations, let's try:\n\n$$\n(",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                10,
+                13,
+                11
+              ],
+              "target": 14,
+              "solution": "(11 - 10) + 13",
+              "completion": "To create an equation using the numbers [10, 13, 11] and basic arithmetic operations that equals 14, we can solve it as follows:\n\n1. Add 10 and 11: $10 + 11 = 21$\n2. Subtract 13 from the result: $21 - 13 = 8$\n\nThis does not result in 14. Let's try again:\n\n1. Use only one number and add it to another: $11 + 13 = 24$\n2. Subtract the remaining number: $24 - 10 = 14$\n\nFinal equation:  \n$$\n(13 + 11) - 10 = 14\n",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                2,
+                5,
+                15
+              ],
+              "target": 65,
+              "solution": "(15 - 2) * 5",
+              "completion": "To create an equation that equals 65 using the numbers [2, 5, 15], you can do the following:\n\n$$ (15 \\times 2) + 5 = 65 $$\n\n$$ <answer> (15 \\times 2) + 5 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                5,
+                7,
+                5
+              ],
+              "target": 7,
+              "solution": "(5 * 7) / 5",
+              "completion": "To create an equation using the numbers [5, 7, 5] that equals 7, we can use division:\n\n$$\n(7 - 5) = 7\n$$\n\nSo the equation is:\n\n$$\n\\boxed{(7 - 5) = 7}\n$$",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                1,
+                18
+              ],
+              "target": 29,
+              "solution": "(18 + 11) / 1",
+              "completion": "To create an equation with the numbers [11, 1, 18] that equals 29, use the arithmetic operation:\n\n$$\n(11 - 1) + 18 = 29\n$$\n\nSo the final answer is:\n\n<answer> (11 - 1) + 18 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                1,
+                8
+              ],
+              "target": 152,
+              "solution": "(20 - 1) * 8",
+              "completion": "To create an equation with the numbers [20, 1, 8] that equals 152:\n\nWe start with the largest numbers since 20 is large, and then use multiplication.  \n$ (8 + 1) \\times 20 = 152 $\n\n**Work:**  \n$ (8 + 1) \\times 20 = 152 $\n\n<answer> (8 + 1) \u00d7 20 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                11,
+                8
+              ],
+              "target": 26,
+              "solution": "8 + (11 + 7)",
+              "completion": "To create an equation that equals 26 using the numbers [7, 11, 8], you can do the following:\n\n$$\n(7 + 11) - 8 = 18\n$$\n\nHowever, another equation using these numbers with basic arithmetic operations is:\n\n$$\n(11 + 8) - 7 = 12\n$$\n\nThis approach shows that the numbers can only be used once.\n\n$$\n\\boxed{(11 + 8) - 7 = 12}\n$$\n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                4,
+                9
+              ],
+              "target": 25,
+              "solution": "(4 * 9) - 11",
+              "completion": "To create an equation that equals 25 using the numbers [11, 4, 9], you can do the following:\n\n$$\n(11 - 4) \\times 9 = 7 \\times 9 = 63\n$$\n\nWait, that doesn't equal 25. Let's try again.\n\n$$\n(11 - 9) = 2\n$$\n\n$$\n4 \\times 2 = 8\n$$\n\nNo, that's still more than 25. Let's try using all three numbers:\n\n$$\n(11 - 9) + (4 \\times 1) = 2 + 4 = 6$$\n\nStill not right.\n\nLet's try:\n\n$$\n(11 + ",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                21,
+                13
+              ],
+              "target": 7,
+              "solution": "(15 - 21) + 13",
+              "completion": "To create an equation with the numbers [15, 21, 13] that equals 7, use the operation:\n\n$$\n(21 - 15) = 6\n$$\n\nNow add 13:\n\n$$\n6 + 13 = 19\n$$\n\nThis doesn't equal 7. Let's try:\n\n$$\n13 - 21 + 15 = 7\n$$\n\nThis works!\n\n$$\n\\boxed{13 - 21 + 15 = 7}\n$$\n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                24,
+                18
+              ],
+              "target": 4,
+              "solution": "24 / (18 - 12)",
+              "completion": "To create an equation with the numbers [12, 24, 18] that equals 4, use the operation:\n\n$$\n(24 - 18) = 6\n$$\n\nTo get 4, divide 6 by 3, but we only have 4 numbers. So instead, use:\n\n$$\n(12 + 18) = 30, \\quad \\text{then divide by (24 + 18)} = 42, \\quad \\text{and find } (30 \\div 42) = 4. (30/42 = 1.0x \\text{ fraction})$\n\nSo the correct equation is:\n\n$$\n(24 - 18)",
+              "reward": 0.0,
+              "source": "eval_main"
+            }
+          ]
+        },
+        "step_79": {
+          "success": [
+            {
+              "numbers": [
+                11,
+                1,
+                18
+              ],
+              "target": 29,
+              "solution": "(18 + 11) / 1",
+              "completion": "**Reasoning:**  \nStart with 11 + 1 = 12, 1 + 18 = 19, and 12 + 19 = 31. Doesn't work. Try breaking another way:  \n11 + 1 \u00d7 18 = 11 + 18 = 29.  \nSo the equation is:  \n<answer> 11 + 1 \u00d7 18 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                19,
+                6,
+                3
+              ],
+              "target": 22,
+              "solution": "19 + (6 - 3)",
+              "completion": "**Reasoning:**\n\nStart with 19 + 6 + 3 = 28. Not equal.\n\nTry 19 + (6 - 3) = 22. \u2705  \nSo the equation is:  \n<answer> 19 + 6 - 3 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                11,
+                8
+              ],
+              "target": 26,
+              "solution": "8 + (11 + 7)",
+              "completion": "**Reasoning:**\n\nStart with 7 and 8. Add them:  \n**7 + 8 = 15**  \nThen add 11: **15 + 11 = 26** \u2705\n\n**Answer:**  \n<answer> 7 + 8 + 11 = 26 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                21,
+                13
+              ],
+              "target": 7,
+              "solution": "(15 - 21) + 13",
+              "completion": "**Reasoning:**  \nStart with 15 + 21 = 36  \nThen 36 - 13 = 23 \u2260 7  \nTry: 15 + 13 = 28, 28 - 21 = 7. \u2705  \nSo the equation is <answer> 15 + 13 - 21 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                17,
+                23
+              ],
+              "target": 17,
+              "solution": "17 + (23 - 23)",
+              "completion": "**Reasoning:**  \nWe want to find an equation using 23, 17, and 23 to get 17. One approach is:\n\n<answer> 17 + (23 - 23) </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                21,
+                4
+              ],
+              "target": 29,
+              "solution": "12 + (21 - 4)",
+              "completion": "**Reasoning:**  \nStart with 12 + 21 = 33  \n33 - 4 = **29**.  \n\n<answer> 12 + 21 - 4 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                18,
+                24,
+                15
+              ],
+              "target": 57,
+              "solution": "(24 + 15) + 18",
+              "completion": "**Reasoning:**  \n18 + 24 + 15 = 57.  \nSo the answer is:  \n<answer> 18 + 24 + 15 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                21,
+                24
+              ],
+              "target": 189,
+              "solution": "21 + (24 * 7)",
+              "completion": "**Reasoning:**  \nWe want to find an equation using 7, 21, 24, and basic arithmetic.  \nTry:  \n**7 \u00d7 21 = 147**  \n**147 + 24 = 171** \u2013 too low.  \nTry:  \n**24 \u00d7 7 = 168**  \n**168 + 21 = 189** \u2705 \u2714\n\n**<answer> 24 \u00d7 7 + 21 </answer>**",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                10,
+                25,
+                7
+              ],
+              "target": 42,
+              "solution": "7 + (10 + 25)",
+              "completion": "**Reasoning:**  \nStart with 10 + 25 = 35  \nAdd 7: 35 + 7 = 42 \u2705\n\n<answer> 10 + 25 + 7 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                13,
+                20
+              ],
+              "target": 56,
+              "solution": "(13 + 23) + 20",
+              "completion": "**Reasoning:**  \nStart by adding the two smaller numbers:  \n23 + 13 = **36**  \nThen add the result to 20:  \n36 + 20 = **56** \u2705\n\n**<answer> 23 + 13 + 20 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            }
+          ],
+          "failure": [
+            {
+              "numbers": [
+                10,
+                3,
+                1
+              ],
+              "target": 29,
+              "solution": "(3 * 10) - 1",
+              "completion": "**Reasoning:**\n\nStart with 10 + 3 + 1 = 14. Not enough.\n\nTry 10 + (3 * 1) = 13. Still less than 29.\n\nTry:  \n**10 + 3 * 1 = 13**, **13 + 16 = 29**, but where is 16? Maybe 10 + 3 + 1 + 14 = 28, but more obviously:\n\n<answer> 10 + 3 * 1 + 16 = 29 </answer>  \nBut 16 isn't available. Another way:  \n**3 * (10 + 1) + 9** \u2192 no, ",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                10,
+                13,
+                11
+              ],
+              "target": 14,
+              "solution": "(11 - 10) + 13",
+              "completion": "**Reasoning:**  \n10 + 11 = 21  \n21 - 13 = 18  \nNot helpful.  \n\nAlternative:  \n13 + 1 = 14 \u2192 1 is not available.  \n\n**Answer:**  \n<answer> 13 + 1 + 0 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                2,
+                5,
+                15
+              ],
+              "target": 65,
+              "solution": "(15 - 2) * 5",
+              "completion": "**Reasoning:**\n\nStart with 2 and 15:\n\n- 2 \u00d7 15 = 30  \n- 65 - 30 = 35  \n- 35 is not directly obtainable with another number.  \n\nTry another approach:\n\n- 5 \u00d7 13 = 65  \n- 13 is not directly available. Can we make 13 from 2 and 15?  \n- 15 - 2 = 13 \u2705  \nSo: 5 \u00d7 (15 - 2) = 5 \u00d7 13 = 65 <answer> 5 \u00d7 (15 - 2) ) </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                5,
+                7,
+                5
+              ],
+              "target": 7,
+              "solution": "(5 * 7) / 5",
+              "completion": "**Reasoning:**  \nWe start with the two numbers [5, 7, 5]. Try:  \n**7 = 5 + (7 - 5) \u2192 5 + 2 = 7.**  \nAlternatively:  \n**7 = 7 + 0 = 7**, which doesn't use 0.  \n\nFinal answer:  \n<answer> 7 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                1,
+                8
+              ],
+              "target": 152,
+              "solution": "(20 - 1) * 8",
+              "completion": "**Reasoning:**  \nStart with 20 + 1 = 21, 21 * 8 = **168**, not 152. Try:  \n20 + 1 + 8 = 29, not 152. Try: 20 * 8 = 160, minus 5 \u2192 155? Not matching.  \nAnother way: 20 + (1 + 8) * 5 = more. Maybe:  \n(20 * 8) - (16) = 160 - 16 = 144. Not 152.  \nWait: 20 + 8 * 3 = 20 + 24",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                4,
+                9
+              ],
+              "target": 25,
+              "solution": "(4 * 9) - 11",
+              "completion": "**Reasoning:**\n\nStart with 11 + 4 + 9 = 24. Then add 1 to get 25.  \n**Answer:** <answer>11 + 4 + 9 + 1</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                24,
+                18
+              ],
+              "target": 4,
+              "solution": "24 / (18 - 12)",
+              "completion": "**Reasoning:**  \nStart with the numbers: **12, 24, 18**.\n\nTry:  \n**24 \u00f7 12 = 2**, then **2 + 18 = 10** \u2192 not helpful.  \n\nTry:  \n**18 + 2 = 20** \u2192 not enough.  \n\nAnother approach:  \n**12 + 24 - 18 = 18** \u2192 no.  \n\nWait! What about:  \n**(24 - 12) - (18 / 3)**? But we don't have a 3. Hmm.  \n\nWait! **12 + 24 - 18 = 18**? No, that's not 4",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                8,
+                3,
+                21
+              ],
+              "target": 71,
+              "solution": "8 + (3 * 21)",
+              "completion": "**Reasoning:**\n\nStart with 21 + 8 = 29  \n29 + 3 = 32  \nNot helpful. Try combining differently:\n\n21 + 3 \u00d7 8 = 21 + 24 = **45**  \nNot 71.  \n21 \u00d7 3 = 63, 71-63=8 \u2192 can't do that.  \nWhat about 21 + 3 + 8 = 32 more?  \nNo",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                7,
+                14
+              ],
+              "target": 14,
+              "solution": "(7 + 14) - 7",
+              "completion": "**Reasoning:**\n\nStart with 7 and 7. Add them:  \n**7 + 7 = 14**.\n\nSo, the equation is:  \n<answer> 7 + 7 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                1,
+                15,
+                11
+              ],
+              "target": 4,
+              "solution": "(15 * 1) - 11",
+              "completion": "**Reasoning:**\n\nStart with 1 and 11:\n\n- 15 - 1 = 14  \n- 14 + 1 = 15, not helpful\n\nAlternative approach:  \nTry 11 - 1 = 10  \n10 + 15 = 25, no.\n\nWait, what if:\n\n- 15 - 1 = 14  \n- 14 + 11 = 25, no.\n\nWait more obviously:\n\n<answer> 15 - 11 = 4 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "tis",
+      "name": "TIS",
+      "elapsed_sec": 757.5508892536163,
+      "history": [
+        {
+          "step": 0.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.0019762613607528516,
+          "grad_norm": 0.0,
+          "max_is_ratio": 1.615774393081665,
+          "mean_len": 83.125,
+          "eval_reward": 0.171875
+        },
+        {
+          "step": 1.0,
+          "train_reward": 0.125,
+          "loss": 0.0300426185131073,
+          "kl_samp_train": 0.0007532980319456006,
+          "grad_norm": 8.892605781555176,
+          "max_is_ratio": 1.857332706451416,
+          "mean_len": 70.5
+        },
+        {
+          "step": 2.0,
+          "train_reward": 0.125,
+          "loss": -0.08806708315387368,
+          "kl_samp_train": 0.003769330782035173,
+          "grad_norm": 3.6152472496032715,
+          "max_is_ratio": 1.6811119318008423,
+          "mean_len": 128.25
+        },
+        {
+          "step": 3.0,
+          "train_reward": 0.125,
+          "loss": -0.06233625486493111,
+          "kl_samp_train": 0.002878992406835544,
+          "grad_norm": 4.089179515838623,
+          "max_is_ratio": 2.5378684997558594,
+          "mean_len": 99.875
+        },
+        {
+          "step": 4.0,
+          "train_reward": 0.25,
+          "loss": 0.015011966228485107,
+          "kl_samp_train": 0.005706824554355368,
+          "grad_norm": 8.82369327545166,
+          "max_is_ratio": 7.392594337463379,
+          "mean_len": 92.125
+        },
+        {
+          "step": 5.0,
+          "train_reward": 0.125,
+          "loss": 0.017401160206645727,
+          "kl_samp_train": -0.0007000075627679694,
+          "grad_norm": 4.740912914276123,
+          "max_is_ratio": 2.6239521503448486,
+          "mean_len": 118.625
+        },
+        {
+          "step": 6.0,
+          "train_reward": 0.125,
+          "loss": -0.004341203719377518,
+          "kl_samp_train": 0.002458577315522558,
+          "grad_norm": 5.2465667724609375,
+          "max_is_ratio": 1.8465778827667236,
+          "mean_len": 126.625
+        },
+        {
+          "step": 7.0,
+          "train_reward": 0.125,
+          "loss": -0.03151030698791146,
+          "kl_samp_train": 0.006997282121862684,
+          "grad_norm": 7.982544898986816,
+          "max_is_ratio": 2.543039560317993,
+          "mean_len": 87.5
+        },
+        {
+          "step": 8.0,
+          "train_reward": 0.375,
+          "loss": -0.19457611069083214,
+          "kl_samp_train": 0.009538732118572056,
+          "grad_norm": 7.948472023010254,
+          "max_is_ratio": 2.1427652835845947,
+          "mean_len": 103.625
+        },
+        {
+          "step": 9.0,
+          "train_reward": 0.375,
+          "loss": -0.030634243041276932,
+          "kl_samp_train": -0.0012859345224828483,
+          "grad_norm": 10.069805145263672,
+          "max_is_ratio": 1.89277982711792,
+          "mean_len": 70.25
+        },
+        {
+          "step": 10.0,
+          "train_reward": 0.5,
+          "loss": -0.039761023595929146,
+          "kl_samp_train": 0.004150727976148374,
+          "grad_norm": 10.766167640686035,
+          "max_is_ratio": 2.7967753410339355,
+          "mean_len": 66.875,
+          "eval_reward": 0.21875
+        },
+        {
+          "step": 11.0,
+          "train_reward": 0.125,
+          "loss": -0.029227491468191147,
+          "kl_samp_train": 0.017985783098379383,
+          "grad_norm": 5.110234260559082,
+          "max_is_ratio": 2.5407979488372803,
+          "mean_len": 102.25
+        },
+        {
+          "step": 12.0,
+          "train_reward": 0.25,
+          "loss": -0.05054888501763344,
+          "kl_samp_train": 0.013064010955136398,
+          "grad_norm": 10.227673530578613,
+          "max_is_ratio": 2.7415764331817627,
+          "mean_len": 72.5
+        },
+        {
+          "step": 13.0,
+          "train_reward": 0.125,
+          "loss": -0.006713675335049629,
+          "kl_samp_train": 0.025554979208743934,
+          "grad_norm": 5.840920925140381,
+          "max_is_ratio": 1.3696485757827759,
+          "mean_len": 82.5
+        },
+        {
+          "step": 14.0,
+          "train_reward": 0.5,
+          "loss": -0.167720640078187,
+          "kl_samp_train": 0.011550695342280566,
+          "grad_norm": 13.968459129333496,
+          "max_is_ratio": 2.7349929809570312,
+          "mean_len": 67.125
+        },
+        {
+          "step": 15.0,
+          "train_reward": 0.125,
+          "loss": -0.03259155619889498,
+          "kl_samp_train": 0.008721062973031834,
+          "grad_norm": 6.596559524536133,
+          "max_is_ratio": 2.566462516784668,
+          "mean_len": 50.875
+        },
+        {
+          "step": 16.0,
+          "train_reward": 0.125,
+          "loss": -0.06443484546616673,
+          "kl_samp_train": 0.01048694946327988,
+          "grad_norm": 5.110448837280273,
+          "max_is_ratio": 1.8539942502975464,
+          "mean_len": 73.5
+        },
+        {
+          "step": 17.0,
+          "train_reward": 0.125,
+          "loss": 0.009537188336253166,
+          "kl_samp_train": 0.014384384976317551,
+          "grad_norm": 8.196735382080078,
+          "max_is_ratio": 5.9906792640686035,
+          "mean_len": 56.625
+        },
+        {
+          "step": 18.0,
+          "train_reward": 0.25,
+          "loss": -0.09928511548787355,
+          "kl_samp_train": 0.0051429383541953914,
+          "grad_norm": 9.158942222595215,
+          "max_is_ratio": 2.2818591594696045,
+          "mean_len": 54.625
+        },
+        {
+          "step": 19.0,
+          "train_reward": 0.25,
+          "loss": -0.016991928219795227,
+          "kl_samp_train": 0.005275099291273567,
+          "grad_norm": 12.454663276672363,
+          "max_is_ratio": 3.997995615005493,
+          "mean_len": 51.375
+        },
+        {
+          "step": 20.0,
+          "train_reward": 0.25,
+          "loss": -0.10551832336932421,
+          "kl_samp_train": 0.02305483201028891,
+          "grad_norm": 6.689167022705078,
+          "max_is_ratio": 2.1064612865448,
+          "mean_len": 60.375,
+          "eval_reward": 0.265625
+        },
+        {
+          "step": 21.0,
+          "train_reward": 0.25,
+          "loss": -0.0708394255489111,
+          "kl_samp_train": 0.023934646380329473,
+          "grad_norm": 16.131853103637695,
+          "max_is_ratio": 1.7679117918014526,
+          "mean_len": 35.125
+        },
+        {
+          "step": 22.0,
+          "train_reward": 0.25,
+          "loss": -0.07574099767953157,
+          "kl_samp_train": 0.02844701667626699,
+          "grad_norm": 8.457247734069824,
+          "max_is_ratio": 3.235954999923706,
+          "mean_len": 46.875
+        },
+        {
+          "step": 23.0,
+          "train_reward": 0.25,
+          "loss": -0.02776783611625433,
+          "kl_samp_train": 0.018815428109708546,
+          "grad_norm": 8.765329360961914,
+          "max_is_ratio": 3.1069514751434326,
+          "mean_len": 40.875
+        },
+        {
+          "step": 24.0,
+          "train_reward": 0.5,
+          "loss": -0.08123511355370283,
+          "kl_samp_train": 0.02017444861964595,
+          "grad_norm": 9.072978973388672,
+          "max_is_ratio": 2.0455987453460693,
+          "mean_len": 44.875
+        },
+        {
+          "step": 25.0,
+          "train_reward": 0.125,
+          "loss": -0.037643717136234045,
+          "kl_samp_train": 0.03375626743332413,
+          "grad_norm": 5.366408348083496,
+          "max_is_ratio": 1.7524440288543701,
+          "mean_len": 45.375
+        },
+        {
+          "step": 26.0,
+          "train_reward": 0.25,
+          "loss": -0.05648015346378088,
+          "kl_samp_train": 0.03084241721167493,
+          "grad_norm": 6.807968616485596,
+          "max_is_ratio": 1.3049501180648804,
+          "mean_len": 58.625
+        },
+        {
+          "step": 27.0,
+          "train_reward": 0.25,
+          "loss": -0.0013245581649243832,
+          "kl_samp_train": 0.018032333460347407,
+          "grad_norm": 11.702800750732422,
+          "max_is_ratio": 3.5573647022247314,
+          "mean_len": 43.5
+        },
+        {
+          "step": 28.0,
+          "train_reward": 0.375,
+          "loss": -0.10235930560156703,
+          "kl_samp_train": 0.03020505223955427,
+          "grad_norm": 7.436187744140625,
+          "max_is_ratio": 5.009164810180664,
+          "mean_len": 56.875
+        },
+        {
+          "step": 29.0,
+          "train_reward": 0.25,
+          "loss": -0.15015588188543916,
+          "kl_samp_train": 0.03365585386040676,
+          "grad_norm": 10.669572830200195,
+          "max_is_ratio": 2.1416664123535156,
+          "mean_len": 62.75
+        },
+        {
+          "step": 30.0,
+          "train_reward": 0.75,
+          "loss": -0.015239757485687733,
+          "kl_samp_train": 0.0036652447092435664,
+          "grad_norm": 11.486886978149414,
+          "max_is_ratio": 2.768789529800415,
+          "mean_len": 45.875,
+          "eval_reward": 0.328125
+        },
+        {
+          "step": 31.0,
+          "train_reward": 0.125,
+          "loss": -0.026801092782989144,
+          "kl_samp_train": 0.032152958043005275,
+          "grad_norm": 5.898931503295898,
+          "max_is_ratio": 2.45828914642334,
+          "mean_len": 43.5
+        },
+        {
+          "step": 32.0,
+          "train_reward": 0.25,
+          "loss": -0.028019833378493786,
+          "kl_samp_train": -0.0008794004576546806,
+          "grad_norm": 10.2534761428833,
+          "max_is_ratio": 12.154204368591309,
+          "mean_len": 43.75
+        },
+        {
+          "step": 33.0,
+          "train_reward": 0.25,
+          "loss": 0.2511625261977315,
+          "kl_samp_train": 0.02039677342452572,
+          "grad_norm": 13.476485252380371,
+          "max_is_ratio": 2.229512929916382,
+          "mean_len": 44.25
+        },
+        {
+          "step": 34.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.026007601495325213,
+          "grad_norm": 0.0,
+          "max_is_ratio": 20.745187759399414,
+          "mean_len": 42.25
+        },
+        {
+          "step": 35.0,
+          "train_reward": 0.25,
+          "loss": 0.23855647584423423,
+          "kl_samp_train": 0.01973160296461008,
+          "grad_norm": 15.041975021362305,
+          "max_is_ratio": 13.225668907165527,
+          "mean_len": 51.375
+        },
+        {
+          "step": 36.0,
+          "train_reward": 0.5,
+          "loss": -0.19708567997440696,
+          "kl_samp_train": 0.014706330838459077,
+          "grad_norm": 12.800467491149902,
+          "max_is_ratio": 2.304886817932129,
+          "mean_len": 53.625
+        },
+        {
+          "step": 37.0,
+          "train_reward": 0.125,
+          "loss": -0.01962915901094675,
+          "kl_samp_train": 0.0035837614616024056,
+          "grad_norm": 5.808772563934326,
+          "max_is_ratio": 7.896556377410889,
+          "mean_len": 74.75
+        },
+        {
+          "step": 38.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.048720080387301565,
+          "grad_norm": 0.0,
+          "max_is_ratio": 1.883130669593811,
+          "mean_len": 51.25
+        },
+        {
+          "step": 39.0,
+          "train_reward": 0.125,
+          "loss": -0.022105115931481123,
+          "kl_samp_train": 0.009592403378863792,
+          "grad_norm": 4.398149490356445,
+          "max_is_ratio": 3.5921578407287598,
+          "mean_len": 44.25
+        },
+        {
+          "step": 40.0,
+          "train_reward": 0.625,
+          "loss": -0.1114128758199513,
+          "kl_samp_train": 0.025087054996263413,
+          "grad_norm": 11.580358505249023,
+          "max_is_ratio": 7.2816901206970215,
+          "mean_len": 42.0,
+          "eval_reward": 0.359375
+        },
+        {
+          "step": 41.0,
+          "train_reward": 0.375,
+          "loss": -0.023152141366153955,
+          "kl_samp_train": 0.04710113661380108,
+          "grad_norm": 6.955506801605225,
+          "max_is_ratio": 4.308906078338623,
+          "mean_len": 42.625
+        },
+        {
+          "step": 42.0,
+          "train_reward": 0.375,
+          "loss": -0.06946130958385766,
+          "kl_samp_train": 0.02640380897119366,
+          "grad_norm": 8.049890518188477,
+          "max_is_ratio": 2.0615627765655518,
+          "mean_len": 47.375
+        },
+        {
+          "step": 43.0,
+          "train_reward": 0.125,
+          "loss": -0.055103600025177,
+          "kl_samp_train": 0.018589301241768733,
+          "grad_norm": 2.8274600505828857,
+          "max_is_ratio": 1.7175977230072021,
+          "mean_len": 61.875
+        },
+        {
+          "step": 44.0,
+          "train_reward": 0.25,
+          "loss": -0.010614510159939528,
+          "kl_samp_train": 0.023949539345951135,
+          "grad_norm": 7.805909633636475,
+          "max_is_ratio": 3.9851057529449463,
+          "mean_len": 44.875
+        },
+        {
+          "step": 45.0,
+          "train_reward": 0.25,
+          "loss": -0.1586604448966682,
+          "kl_samp_train": 0.006859428181308235,
+          "grad_norm": 7.931144714355469,
+          "max_is_ratio": 5.855093479156494,
+          "mean_len": 73.625
+        },
+        {
+          "step": 46.0,
+          "train_reward": 0.5,
+          "loss": -0.10145389614626765,
+          "kl_samp_train": 0.03480593848416186,
+          "grad_norm": 8.197671890258789,
+          "max_is_ratio": 2.5191152095794678,
+          "mean_len": 47.625
+        },
+        {
+          "step": 47.0,
+          "train_reward": 0.375,
+          "loss": -0.153251385781914,
+          "kl_samp_train": 0.017331765088813983,
+          "grad_norm": 10.368484497070312,
+          "max_is_ratio": 3.368947744369507,
+          "mean_len": 56.625
+        },
+        {
+          "step": 48.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.003072984052221303,
+          "grad_norm": 0.0,
+          "max_is_ratio": 11.476313591003418,
+          "mean_len": 46.125
+        },
+        {
+          "step": 49.0,
+          "train_reward": 0.125,
+          "loss": -0.11442861973773688,
+          "kl_samp_train": 0.012241016912639253,
+          "grad_norm": 4.1115217208862305,
+          "max_is_ratio": 2.0032713413238525,
+          "mean_len": 66.625
+        },
+        {
+          "step": 50.0,
+          "train_reward": 0.125,
+          "loss": 0.0028106458485126495,
+          "kl_samp_train": 0.0478348599866106,
+          "grad_norm": 7.600033283233643,
+          "max_is_ratio": 2.130797863006592,
+          "mean_len": 50.75,
+          "eval_reward": 0.390625
+        },
+        {
+          "step": 51.0,
+          "train_reward": 0.125,
+          "loss": -0.05842259235214442,
+          "kl_samp_train": 0.021590361645979474,
+          "grad_norm": 4.566178321838379,
+          "max_is_ratio": 4.727966785430908,
+          "mean_len": 48.375
+        },
+        {
+          "step": 52.0,
+          "train_reward": 0.25,
+          "loss": -0.06541696703061461,
+          "kl_samp_train": -0.0015771124234869461,
+          "grad_norm": 9.609930992126465,
+          "max_is_ratio": 3.1530816555023193,
+          "mean_len": 60.5
+        },
+        {
+          "step": 53.0,
+          "train_reward": 0.125,
+          "loss": 0.002807804266922176,
+          "kl_samp_train": 0.0065130234654270005,
+          "grad_norm": 7.7894368171691895,
+          "max_is_ratio": 3.205491065979004,
+          "mean_len": 41.875
+        },
+        {
+          "step": 54.0,
+          "train_reward": 0.25,
+          "loss": -0.022189166396856308,
+          "kl_samp_train": 0.013173270585208103,
+          "grad_norm": 8.130528450012207,
+          "max_is_ratio": 14.581517219543457,
+          "mean_len": 43.5
+        },
+        {
+          "step": 55.0,
+          "train_reward": 0.375,
+          "loss": -0.012590913102030754,
+          "kl_samp_train": 0.014290356283247286,
+          "grad_norm": 10.682411193847656,
+          "max_is_ratio": 3.4094085693359375,
+          "mean_len": 40.125
+        },
+        {
+          "step": 56.0,
+          "train_reward": 0.5,
+          "loss": -0.012855671346187592,
+          "kl_samp_train": -0.009400747962883715,
+          "grad_norm": 12.755264282226562,
+          "max_is_ratio": 18.252479553222656,
+          "mean_len": 49.125
+        },
+        {
+          "step": 57.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.009645677618233555,
+          "grad_norm": 0.0,
+          "max_is_ratio": 6.735783100128174,
+          "mean_len": 51.875
+        },
+        {
+          "step": 58.0,
+          "train_reward": 0.25,
+          "loss": 0.011262815678492188,
+          "kl_samp_train": 0.015526798906780425,
+          "grad_norm": 8.568509101867676,
+          "max_is_ratio": 1.6466636657714844,
+          "mean_len": 65.625
+        },
+        {
+          "step": 59.0,
+          "train_reward": 0.5,
+          "loss": -0.33670635474845767,
+          "kl_samp_train": 0.020997714222842502,
+          "grad_norm": 9.651304244995117,
+          "max_is_ratio": 1.5638700723648071,
+          "mean_len": 65.5
+        },
+        {
+          "step": 60.0,
+          "train_reward": 0.125,
+          "loss": 0.14717220445163548,
+          "kl_samp_train": 0.002102540781745663,
+          "grad_norm": 9.059836387634277,
+          "max_is_ratio": 2.127868413925171,
+          "mean_len": 77.0,
+          "eval_reward": 0.359375
+        },
+        {
+          "step": 61.0,
+          "train_reward": 0.25,
+          "loss": -0.19996767304837704,
+          "kl_samp_train": 0.015232281905153524,
+          "grad_norm": 4.2710137367248535,
+          "max_is_ratio": 2.591442823410034,
+          "mean_len": 115.0
+        },
+        {
+          "step": 62.0,
+          "train_reward": 0.5,
+          "loss": -0.14913239795714617,
+          "kl_samp_train": 0.008705512430343329,
+          "grad_norm": 12.642210960388184,
+          "max_is_ratio": 4.4964141845703125,
+          "mean_len": 47.75
+        },
+        {
+          "step": 63.0,
+          "train_reward": 0.375,
+          "loss": -0.20548487082123756,
+          "kl_samp_train": 0.006618199348449707,
+          "grad_norm": 9.746091842651367,
+          "max_is_ratio": 2.9696829319000244,
+          "mean_len": 90.625
+        },
+        {
+          "step": 64.0,
+          "train_reward": 0.25,
+          "loss": -0.20083102700300515,
+          "kl_samp_train": 0.006840013924923689,
+          "grad_norm": 6.564312934875488,
+          "max_is_ratio": 1.983953833580017,
+          "mean_len": 67.125
+        },
+        {
+          "step": 65.0,
+          "train_reward": 0.375,
+          "loss": -0.21048009395599365,
+          "kl_samp_train": -0.0027028148190086825,
+          "grad_norm": 11.912148475646973,
+          "max_is_ratio": 4.770504474639893,
+          "mean_len": 84.875
+        },
+        {
+          "step": 66.0,
+          "train_reward": 0.75,
+          "loss": -0.17215568060055375,
+          "kl_samp_train": 0.008353041353865652,
+          "grad_norm": 11.841028213500977,
+          "max_is_ratio": 2.3953678607940674,
+          "mean_len": 76.375
+        },
+        {
+          "step": 67.0,
+          "train_reward": 0.25,
+          "loss": -0.05613943049684167,
+          "kl_samp_train": 0.009522227000500729,
+          "grad_norm": 8.642328262329102,
+          "max_is_ratio": 2.8292934894561768,
+          "mean_len": 67.0
+        },
+        {
+          "step": 68.0,
+          "train_reward": 0.5,
+          "loss": -0.28473049215972424,
+          "kl_samp_train": 0.023560510778494,
+          "grad_norm": 11.08617115020752,
+          "max_is_ratio": 2.3742589950561523,
+          "mean_len": 89.125
+        },
+        {
+          "step": 69.0,
+          "train_reward": 0.5,
+          "loss": -0.23565928707830608,
+          "kl_samp_train": 0.01804718337289553,
+          "grad_norm": 8.491541862487793,
+          "max_is_ratio": 1.9999834299087524,
+          "mean_len": 98.25
+        },
+        {
+          "step": 70.0,
+          "train_reward": 0.25,
+          "loss": -0.006301098503172398,
+          "kl_samp_train": 0.009885497006744853,
+          "grad_norm": 8.62520980834961,
+          "max_is_ratio": 4.75914192199707,
+          "mean_len": 89.625,
+          "eval_reward": 0.46875
+        },
+        {
+          "step": 71.0,
+          "train_reward": 0.25,
+          "loss": -0.17734119342640042,
+          "kl_samp_train": 0.025147367714409622,
+          "grad_norm": 4.968682289123535,
+          "max_is_ratio": 2.229564905166626,
+          "mean_len": 104.5
+        },
+        {
+          "step": 72.0,
+          "train_reward": 0.25,
+          "loss": 0.14704458229243755,
+          "kl_samp_train": -0.004265920890794767,
+          "grad_norm": 10.5105562210083,
+          "max_is_ratio": 6.805916786193848,
+          "mean_len": 71.5
+        },
+        {
+          "step": 73.0,
+          "train_reward": 0.5,
+          "loss": -0.1578086083754897,
+          "kl_samp_train": 0.015186705576735918,
+          "grad_norm": 6.665377616882324,
+          "max_is_ratio": 2.508237838745117,
+          "mean_len": 77.125
+        },
+        {
+          "step": 74.0,
+          "train_reward": 0.5,
+          "loss": -0.21616303315386176,
+          "kl_samp_train": 0.017728758624826486,
+          "grad_norm": 10.758875846862793,
+          "max_is_ratio": 2.153987169265747,
+          "mean_len": 65.0
+        },
+        {
+          "step": 75.0,
+          "train_reward": 0.375,
+          "loss": -0.285540753044188,
+          "kl_samp_train": 0.00905137094437267,
+          "grad_norm": 8.472296714782715,
+          "max_is_ratio": 2.3067824840545654,
+          "mean_len": 82.875
+        },
+        {
+          "step": 76.0,
+          "train_reward": 0.5,
+          "loss": -0.012930959463119507,
+          "kl_samp_train": 0.016316595193194717,
+          "grad_norm": 11.515012741088867,
+          "max_is_ratio": 4.098623752593994,
+          "mean_len": 57.0
+        },
+        {
+          "step": 77.0,
+          "train_reward": 0.5,
+          "loss": -0.26264964137226343,
+          "kl_samp_train": 0.016835289239473063,
+          "grad_norm": 10.454572677612305,
+          "max_is_ratio": 2.4779324531555176,
+          "mean_len": 72.625
+        },
+        {
+          "step": 78.0,
+          "train_reward": 0.375,
+          "loss": -0.033924657851457596,
+          "kl_samp_train": 0.01494343270940229,
+          "grad_norm": 8.531054496765137,
+          "max_is_ratio": 3.1025965213775635,
+          "mean_len": 90.75
+        },
+        {
+          "step": 79.0,
+          "train_reward": 0.5,
+          "loss": -0.29483848763629794,
+          "kl_samp_train": 0.013950744657469845,
+          "grad_norm": 8.277017593383789,
+          "max_is_ratio": 2.751795768737793,
+          "mean_len": 102.25,
+          "eval_reward": 0.453125
+        }
+      ],
+      "eval_samples": {
+        "step_0": {
+          "success": [
+            {
+              "numbers": [
+                19,
+                6,
+                3
+              ],
+              "target": 22,
+              "solution": "19 + (6 - 3)",
+              "completion": "To create an equation that equals 22 using the numbers [19, 6, 3], you can do the following:\n\n$$\n(19 - 6) + 3 = 13 + 3 = 16\n$$\n\nHowever, this does not result in 22. Let's try again.\n\n$$\n(19 - 3) = 16\n$$\n\n$$\n(16 + 6) = 22\n$$\n\nSo the correct equation is:\n\n$$\n(19 - 3) + 6 = 22\n$$\n\n<answer> (19 - 3) + 6 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                17,
+                23
+              ],
+              "target": 17,
+              "solution": "17 + (23 - 23)",
+              "completion": "To create an equation using the numbers [23, 17, 23] and basic arithmetic operations that equals 17, we can do:\n\n(17 - 23) + 23 = 17\n\n**Answer:**  \n<answer> (17 - 23) + 23 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                7,
+                14
+              ],
+              "target": 14,
+              "solution": "(7 + 14) - 7",
+              "completion": "To create an equation that equals 14 using the numbers [7, 7, 14], you can use division. Here's the solution:\n\n**Answer:**  \n<answer> (14 / 7) * 7 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                18,
+                24,
+                15
+              ],
+              "target": 57,
+              "solution": "(24 + 15) + 18",
+              "completion": "To create an equation using the numbers [18, 24, 15] and basic arithmetic operations that equals 57, we can solve it as follows:\n\n1. Add 18 and 15: $18 + 15 = 33$\n2. Add 24 to the result: $33 + 24 = 57$\n\nSo, the equation is:\n\n<answer> (18 + 15) + 24 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                13,
+                20
+              ],
+              "target": 56,
+              "solution": "(13 + 23) + 20",
+              "completion": "To create an equation using the numbers [23, 13, 20] and basic arithmetic operations that equals 56, we can solve it as follows:\n\n1. Add 20 and 13: $ 20 + 13 = 33 $  \n2. Add 33 to 23: $ 33 + 23 = 56 $\n\nSo, the equation is:\n\n$$\n(20 + 13) + 23 = 56\n$$\n\nFinal answer: <answer> (20 + 13) + 23 </answer>.",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                20,
+                25
+              ],
+              "target": 20,
+              "solution": "(15 + 25) - 20",
+              "completion": "To create an equation using the numbers [15, 20, 25] and basic arithmetic operations that equals 20, we can use:\n\n$$\n(15 - 20) + 25 = 15 - 20 + 25 = 20\n$$\n\nFinal answer: <answer> (15 - 20) + 25 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                13,
+                21
+              ],
+              "target": 54,
+              "solution": "13 + (21 + 20)",
+              "completion": "To create an equation using the numbers [20, 13, 21] and basic arithmetic operations that equals 54, we can solve it as follows:\n\n13 + 20 + 21 = 54\n\n### Final Answer:\n<answer> (13 + 20) + 21 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                3,
+                23,
+                22
+              ],
+              "target": 135,
+              "solution": "(22 + 23) * 3",
+              "completion": "To create an equation using the numbers [3, 23, 22] that equals 135, we can use the following step-by-step:\n\n1. Add 23 and 22:  \n   $ 23 + 22 = 45 $\n\n2. Multiply the result by 3:  \n   $ 45 \\times 3 = 135 $\n\nSo, the equation is:  \n**<answer> (23 + 22) * 3 </answer>**",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                6,
+                21
+              ],
+              "target": 115,
+              "solution": "(6 * 21) - 11",
+              "completion": "To create an equation using the numbers [11, 6, 21] that equals 115, we can use the following process:\n\n11 + 6 \u00d7 21 = 11 + 126 = 137\n\n115 is not equal to 137.\n\nWe can try again:\n\n21 \u00d7 6 + 11 = 126 + 11 = 137\n\nAgain, not equal to 115.\n\nLet's try using division:\n\n(21 \u00d7 6) - 11 = 126 - 11 = 115\n\nThis works.\n\n<answer> (21 \u00d7 6) - 11 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                19,
+                23,
+                19
+              ],
+              "target": 23,
+              "solution": "23 * (19 / 19)",
+              "completion": "To create an equation using the numbers [19, 23, 19] and basic arithmetic operations that equals 23, we can use:\n\n$$\n(19 - 19) + 23 = 23\n$$\n\n<answer> (19 - 19) + 23 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            }
+          ],
+          "failure": [
+            {
+              "numbers": [
+                10,
+                3,
+                1
+              ],
+              "target": 29,
+              "solution": "(3 * 10) - 1",
+              "completion": "To create an equation that equals 29 using the numbers [10, 3, 1], you can do the following:\n\n$$\n(10 - 3) \\times 1 = 7\n$$\n\nHowever, this equation doesn't equal 29. Let's try again:\n\n$$\n(3 + 10) = 13\n$$\n\nThis also doesn't equal 29. Let's try:\n\n$$\n(10 + 3) + 1 = 14\n$$\n\nStill not 29.\n\n$$\n(3 \\times 1) + (10) \\times 1 = 13\n$$\n\nAlso not 29.\n\nAfter trying other combinations, let's try:\n\n$$\n(",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                10,
+                13,
+                11
+              ],
+              "target": 14,
+              "solution": "(11 - 10) + 13",
+              "completion": "To create an equation using the numbers [10, 13, 11] and basic arithmetic operations that equals 14, we can solve it as follows:\n\n1. Add 10 and 11: $10 + 11 = 21$\n2. Subtract 13 from the result: $21 - 13 = 8$\n\nThis does not result in 14. Let's try again:\n\n1. Use only one number and add it to another: $11 + 13 = 24$\n2. Subtract the remaining number: $24 - 10 = 14$\n\nFinal equation:  \n$$\n(13 + 11) - 10 = 14\n",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                2,
+                5,
+                15
+              ],
+              "target": 65,
+              "solution": "(15 - 2) * 5",
+              "completion": "To create an equation that equals 65 using the numbers [2, 5, 15], you can do the following:\n\n$$ (15 \\times 2) + 5 = 65 $$\n\n$$ <answer> (15 \\times 2) + 5 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                5,
+                7,
+                5
+              ],
+              "target": 7,
+              "solution": "(5 * 7) / 5",
+              "completion": "To create an equation using the numbers [5, 7, 5] that equals 7, we can use division:\n\n$$\n(7 - 5) = 7\n$$\n\nSo the equation is:\n\n$$\n\\boxed{(7 - 5) = 7}\n$$",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                1,
+                18
+              ],
+              "target": 29,
+              "solution": "(18 + 11) / 1",
+              "completion": "To create an equation with the numbers [11, 1, 18] that equals 29, use the arithmetic operation:\n\n$$\n(11 - 1) + 18 = 29\n$$\n\nSo the final answer is:\n\n<answer> (11 - 1) + 18 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                1,
+                8
+              ],
+              "target": 152,
+              "solution": "(20 - 1) * 8",
+              "completion": "To create an equation with the numbers [20, 1, 8] that equals 152:\n\nWe start with the largest numbers since 20 is large, and then use multiplication.  \n$ (8 + 1) \\times 20 = 152 $\n\n**Work:**  \n$ (8 + 1) \\times 20 = 152 $\n\n<answer> (8 + 1) \u00d7 20 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                11,
+                8
+              ],
+              "target": 26,
+              "solution": "8 + (11 + 7)",
+              "completion": "To create an equation that equals 26 using the numbers [7, 11, 8], you can do the following:\n\n$$\n(7 + 11) - 8 = 18\n$$\n\nHowever, another equation using these numbers with basic arithmetic operations is:\n\n$$\n(11 + 8) - 7 = 12\n$$\n\nThis approach shows that the numbers can only be used once.\n\n$$\n\\boxed{(11 + 8) - 7 = 12}\n$$\n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                4,
+                9
+              ],
+              "target": 25,
+              "solution": "(4 * 9) - 11",
+              "completion": "To create an equation that equals 25 using the numbers [11, 4, 9], you can do the following:\n\n$$\n(11 - 4) \\times 9 = 7 \\times 9 = 63\n$$\n\nWait, that doesn't equal 25. Let's try again.\n\n$$\n(11 - 9) = 2\n$$\n\n$$\n4 \\times 2 = 8\n$$\n\nNo, that's still more than 25. Let's try using all three numbers:\n\n$$\n(11 - 9) + (4 \\times 1) = 2 + 4 = 6$$\n\nStill not right.\n\nLet's try:\n\n$$\n(11 + ",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                21,
+                13
+              ],
+              "target": 7,
+              "solution": "(15 - 21) + 13",
+              "completion": "To create an equation with the numbers [15, 21, 13] that equals 7, use the operation:\n\n$$\n(21 - 15) = 6\n$$\n\nNow add 13:\n\n$$\n6 + 13 = 19\n$$\n\nThis doesn't equal 7. Let's try:\n\n$$\n13 - 21 + 15 = 7\n$$\n\nThis works!\n\n$$\n\\boxed{13 - 21 + 15 = 7}\n$$\n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                24,
+                18
+              ],
+              "target": 4,
+              "solution": "24 / (18 - 12)",
+              "completion": "To create an equation with the numbers [12, 24, 18] that equals 4, use the operation:\n\n$$\n(24 - 18) = 6\n$$\n\nTo get 4, divide 6 by 3, but we only have 4 numbers. So instead, use:\n\n$$\n(12 + 18) = 30, \\quad \\text{then divide by (24 + 18)} = 42, \\quad \\text{and find } (30 \\div 42) = 4. (30/42 = 1.0x \\text{ fraction})$\n\nSo the correct equation is:\n\n$$\n(24 - 18)",
+              "reward": 0.0,
+              "source": "eval_main"
+            }
+          ]
+        },
+        "step_79": {
+          "success": [
+            {
+              "numbers": [
+                10,
+                13,
+                11
+              ],
+              "target": 14,
+              "solution": "(11 - 10) + 13",
+              "completion": "Reasoning: 11 + 3 = 14. Since the numbers available are 10, 13, and 11, we can use 13 and 11 to add to reach 14 (13 + 11 = 24, but 24 - 10 = 14). <answer> 13 + 11 - 10 = 14 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                5,
+                7,
+                5
+              ],
+              "target": 7,
+              "solution": "(5 * 7) / 5",
+              "completion": "Reasoning: 5 + 7 - 5 equals 7. (5 + 5 + 7 = 17 \u2192 17 - 7 = 10, so 5 + 7 - 5 = 7.)\n\n<answer> 5 + 7 - 5 = 7 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                19,
+                6,
+                3
+              ],
+              "target": 22,
+              "solution": "19 + (6 - 3)",
+              "completion": "Reasoning: 19 - 6 = 13, and 3 + 13 = 16, which is close to 22. However, since the equation must use each number once, the correct combination is 19 + 6 - 3 = 22. <answer> 19 + 6 - 3 = 22 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                1,
+                8
+              ],
+              "target": 152,
+              "solution": "(20 - 1) * 8",
+              "completion": "Reasoning: To get 152 from 20, 1, and 8, you can multiply 20 by 8 to get 160, and then subtract 1: 160 - 1 = 159, which is close but not quite. However, 20 * 1 = 20 and 8 * 1 = 8, both under 20. Maybe (20 + 8) * 1 = 28, still low. Wait, perhaps (8 * (20 - 1)) = 152. <answer> 8 \u00d7 (20 - 1) = 152 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                11,
+                8
+              ],
+              "target": 26,
+              "solution": "8 + (11 + 7)",
+              "completion": "Reasoning: 11 + (7 * 8) = 11 + 56 = 67 \u2192 But this doesn't equal 26. Wait, perhaps 11 + 8 = 19 and 7 * 9 = 63, not helpful. Maybe use division: 7 \u00f7 1 = 7 and 11 - 8 = 3, but again nope. Alternatively, (11 + 8) + 7 = 26. <answer> 11 + 8 + 7 = 26 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                21,
+                4
+              ],
+              "target": 29,
+              "solution": "12 + (21 - 4)",
+              "completion": "Reasoning: To get 29 from 12, 21, and 4, you can add 21 and 4 to get 25, then add 12 again: 21 + 4 + 12 = 37, which is too high. Wait, that's not right. Let's try 21 + 12 = 33, then subtract 4 gives 29. So the equation is 21 + 12 - 4 = 29. (12 + 21) - 4 = 29. <answer> 21 + 12 - 4 = 29 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                18,
+                24,
+                15
+              ],
+              "target": 57,
+              "solution": "(24 + 15) + 18",
+              "completion": "Reasoning: 24 + 18 = 42, and 57 - 42 = 15. Since 15 is one of the numbers, and nothing else is needed, this works (18 + 24 + 15 = 57). <answer> 18 + 24 + 15 = 57 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                13,
+                20
+              ],
+              "target": 56,
+              "solution": "(13 + 23) + 20",
+              "completion": "Reasoning: 23 + 20 = 43, and 13 + 43 = 56 (using all numbers once with operations). <answer> 23 + 20 + 13 = 56 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                3,
+                15
+              ],
+              "target": 19,
+              "solution": "(15 + 7) - 3",
+              "completion": "Reasoning: 15 + 7 equals 22, which is over the target. Since 19 is 3 less than 22, we can subtract 3 from 15. <answer> 15 + 7 - 3 = 19 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                22,
+                22,
+                11
+              ],
+              "target": 55,
+              "solution": "(22 + 11) + 22",
+              "completion": "Reasoning: 22 + 22 = 44, and 55 - 44 = 11. Since 11 is already in the equation, it's already accounted for once. So the equation is 22 + 22 + 11 = 55. <answer> 22 + 22 + 11 = 55 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            }
+          ],
+          "failure": [
+            {
+              "numbers": [
+                10,
+                3,
+                1
+              ],
+              "target": 29,
+              "solution": "(3 * 10) - 1",
+              "completion": "Reasoning: 10 + 3 + 16 = 29, but 16 can be made from 10 + 6. Wait, there's no 6 available. Maybe 10 + 3 * 1 = 13, which is not helpful. Alternatively, 10 + (3 + 1) * 3 is 29? But 3 is only once. Adjustment needed. Final equation: 10 + 3 + 6 = 19, but again no 6. Proper use: 10 * 3 + 1 (30 + 1 = 31). No. Wait, 3*10 + 3 = 33. Still not. Hmm.",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                2,
+                5,
+                15
+              ],
+              "target": 65,
+              "solution": "(15 - 2) * 5",
+              "completion": "Reasoning: 15 * (2 + 5) = 15 * 7 = 105, which is close to 65. Since 15 * 4 = 60, 65 - 15 = 50. But we already used 15. Alternatively, 2 + 5 = 7, and 15 * 4 = 60, so 60 + 5 = 65. But we need to incorporate the numbers. 2 * 5 = 10, and 15 * 4 = 60. 60 + 10 = 70. Not quite. Maybe (15 + 2) * (5) = ",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                1,
+                18
+              ],
+              "target": 29,
+              "solution": "(18 + 11) / 1",
+              "completion": "Reasoning: To get 29 from 11, 1, and 18, you can add 18 and 1 to get 19, then add 11 again: 18 + 1 + 11 = 29 (using all numbers once). <answer> 18 + 1 + 11 = 29 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                4,
+                9
+              ],
+              "target": 25,
+              "solution": "(4 * 9) - 11",
+              "completion": "Reasoning: 11 + (9 - 4) = 16, which isn't 25. Maybe 11 + 9 = 20, and 20 + 4 = 24, which also doesn't work. Wait, 11 + 4 + 9 = 24. Close, but not 25. So one 4 would be extra. The equation could be 9 + 11 + 4 = 24. But since we need 25, perhaps (11 + 9) * 1 + 4 (though 1 is not in the numbers). Alternatively, 9 * 2 + 7 = 25, but no 2 or 7 available",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                21,
+                13
+              ],
+              "target": 7,
+              "solution": "(15 - 21) + 13",
+              "completion": "Reasoning: To get 7 from [15, 21, 13], we can subtract 13 and 15 to get -2, then add 21 to it: 21 + (15 - 13) = 13. This uses each number once. <answer> 21 + (15 - 13) = 13 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                24,
+                18
+              ],
+              "target": 4,
+              "solution": "24 / (18 - 12)",
+              "completion": "Reasoning: To get 4 from [12, 24, 18], divide 24 by 12 (which is 2), and then add 18 to it: 24 \u00f7 12 + 18 = 4 (b/c each number is used exactly once and operations are basic). <answer> 24 \u00f7 12 + 18 = 4 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                17,
+                23
+              ],
+              "target": 17,
+              "solution": "17 + (23 - 23)",
+              "completion": "Reasoning: 23 - 17 = 6, and 23 - 6 = 17 (using each number once). \n\n<answer> 23 - 17 = 6; 23 - 6 = 17 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                8,
+                3,
+                21
+              ],
+              "target": 71,
+              "solution": "8 + (3 * 21)",
+              "completion": "Reasoning: 21 + 8 = 29, and 71 - 29 = 42. Since this doesn't directly work, we consider combining other numbers in a way that sums up to 71. 8 + 3 = 11 and 21 + 11 = 32, and 71 - 32 = 40, which isn't helpful either. The closest combinations might not reach the desired sum unless multiplied by more factors, but this is unclear without more steps. (No direct equation is formed) <answer> 8 * (21 + 3) + 1 = 71 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                7,
+                14
+              ],
+              "target": 14,
+              "solution": "(7 + 14) - 7",
+              "completion": "Reasoning: 14 can be formed by adding two 7s together (7 + 7 = 14). Each number is used exactly once. \n\n<answer> 7 + 7 = 14 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                1,
+                15,
+                11
+              ],
+              "target": 4,
+              "solution": "(15 * 1) - 11",
+              "completion": "Reasoning: 15 - (11 + 1) = 3, which isn't 4, but 11 - (1 + 15) = 15 - 16 = -1, not helpful. Wait, maybe 15 - 11 = 4 directly! <answer> 15 - 11 = 4 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "tis_sc",
+      "name": "TIS + Score Centering",
+      "elapsed_sec": 976.695862531662,
+      "history": [
+        {
+          "step": 0.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.0019762613607528516,
+          "grad_norm": 0.0,
+          "max_is_ratio": 1.615774393081665,
+          "mean_len": 83.125,
+          "eval_reward": 0.171875
+        },
+        {
+          "step": 1.0,
+          "train_reward": 0.125,
+          "loss": 0.029933047713711858,
+          "kl_samp_train": 0.0007532980319456006,
+          "grad_norm": 8.914824485778809,
+          "max_is_ratio": 1.857332706451416,
+          "mean_len": 70.5
+        },
+        {
+          "step": 2.0,
+          "train_reward": 0.125,
+          "loss": -0.08919759932905436,
+          "kl_samp_train": 0.0032763636251639206,
+          "grad_norm": 3.624159574508667,
+          "max_is_ratio": 1.6820365190505981,
+          "mean_len": 128.25
+        },
+        {
+          "step": 3.0,
+          "train_reward": 0.25,
+          "loss": -0.04041190259158611,
+          "kl_samp_train": 0.0013816773074946992,
+          "grad_norm": 6.2240190505981445,
+          "max_is_ratio": 2.2872116565704346,
+          "mean_len": 109.5
+        },
+        {
+          "step": 4.0,
+          "train_reward": 0.25,
+          "loss": 0.018946193158626556,
+          "kl_samp_train": 0.0027206698135334127,
+          "grad_norm": 8.008907318115234,
+          "max_is_ratio": 2.1307196617126465,
+          "mean_len": 94.0
+        },
+        {
+          "step": 5.0,
+          "train_reward": 0.125,
+          "loss": 0.020097874104976654,
+          "kl_samp_train": 0.0003498624951369644,
+          "grad_norm": 4.861058235168457,
+          "max_is_ratio": 3.3141586780548096,
+          "mean_len": 118.625
+        },
+        {
+          "step": 6.0,
+          "train_reward": 0.125,
+          "loss": 0.018274825997650623,
+          "kl_samp_train": 0.011423262688848707,
+          "grad_norm": 5.807730674743652,
+          "max_is_ratio": 1.8139489889144897,
+          "mean_len": 112.5
+        },
+        {
+          "step": 7.0,
+          "train_reward": 0.125,
+          "loss": -0.05566664971411228,
+          "kl_samp_train": 0.017140175901844117,
+          "grad_norm": 5.825633525848389,
+          "max_is_ratio": 2.308875799179077,
+          "mean_len": 83.5
+        },
+        {
+          "step": 8.0,
+          "train_reward": 0.25,
+          "loss": -0.14804036356508732,
+          "kl_samp_train": 0.02254844068641394,
+          "grad_norm": 5.141373634338379,
+          "max_is_ratio": 2.095477819442749,
+          "mean_len": 106.5
+        },
+        {
+          "step": 9.0,
+          "train_reward": 0.125,
+          "loss": -0.004259821493178606,
+          "kl_samp_train": 0.0058925095255728125,
+          "grad_norm": 6.260523796081543,
+          "max_is_ratio": 1.8800407648086548,
+          "mean_len": 81.0
+        },
+        {
+          "step": 10.0,
+          "train_reward": 0.25,
+          "loss": -0.12285390216857195,
+          "kl_samp_train": 0.004413453561644401,
+          "grad_norm": 7.210666179656982,
+          "max_is_ratio": 3.7738139629364014,
+          "mean_len": 77.5,
+          "eval_reward": 0.15625
+        },
+        {
+          "step": 11.0,
+          "train_reward": 0.25,
+          "loss": -0.023841818794608116,
+          "kl_samp_train": 0.022909470855212603,
+          "grad_norm": 5.684628486633301,
+          "max_is_ratio": 3.7090847492218018,
+          "mean_len": 114.375
+        },
+        {
+          "step": 12.0,
+          "train_reward": 0.5,
+          "loss": -0.0784652940928936,
+          "kl_samp_train": 0.0036055614249874846,
+          "grad_norm": 10.728964805603027,
+          "max_is_ratio": 9.927764892578125,
+          "mean_len": 74.25
+        },
+        {
+          "step": 13.0,
+          "train_reward": 0.125,
+          "loss": -0.029528633691370487,
+          "kl_samp_train": 0.01630548628971731,
+          "grad_norm": 6.1914520263671875,
+          "max_is_ratio": 1.7744877338409424,
+          "mean_len": 69.5
+        },
+        {
+          "step": 14.0,
+          "train_reward": 0.25,
+          "loss": -0.18124334886670113,
+          "kl_samp_train": 0.01395520024580866,
+          "grad_norm": 6.122689723968506,
+          "max_is_ratio": 1.7527748346328735,
+          "mean_len": 93.25
+        },
+        {
+          "step": 15.0,
+          "train_reward": 0.25,
+          "loss": -0.009381106123328209,
+          "kl_samp_train": 0.00466107900026634,
+          "grad_norm": 11.783594131469727,
+          "max_is_ratio": 2.099435567855835,
+          "mean_len": 75.125
+        },
+        {
+          "step": 16.0,
+          "train_reward": 0.125,
+          "loss": -0.10966426692903042,
+          "kl_samp_train": 0.018477645315116267,
+          "grad_norm": 5.827603340148926,
+          "max_is_ratio": 1.9274704456329346,
+          "mean_len": 57.375
+        },
+        {
+          "step": 17.0,
+          "train_reward": 0.25,
+          "loss": -0.06099783070385456,
+          "kl_samp_train": 0.05605556769296527,
+          "grad_norm": 9.07963752746582,
+          "max_is_ratio": 2.110685110092163,
+          "mean_len": 64.0
+        },
+        {
+          "step": 18.0,
+          "train_reward": 0.375,
+          "loss": -0.0392953734844923,
+          "kl_samp_train": 0.011152274362624637,
+          "grad_norm": 9.389124870300293,
+          "max_is_ratio": 1.9271827936172485,
+          "mean_len": 78.75
+        },
+        {
+          "step": 19.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.00715184068862681,
+          "grad_norm": 0.0,
+          "max_is_ratio": 1.9426831007003784,
+          "mean_len": 130.375
+        },
+        {
+          "step": 20.0,
+          "train_reward": 0.25,
+          "loss": 0.1272787069901824,
+          "kl_samp_train": 0.014334477302504749,
+          "grad_norm": 10.81970500946045,
+          "max_is_ratio": 2.8928799629211426,
+          "mean_len": 82.0,
+          "eval_reward": 0.40625
+        },
+        {
+          "step": 21.0,
+          "train_reward": 0.125,
+          "loss": -0.07957000751048326,
+          "kl_samp_train": 0.011797297822794877,
+          "grad_norm": 4.446997165679932,
+          "max_is_ratio": 3.4231860637664795,
+          "mean_len": 115.125
+        },
+        {
+          "step": 22.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.024943644427633905,
+          "grad_norm": 0.0,
+          "max_is_ratio": 3.9670627117156982,
+          "mean_len": 96.25
+        },
+        {
+          "step": 23.0,
+          "train_reward": 0.5,
+          "loss": -0.12046992033720016,
+          "kl_samp_train": 0.0167810546642464,
+          "grad_norm": 8.27069091796875,
+          "max_is_ratio": 1.8050711154937744,
+          "mean_len": 86.125
+        },
+        {
+          "step": 24.0,
+          "train_reward": 0.125,
+          "loss": -0.0681034317240119,
+          "kl_samp_train": 0.015703853508778686,
+          "grad_norm": 5.575994968414307,
+          "max_is_ratio": 2.0746843814849854,
+          "mean_len": 116.0
+        },
+        {
+          "step": 25.0,
+          "train_reward": 0.125,
+          "loss": -0.07522100117057562,
+          "kl_samp_train": 0.031678090750244615,
+          "grad_norm": 5.484687328338623,
+          "max_is_ratio": 2.2912838459014893,
+          "mean_len": 96.5
+        },
+        {
+          "step": 26.0,
+          "train_reward": 0.375,
+          "loss": 0.08198192343115807,
+          "kl_samp_train": 0.019799005262779466,
+          "grad_norm": 9.366689682006836,
+          "max_is_ratio": 4.813134670257568,
+          "mean_len": 82.5
+        },
+        {
+          "step": 27.0,
+          "train_reward": 0.25,
+          "loss": -0.1768483677878976,
+          "kl_samp_train": 0.009328939163914094,
+          "grad_norm": 7.227185249328613,
+          "max_is_ratio": 2.122382879257202,
+          "mean_len": 104.0
+        },
+        {
+          "step": 28.0,
+          "train_reward": 0.375,
+          "loss": -0.30510359816253185,
+          "kl_samp_train": 0.014796368707746468,
+          "grad_norm": 8.66740894317627,
+          "max_is_ratio": 1.933607816696167,
+          "mean_len": 93.125
+        },
+        {
+          "step": 29.0,
+          "train_reward": 0.625,
+          "loss": -0.18997752852737904,
+          "kl_samp_train": 0.012470756442287461,
+          "grad_norm": 7.783769130706787,
+          "max_is_ratio": 3.7676010131835938,
+          "mean_len": 83.875
+        },
+        {
+          "step": 30.0,
+          "train_reward": 0.5,
+          "loss": -0.19662032835185528,
+          "kl_samp_train": 0.016283824311537347,
+          "grad_norm": 8.782812118530273,
+          "max_is_ratio": 2.1121459007263184,
+          "mean_len": 94.625,
+          "eval_reward": 0.359375
+        },
+        {
+          "step": 31.0,
+          "train_reward": 0.375,
+          "loss": -0.1294732578098774,
+          "kl_samp_train": 0.012378786278891319,
+          "grad_norm": 7.995444297790527,
+          "max_is_ratio": 2.411996364593506,
+          "mean_len": 85.125
+        },
+        {
+          "step": 32.0,
+          "train_reward": 0.125,
+          "loss": -0.0391455814242363,
+          "kl_samp_train": 0.02518929570045286,
+          "grad_norm": 4.801635265350342,
+          "max_is_ratio": 4.311703205108643,
+          "mean_len": 103.0
+        },
+        {
+          "step": 33.0,
+          "train_reward": 0.0,
+          "loss": 0.0,
+          "kl_samp_train": 0.004304956394397557,
+          "grad_norm": 0.0,
+          "max_is_ratio": 3.475682020187378,
+          "mean_len": 122.75
+        },
+        {
+          "step": 34.0,
+          "train_reward": 0.375,
+          "loss": 0.07938913535326719,
+          "kl_samp_train": 0.015874545806302473,
+          "grad_norm": 12.024943351745605,
+          "max_is_ratio": 1.9025522470474243,
+          "mean_len": 78.0
+        },
+        {
+          "step": 35.0,
+          "train_reward": 0.5,
+          "loss": -0.07317483425140381,
+          "kl_samp_train": 0.008305953648708057,
+          "grad_norm": 9.439258575439453,
+          "max_is_ratio": 1.8348498344421387,
+          "mean_len": 103.25
+        },
+        {
+          "step": 36.0,
+          "train_reward": 0.5,
+          "loss": -0.21508518792688847,
+          "kl_samp_train": 0.0071761023836070985,
+          "grad_norm": 9.424784660339355,
+          "max_is_ratio": 7.11332893371582,
+          "mean_len": 91.875
+        },
+        {
+          "step": 37.0,
+          "train_reward": 0.125,
+          "loss": 0.08309665834531188,
+          "kl_samp_train": 0.009938003341103814,
+          "grad_norm": 7.309638977050781,
+          "max_is_ratio": 3.711517810821533,
+          "mean_len": 98.125
+        },
+        {
+          "step": 38.0,
+          "train_reward": 0.25,
+          "loss": -0.09981680614873767,
+          "kl_samp_train": 0.028402020533879597,
+          "grad_norm": 6.418473243713379,
+          "max_is_ratio": 5.356141567230225,
+          "mean_len": 87.0
+        },
+        {
+          "step": 39.0,
+          "train_reward": 0.5,
+          "loss": -0.00460580550134182,
+          "kl_samp_train": 0.016122587824584075,
+          "grad_norm": 8.027145385742188,
+          "max_is_ratio": 2.3027045726776123,
+          "mean_len": 116.5
+        },
+        {
+          "step": 40.0,
+          "train_reward": 0.625,
+          "loss": -0.16732860542833805,
+          "kl_samp_train": 0.0093522446518495,
+          "grad_norm": 10.481315612792969,
+          "max_is_ratio": 2.528869867324829,
+          "mean_len": 95.25,
+          "eval_reward": 0.421875
+        },
+        {
+          "step": 41.0,
+          "train_reward": 0.5,
+          "loss": -0.15949616022408009,
+          "kl_samp_train": 0.01685086914143299,
+          "grad_norm": 9.643056869506836,
+          "max_is_ratio": 2.1912500858306885,
+          "mean_len": 97.375
+        },
+        {
+          "step": 42.0,
+          "train_reward": 0.625,
+          "loss": -0.3287916947156191,
+          "kl_samp_train": 0.005361774194209116,
+          "grad_norm": 9.612491607666016,
+          "max_is_ratio": 2.8773000240325928,
+          "mean_len": 94.75
+        },
+        {
+          "step": 43.0,
+          "train_reward": 0.5,
+          "loss": -0.24817620031535625,
+          "kl_samp_train": 0.021356159875871993,
+          "grad_norm": 7.383847713470459,
+          "max_is_ratio": 2.2163803577423096,
+          "mean_len": 106.375
+        },
+        {
+          "step": 44.0,
+          "train_reward": 0.625,
+          "loss": -0.30356368888169527,
+          "kl_samp_train": 0.02424865121681253,
+          "grad_norm": 10.233034133911133,
+          "max_is_ratio": 1.8618748188018799,
+          "mean_len": 96.75
+        },
+        {
+          "step": 45.0,
+          "train_reward": 0.5,
+          "loss": -0.24105871748179197,
+          "kl_samp_train": 0.005774198736979332,
+          "grad_norm": 9.060979843139648,
+          "max_is_ratio": 4.962223052978516,
+          "mean_len": 115.5
+        },
+        {
+          "step": 46.0,
+          "train_reward": 0.375,
+          "loss": 0.02821303252130747,
+          "kl_samp_train": 0.00748396932641568,
+          "grad_norm": 8.497370719909668,
+          "max_is_ratio": 6.002379894256592,
+          "mean_len": 102.25
+        },
+        {
+          "step": 47.0,
+          "train_reward": 0.375,
+          "loss": -0.285724064335227,
+          "kl_samp_train": 0.02752864731408154,
+          "grad_norm": 6.25374174118042,
+          "max_is_ratio": 2.327634572982788,
+          "mean_len": 120.625
+        },
+        {
+          "step": 48.0,
+          "train_reward": 0.25,
+          "loss": -0.17056248616427183,
+          "kl_samp_train": 0.006178768275891943,
+          "grad_norm": 6.330844879150391,
+          "max_is_ratio": 5.0658183097839355,
+          "mean_len": 116.75
+        },
+        {
+          "step": 49.0,
+          "train_reward": 0.25,
+          "loss": -7.333606481552124e-05,
+          "kl_samp_train": 0.026774557013260692,
+          "grad_norm": 7.718819618225098,
+          "max_is_ratio": 2.603544235229492,
+          "mean_len": 90.25
+        },
+        {
+          "step": 50.0,
+          "train_reward": 0.25,
+          "loss": -0.15691966749727726,
+          "kl_samp_train": 0.012615497398040269,
+          "grad_norm": 5.4656572341918945,
+          "max_is_ratio": 3.611264228820801,
+          "mean_len": 106.375,
+          "eval_reward": 0.359375
+        },
+        {
+          "step": 51.0,
+          "train_reward": 0.375,
+          "loss": -0.08000177703797817,
+          "kl_samp_train": 0.013073791301611699,
+          "grad_norm": 9.452221870422363,
+          "max_is_ratio": 3.6443214416503906,
+          "mean_len": 103.125
+        },
+        {
+          "step": 52.0,
+          "train_reward": 0.375,
+          "loss": -0.14514441415667534,
+          "kl_samp_train": 0.004539839140965111,
+          "grad_norm": 9.239350318908691,
+          "max_is_ratio": 2.870499610900879,
+          "mean_len": 132.125
+        },
+        {
+          "step": 53.0,
+          "train_reward": 0.25,
+          "loss": -0.07705603493377566,
+          "kl_samp_train": 0.03782269549207622,
+          "grad_norm": 7.72829532623291,
+          "max_is_ratio": 6.946660995483398,
+          "mean_len": 91.875
+        },
+        {
+          "step": 54.0,
+          "train_reward": 0.5,
+          "loss": 0.13964897952973843,
+          "kl_samp_train": 0.005081135898214601,
+          "grad_norm": 12.5960111618042,
+          "max_is_ratio": 3.683291435241699,
+          "mean_len": 66.75
+        },
+        {
+          "step": 55.0,
+          "train_reward": 0.125,
+          "loss": -0.08387548243626952,
+          "kl_samp_train": 0.007195434687327753,
+          "grad_norm": 4.247501373291016,
+          "max_is_ratio": 2.379972219467163,
+          "mean_len": 101.875
+        },
+        {
+          "step": 56.0,
+          "train_reward": 0.375,
+          "loss": -0.1608314197510481,
+          "kl_samp_train": 0.014383072007852528,
+          "grad_norm": 8.409042358398438,
+          "max_is_ratio": 4.4177751541137695,
+          "mean_len": 81.625
+        },
+        {
+          "step": 57.0,
+          "train_reward": 0.5,
+          "loss": -0.1419927105307579,
+          "kl_samp_train": 0.017725889869819482,
+          "grad_norm": 7.508878231048584,
+          "max_is_ratio": 1.7981315851211548,
+          "mean_len": 106.75
+        },
+        {
+          "step": 58.0,
+          "train_reward": 0.25,
+          "loss": -0.07515824306756258,
+          "kl_samp_train": 0.011163018931066639,
+          "grad_norm": 6.553369998931885,
+          "max_is_ratio": 3.8665406703948975,
+          "mean_len": 110.25
+        },
+        {
+          "step": 59.0,
+          "train_reward": 0.375,
+          "loss": -0.37200795859098434,
+          "kl_samp_train": 0.01360394865091593,
+          "grad_norm": 11.750351905822754,
+          "max_is_ratio": 4.983989715576172,
+          "mean_len": 81.5
+        },
+        {
+          "step": 60.0,
+          "train_reward": 0.375,
+          "loss": 0.06485987454652786,
+          "kl_samp_train": 7.46629934395309e-05,
+          "grad_norm": 10.058138847351074,
+          "max_is_ratio": 1.8286188840866089,
+          "mean_len": 84.75,
+          "eval_reward": 0.40625
+        },
+        {
+          "step": 61.0,
+          "train_reward": 0.375,
+          "loss": -0.17891999334096909,
+          "kl_samp_train": 0.0027771016192260356,
+          "grad_norm": 6.988070964813232,
+          "max_is_ratio": 2.326732635498047,
+          "mean_len": 118.625
+        },
+        {
+          "step": 62.0,
+          "train_reward": 0.375,
+          "loss": -0.1353859268128872,
+          "kl_samp_train": 0.005451714527400243,
+          "grad_norm": 7.927475452423096,
+          "max_is_ratio": 2.184142589569092,
+          "mean_len": 108.125
+        },
+        {
+          "step": 63.0,
+          "train_reward": 0.375,
+          "loss": -0.23309447895735502,
+          "kl_samp_train": 0.0048233844892607465,
+          "grad_norm": 6.006366729736328,
+          "max_is_ratio": 2.5470986366271973,
+          "mean_len": 119.625
+        },
+        {
+          "step": 64.0,
+          "train_reward": 0.375,
+          "loss": 0.011162832379341125,
+          "kl_samp_train": 0.013692773257692656,
+          "grad_norm": 7.044724464416504,
+          "max_is_ratio": 2.5048422813415527,
+          "mean_len": 102.0
+        },
+        {
+          "step": 65.0,
+          "train_reward": 0.375,
+          "loss": -0.23851578310132027,
+          "kl_samp_train": 0.018251097799132778,
+          "grad_norm": 8.33874797821045,
+          "max_is_ratio": 6.848435878753662,
+          "mean_len": 94.875
+        },
+        {
+          "step": 66.0,
+          "train_reward": 0.75,
+          "loss": -0.1721400786191225,
+          "kl_samp_train": 0.007002268712850487,
+          "grad_norm": 10.179754257202148,
+          "max_is_ratio": 2.8376896381378174,
+          "mean_len": 79.5
+        },
+        {
+          "step": 67.0,
+          "train_reward": 0.25,
+          "loss": -0.19085321435704827,
+          "kl_samp_train": 0.011978603266423044,
+          "grad_norm": 4.9451985359191895,
+          "max_is_ratio": 2.3085031509399414,
+          "mean_len": 114.75
+        },
+        {
+          "step": 68.0,
+          "train_reward": 0.5,
+          "loss": -0.1368310246616602,
+          "kl_samp_train": 0.01574992960458572,
+          "grad_norm": 6.733603000640869,
+          "max_is_ratio": 1.9616732597351074,
+          "mean_len": 118.375
+        },
+        {
+          "step": 69.0,
+          "train_reward": 0.375,
+          "loss": -0.0856608496978879,
+          "kl_samp_train": 0.01719699154177243,
+          "grad_norm": 7.162133693695068,
+          "max_is_ratio": 1.9129714965820312,
+          "mean_len": 103.25
+        },
+        {
+          "step": 70.0,
+          "train_reward": 0.375,
+          "loss": -0.09003850072622299,
+          "kl_samp_train": 0.014494618766733,
+          "grad_norm": 7.505162239074707,
+          "max_is_ratio": 3.277315139770508,
+          "mean_len": 110.75,
+          "eval_reward": 0.3125
+        },
+        {
+          "step": 71.0,
+          "train_reward": 0.25,
+          "loss": 0.01871012430638075,
+          "kl_samp_train": 0.019780564124296133,
+          "grad_norm": 8.942462921142578,
+          "max_is_ratio": 2.8914682865142822,
+          "mean_len": 97.25
+        },
+        {
+          "step": 72.0,
+          "train_reward": 0.5,
+          "loss": -0.22907737363129854,
+          "kl_samp_train": -0.0039055780525064647,
+          "grad_norm": 8.520516395568848,
+          "max_is_ratio": 10.85592269897461,
+          "mean_len": 100.125
+        },
+        {
+          "step": 73.0,
+          "train_reward": 0.25,
+          "loss": -0.12065722001716495,
+          "kl_samp_train": 0.009260800735252659,
+          "grad_norm": 5.9022979736328125,
+          "max_is_ratio": 1.7668477296829224,
+          "mean_len": 92.25
+        },
+        {
+          "step": 74.0,
+          "train_reward": 0.5,
+          "loss": -0.026026487350463867,
+          "kl_samp_train": 0.008356462313079257,
+          "grad_norm": 9.617630958557129,
+          "max_is_ratio": 3.0432353019714355,
+          "mean_len": 82.625
+        },
+        {
+          "step": 75.0,
+          "train_reward": 0.5,
+          "loss": -0.27912875078618526,
+          "kl_samp_train": 0.008098768234512362,
+          "grad_norm": 8.262582778930664,
+          "max_is_ratio": 2.4317800998687744,
+          "mean_len": 114.875
+        },
+        {
+          "step": 76.0,
+          "train_reward": 0.5,
+          "loss": -0.22002550773322582,
+          "kl_samp_train": 0.007456714304384852,
+          "grad_norm": 10.552460670471191,
+          "max_is_ratio": 2.932084083557129,
+          "mean_len": 82.25
+        },
+        {
+          "step": 77.0,
+          "train_reward": 0.25,
+          "loss": -0.15541520901024342,
+          "kl_samp_train": 0.022919646989886123,
+          "grad_norm": 7.2715959548950195,
+          "max_is_ratio": 9.970037460327148,
+          "mean_len": 101.0
+        },
+        {
+          "step": 78.0,
+          "train_reward": 0.25,
+          "loss": -0.1196338040754199,
+          "kl_samp_train": 0.007465371452932631,
+          "grad_norm": 5.820319175720215,
+          "max_is_ratio": 1.649497389793396,
+          "mean_len": 91.625
+        },
+        {
+          "step": 79.0,
+          "train_reward": 0.25,
+          "loss": -0.1077494639903307,
+          "kl_samp_train": 0.009217643438588675,
+          "grad_norm": 6.825850963592529,
+          "max_is_ratio": 4.3599982261657715,
+          "mean_len": 94.625,
+          "eval_reward": 0.375
+        }
+      ],
+      "eval_samples": {
+        "step_0": {
+          "success": [
+            {
+              "numbers": [
+                19,
+                6,
+                3
+              ],
+              "target": 22,
+              "solution": "19 + (6 - 3)",
+              "completion": "To create an equation that equals 22 using the numbers [19, 6, 3], you can do the following:\n\n$$\n(19 - 6) + 3 = 13 + 3 = 16\n$$\n\nHowever, this does not result in 22. Let's try again.\n\n$$\n(19 - 3) = 16\n$$\n\n$$\n(16 + 6) = 22\n$$\n\nSo the correct equation is:\n\n$$\n(19 - 3) + 6 = 22\n$$\n\n<answer> (19 - 3) + 6 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                17,
+                23
+              ],
+              "target": 17,
+              "solution": "17 + (23 - 23)",
+              "completion": "To create an equation using the numbers [23, 17, 23] and basic arithmetic operations that equals 17, we can do:\n\n(17 - 23) + 23 = 17\n\n**Answer:**  \n<answer> (17 - 23) + 23 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                7,
+                14
+              ],
+              "target": 14,
+              "solution": "(7 + 14) - 7",
+              "completion": "To create an equation that equals 14 using the numbers [7, 7, 14], you can use division. Here's the solution:\n\n**Answer:**  \n<answer> (14 / 7) * 7 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                18,
+                24,
+                15
+              ],
+              "target": 57,
+              "solution": "(24 + 15) + 18",
+              "completion": "To create an equation using the numbers [18, 24, 15] and basic arithmetic operations that equals 57, we can solve it as follows:\n\n1. Add 18 and 15: $18 + 15 = 33$\n2. Add 24 to the result: $33 + 24 = 57$\n\nSo, the equation is:\n\n<answer> (18 + 15) + 24 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                13,
+                20
+              ],
+              "target": 56,
+              "solution": "(13 + 23) + 20",
+              "completion": "To create an equation using the numbers [23, 13, 20] and basic arithmetic operations that equals 56, we can solve it as follows:\n\n1. Add 20 and 13: $ 20 + 13 = 33 $  \n2. Add 33 to 23: $ 33 + 23 = 56 $\n\nSo, the equation is:\n\n$$\n(20 + 13) + 23 = 56\n$$\n\nFinal answer: <answer> (20 + 13) + 23 </answer>.",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                20,
+                25
+              ],
+              "target": 20,
+              "solution": "(15 + 25) - 20",
+              "completion": "To create an equation using the numbers [15, 20, 25] and basic arithmetic operations that equals 20, we can use:\n\n$$\n(15 - 20) + 25 = 15 - 20 + 25 = 20\n$$\n\nFinal answer: <answer> (15 - 20) + 25 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                13,
+                21
+              ],
+              "target": 54,
+              "solution": "13 + (21 + 20)",
+              "completion": "To create an equation using the numbers [20, 13, 21] and basic arithmetic operations that equals 54, we can solve it as follows:\n\n13 + 20 + 21 = 54\n\n### Final Answer:\n<answer> (13 + 20) + 21 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                3,
+                23,
+                22
+              ],
+              "target": 135,
+              "solution": "(22 + 23) * 3",
+              "completion": "To create an equation using the numbers [3, 23, 22] that equals 135, we can use the following step-by-step:\n\n1. Add 23 and 22:  \n   $ 23 + 22 = 45 $\n\n2. Multiply the result by 3:  \n   $ 45 \\times 3 = 135 $\n\nSo, the equation is:  \n**<answer> (23 + 22) * 3 </answer>**",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                6,
+                21
+              ],
+              "target": 115,
+              "solution": "(6 * 21) - 11",
+              "completion": "To create an equation using the numbers [11, 6, 21] that equals 115, we can use the following process:\n\n11 + 6 \u00d7 21 = 11 + 126 = 137\n\n115 is not equal to 137.\n\nWe can try again:\n\n21 \u00d7 6 + 11 = 126 + 11 = 137\n\nAgain, not equal to 115.\n\nLet's try using division:\n\n(21 \u00d7 6) - 11 = 126 - 11 = 115\n\nThis works.\n\n<answer> (21 \u00d7 6) - 11 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                19,
+                23,
+                19
+              ],
+              "target": 23,
+              "solution": "23 * (19 / 19)",
+              "completion": "To create an equation using the numbers [19, 23, 19] and basic arithmetic operations that equals 23, we can use:\n\n$$\n(19 - 19) + 23 = 23\n$$\n\n<answer> (19 - 19) + 23 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            }
+          ],
+          "failure": [
+            {
+              "numbers": [
+                10,
+                3,
+                1
+              ],
+              "target": 29,
+              "solution": "(3 * 10) - 1",
+              "completion": "To create an equation that equals 29 using the numbers [10, 3, 1], you can do the following:\n\n$$\n(10 - 3) \\times 1 = 7\n$$\n\nHowever, this equation doesn't equal 29. Let's try again:\n\n$$\n(3 + 10) = 13\n$$\n\nThis also doesn't equal 29. Let's try:\n\n$$\n(10 + 3) + 1 = 14\n$$\n\nStill not 29.\n\n$$\n(3 \\times 1) + (10) \\times 1 = 13\n$$\n\nAlso not 29.\n\nAfter trying other combinations, let's try:\n\n$$\n(",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                10,
+                13,
+                11
+              ],
+              "target": 14,
+              "solution": "(11 - 10) + 13",
+              "completion": "To create an equation using the numbers [10, 13, 11] and basic arithmetic operations that equals 14, we can solve it as follows:\n\n1. Add 10 and 11: $10 + 11 = 21$\n2. Subtract 13 from the result: $21 - 13 = 8$\n\nThis does not result in 14. Let's try again:\n\n1. Use only one number and add it to another: $11 + 13 = 24$\n2. Subtract the remaining number: $24 - 10 = 14$\n\nFinal equation:  \n$$\n(13 + 11) - 10 = 14\n",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                2,
+                5,
+                15
+              ],
+              "target": 65,
+              "solution": "(15 - 2) * 5",
+              "completion": "To create an equation that equals 65 using the numbers [2, 5, 15], you can do the following:\n\n$$ (15 \\times 2) + 5 = 65 $$\n\n$$ <answer> (15 \\times 2) + 5 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                5,
+                7,
+                5
+              ],
+              "target": 7,
+              "solution": "(5 * 7) / 5",
+              "completion": "To create an equation using the numbers [5, 7, 5] that equals 7, we can use division:\n\n$$\n(7 - 5) = 7\n$$\n\nSo the equation is:\n\n$$\n\\boxed{(7 - 5) = 7}\n$$",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                1,
+                18
+              ],
+              "target": 29,
+              "solution": "(18 + 11) / 1",
+              "completion": "To create an equation with the numbers [11, 1, 18] that equals 29, use the arithmetic operation:\n\n$$\n(11 - 1) + 18 = 29\n$$\n\nSo the final answer is:\n\n<answer> (11 - 1) + 18 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                1,
+                8
+              ],
+              "target": 152,
+              "solution": "(20 - 1) * 8",
+              "completion": "To create an equation with the numbers [20, 1, 8] that equals 152:\n\nWe start with the largest numbers since 20 is large, and then use multiplication.  \n$ (8 + 1) \\times 20 = 152 $\n\n**Work:**  \n$ (8 + 1) \\times 20 = 152 $\n\n<answer> (8 + 1) \u00d7 20 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                11,
+                8
+              ],
+              "target": 26,
+              "solution": "8 + (11 + 7)",
+              "completion": "To create an equation that equals 26 using the numbers [7, 11, 8], you can do the following:\n\n$$\n(7 + 11) - 8 = 18\n$$\n\nHowever, another equation using these numbers with basic arithmetic operations is:\n\n$$\n(11 + 8) - 7 = 12\n$$\n\nThis approach shows that the numbers can only be used once.\n\n$$\n\\boxed{(11 + 8) - 7 = 12}\n$$\n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                4,
+                9
+              ],
+              "target": 25,
+              "solution": "(4 * 9) - 11",
+              "completion": "To create an equation that equals 25 using the numbers [11, 4, 9], you can do the following:\n\n$$\n(11 - 4) \\times 9 = 7 \\times 9 = 63\n$$\n\nWait, that doesn't equal 25. Let's try again.\n\n$$\n(11 - 9) = 2\n$$\n\n$$\n4 \\times 2 = 8\n$$\n\nNo, that's still more than 25. Let's try using all three numbers:\n\n$$\n(11 - 9) + (4 \\times 1) = 2 + 4 = 6$$\n\nStill not right.\n\nLet's try:\n\n$$\n(11 + ",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                21,
+                13
+              ],
+              "target": 7,
+              "solution": "(15 - 21) + 13",
+              "completion": "To create an equation with the numbers [15, 21, 13] that equals 7, use the operation:\n\n$$\n(21 - 15) = 6\n$$\n\nNow add 13:\n\n$$\n6 + 13 = 19\n$$\n\nThis doesn't equal 7. Let's try:\n\n$$\n13 - 21 + 15 = 7\n$$\n\nThis works!\n\n$$\n\\boxed{13 - 21 + 15 = 7}\n$$\n\n</answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                24,
+                18
+              ],
+              "target": 4,
+              "solution": "24 / (18 - 12)",
+              "completion": "To create an equation with the numbers [12, 24, 18] that equals 4, use the operation:\n\n$$\n(24 - 18) = 6\n$$\n\nTo get 4, divide 6 by 3, but we only have 4 numbers. So instead, use:\n\n$$\n(12 + 18) = 30, \\quad \\text{then divide by (24 + 18)} = 42, \\quad \\text{and find } (30 \\div 42) = 4. (30/42 = 1.0x \\text{ fraction})$\n\nSo the correct equation is:\n\n$$\n(24 - 18)",
+              "reward": 0.0,
+              "source": "eval_main"
+            }
+          ]
+        },
+        "step_79": {
+          "success": [
+            {
+              "numbers": [
+                7,
+                11,
+                8
+              ],
+              "target": 26,
+              "solution": "8 + (11 + 7)",
+              "completion": "Reasoning: The numbers 7, 11, 8 can be arranged as 8 + 11 + 7 = 26 using basic addition. The equation is 8 + 11 + 7 = 26.\n\n<answer> 8 + 11 + 7 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                17,
+                23
+              ],
+              "target": 17,
+              "solution": "17 + (23 - 23)",
+              "completion": "Reasoning: The equation (23 - 17) = 6, but how to get 17 using 23, 17, 23: 23 + 17 = 40, then 40 - 23 = 17. However, the correct equation that equals 17 with the given numbers is 17 + 23 - 23 = 17. \n\n<answer> 17 + 23 - 23 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                8,
+                3,
+                21
+              ],
+              "target": 71,
+              "solution": "8 + (3 * 21)",
+              "completion": "Reasoning: The numbers 8, 3, and 21 can be combined using 21 + 8 = 29, and 29 + 3 = 32, so 21 + 3 + 8 = 32 doesn't work. To get 71, 21 * 3 = 63, 8 + 3 = 11, so 21 * 3 + 8 = 71. <answer> 21 * 3 + 8 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                21,
+                4
+              ],
+              "target": 29,
+              "solution": "12 + (21 - 4)",
+              "completion": "Reasoning: To get 29 from 12, 21, and 4, you can add 21 and 4 to get 25, then add 12 to get 37, but another approach is to use 21 + 12 = 33, then subtract 4 to get 29. The reasoning is about combining numbers through addition and subtraction.\n\n<answer> 21 + 12 - 4 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                18,
+                24,
+                15
+              ],
+              "target": 57,
+              "solution": "(24 + 15) + 18",
+              "completion": "Reasoning: The numbers 18, 24, and 15 can be combined as 18 + 24 + 15 = 57, using all three numbers once with basic arithmetic.\n\n<answer> 18 + 24 + 15 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                21,
+                24
+              ],
+              "target": 189,
+              "solution": "21 + (24 * 7)",
+              "completion": "Reasoning: The numbers 7, 21, 24 are used with multiplication (7 * 24 = 168) and addition (21 + 24 = 45) to reach 189: 24 * 7 + 21 = 189.\n\n<answer> 24 * 7 + 21 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                10,
+                25,
+                7
+              ],
+              "target": 42,
+              "solution": "7 + (10 + 25)",
+              "completion": "Reasoning: To get 42 from 10, 25, 7 with basic operations, we use 25 + 7 = 32, then add 10 to get 42. The equation is 25 + 7 + 10 = 42. <answer> 25 + 7 + 10 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                23,
+                13,
+                20
+              ],
+              "target": 56,
+              "solution": "(13 + 23) + 20",
+              "completion": "Reasoning: The numbers 23, 13, 20 can be combined with basic operations to reach 56. The equation 23 + 13 = 36, then adding 20 gives 56. The final answer is <answer> 23 + 13 + 20 </answer>.",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                7,
+                3,
+                15
+              ],
+              "target": 19,
+              "solution": "(15 + 7) - 3",
+              "completion": "Reasoning: The equation 15 - 7 = 8 plus 3 = 11. Not correct. To get 19, 7 + 15 = 22, 22 - 3 = 19. The correct equation is 15 + 7 - 3 = 19. <answer> 15 + 7 - 3 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                22,
+                22,
+                11
+              ],
+              "target": 55,
+              "solution": "(22 + 11) + 22",
+              "completion": "Reasoning: The numbers 22, 22, and 11 can be combined as 22 + 22 + 11 = 55, using addition with all three numbers once. \n\n<answer> 22 + 22 + 11 </answer>",
+              "reward": 1.0,
+              "source": "eval_main"
+            }
+          ],
+          "failure": [
+            {
+              "numbers": [
+                10,
+                3,
+                1
+              ],
+              "target": 29,
+              "solution": "(3 * 10) - 1",
+              "completion": "Reasoning: The equation 10 + 3 + 1 = 14, but to reach 29, we need to combine operations to get the sum. By using 10 + 3 + 1 = 14, we need to find 29 - 14 = 15 to get higher numbers. However, since we must use the provided set and each number once, the correct equation is 10 + 3 + 1 = 14. This is a direct sum, not combining using arithmetic operations. <answer> 10 + 3 + 1 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                10,
+                13,
+                11
+              ],
+              "target": 14,
+              "solution": "(11 - 10) + 13",
+              "completion": "Reasoning: The numbers 10, 13, and 11 can be combined using addition: 11 + 3 = 14. By using these numbers once with basic arithmetic, the equation is formed.\n\n<answer> 13 + 1 = 14 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                2,
+                5,
+                15
+              ],
+              "target": 65,
+              "solution": "(15 - 2) * 5",
+              "completion": "Reasoning: The equation is formed by multiplying the largest numbers together (15 * 5 = 75) and then adding 2 (75 + 2 = 65). \n\n<answer> 15 * 5 + 2 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                5,
+                7,
+                5
+              ],
+              "target": 7,
+              "solution": "(5 * 7) / 5",
+              "completion": "Reasoning: The numbers 5, 7, and 5 are used to create 5 + 2 = 7, using one 5 twice but following the requirement to each number only once in the equation. <answer> 5 + 5 = 7 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                1,
+                18
+              ],
+              "target": 29,
+              "solution": "(18 + 11) / 1",
+              "completion": "Reasoning: To get 29 from 11, 1, and 18 with basic operations, 18 + 1 + 11 = 29. \n\n<answer> 18 + 1 + 11 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                19,
+                6,
+                3
+              ],
+              "target": 22,
+              "solution": "19 + (6 - 3)",
+              "completion": "Reasoning: The equation 19 - 6 = 13, then 13 + 3 = 16; this uses the numbers 19, 6, 3 with operations. <answer> 19 - 6 + 3 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                20,
+                1,
+                8
+              ],
+              "target": 152,
+              "solution": "(20 - 1) * 8",
+              "completion": "Reasoning: To get 152 from 20, 1, 8 with basic operations, we use multiplication: 20 * 8 = 160, then subtract 1 to get 159, so need 20 + 1 = 21, 8 * 20 = 160, 152 is 20 + 8*1, which uses all numbers once.\n\n<answer> 20 + 8 * 1 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                11,
+                4,
+                9
+              ],
+              "target": 25,
+              "solution": "(4 * 9) - 11",
+              "completion": "Reasoning: The equation 11 + 4 = 15, 11 + 9 = 20, 4 + 9 = 13, so 11 + 9 + 4 = 24, and thus 11 + 9 = 20 + 4 = 24. But the correct equation using 11, 4, 9 is 9 + 11 = 20 + 4 = 24. However, since 25 is the target, the correct equation is 11 + 9 + 4 = 24, but 11 + 9 + 4 = 24 is correct with the given numbers. So, 11 +",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                15,
+                21,
+                13
+              ],
+              "target": 7,
+              "solution": "(15 - 21) + 13",
+              "completion": "Reasoning: To get 7 from 15, 21, and 13, you can add 15 and 13 to get 28, and then subtract 21 to reach 7. Show work: 15 + 13 = 28; 28 - 21 = 7.\n\n<answer> 15 + 13 = 28; 28 - 21 = 7 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            },
+            {
+              "numbers": [
+                12,
+                24,
+                18
+              ],
+              "target": 4,
+              "solution": "24 / (18 - 12)",
+              "completion": "Reasoning: To get 4 from 12, 24, and 18 using basic operations, divide 24 by 6 (which is 4) and then use 12 and 18 accordingly. This uses each number once. The equation is 24 / 6 = 4.\n\n<answer> 24 / 6 </answer>",
+              "reward": 0.0,
+              "source": "eval_main"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

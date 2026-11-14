@@ -1,0 +1,252 @@
+W1114 15:01:18.608000 16840 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1114 15:01:18.609000 16840 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1114 15:01:18.609000 16840 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+[RealTIM FP8] device=cuda | model=Qwen/Qwen3-0.6B | steps=80
+(MainProcess pid=16840) INFO 11-14 15:01:24 [startup.py:96] non-default args: {'dtype': 'bfloat16', 'max_model_len': 512, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.18, 'max_logprobs': 132, 'disable_log_stats': True, 'enforce_eager': True}
+(MainProcess pid=16840) WARNING 11-14 15:01:24 [arg_utils.py:1984] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.
+(MainProcess pid=16840) INFO 11-14 15:01:24 [model.py:744] Resolved architecture: Qwen3ForCausalLM
+(MainProcess pid=16840) INFO 11-14 15:01:24 [model.py:2170] Using max model len 512
+(MainProcess pid=16840) INFO 11-14 15:01:24 [scheduler.py:310] Chunked prefill is enabled with max_num_batched_tokens=8192.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+(MainProcess pid=16840) WARNING 11-14 15:01:24 [vllm.py:1778] Enforce eager set, disabling torch.compile, CUDAGraphs, and JIT kernel warmup. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none and --kernel_config.enable_jit_warmup=False
+(MainProcess pid=16840) WARNING 11-14 15:01:24 [vllm.py:1802] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+(MainProcess pid=16840) INFO 11-14 15:01:24 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=16840) INFO 11-14 15:01:24 [vllm.py:2005] Cudagraph is disabled under eager mode
+(MainProcess pid=16840) INFO 11-14 15:01:24 [compilation.py:317] Enabled custom fusions: norm_quant, act_quant
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]Fetching 9 files: 100%|██████████| 9/9 [00:00<00:00, 1437.50it/s]
+(MainProcess pid=16840) INFO 11-14 15:01:28 [core.py:139] Initializing a V1 LLM engine (v0.33.0) with config: model='Qwen/Qwen3-0.6B', speculative_config=None, tokenizer='Qwen/Qwen3-0.6B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=main, tokenizer_revision=main, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=512, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=True, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, custom_histogram_buckets=None, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=Qwen/Qwen3-0.6B, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'cudagraph_decoder_replay': True, 'decoder_replay_cudagraph_capture_sizes': [], 'decoder_replay_trim_threshold': 768, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_rocm_segmented_attn_autotune=False, enable_cutedsl_warmup=True, enable_jit_warmup=False, monokernel=False, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(MainProcess pid=16840) INFO 11-14 15:01:30 [parallel_state.py:1929] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_a3e5a74d7fc849e6b0a3b3cede3bdac4 backend=nccl
+(MainProcess pid=16840) INFO 11-14 15:01:30 [parallel_state.py:2385] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(MainProcess pid=16840) INFO 11-14 15:01:30 [gpu_worker.py:513] Using V2 Model Runner
+(MainProcess pid=16840) INFO 11-14 15:01:31 [model_runner.py:399] Loading model from scratch...
+(MainProcess pid=16840) INFO 11-14 15:01:32 [cuda.py:508] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(MainProcess pid=16840) INFO 11-14 15:01:32 [flash_attn.py:1122] Using FlashAttention version 2
+(MainProcess pid=16840) INFO 11-14 15:01:32 [base_loader.py:82] Initializing model took 0.939345 seconds
+(MainProcess pid=16840) INFO 11-14 15:01:32 [weight_utils.py:1144] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 1.40 GiB. Available RAM: 78.89 GiB.
+(MainProcess pid=16840) INFO 11-14 15:01:32 [weight_utils.py:1167] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  2.17it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  2.17it/s]
+
+(MainProcess pid=16840) INFO 11-14 15:01:33 [default_loader.py:506] Loading weights took 0.49 seconds
+(MainProcess pid=16840) INFO 11-14 15:01:35 [model_runner.py:428] Model loading took 1.12 GiB memory and 4.682331 seconds
+(MainProcess pid=16840) INFO 11-14 15:01:35 [topk_topp_sampler.py:149] Using FlashInfer for top-p & top-k sampling.
+(MainProcess pid=16840) INFO 11-14 15:01:35 [torch_utils.py:281] Reducing Torch threads from 6 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(MainProcess pid=16840) INFO 11-14 15:01:35 [utils.py:381] Using LBNHC KV cache layout.
+(MainProcess pid=16840) INFO 11-14 15:01:39 [gpu_worker.py:772] Available KV cache memory: 5.29 GiB
+(MainProcess pid=16840) INFO 11-14 15:01:39 [kv_cache_utils.py:1147] GPU KV cache size: 49,488 tokens, Maximum concurrency for 512 tokens per request: 96.66x
+(MainProcess pid=16840) INFO 11-14 15:01:39 [gpu_worker.py:1066] Free memory on device (38.97/39.49 GiB) on startup. Desired GPU memory utilization is (0.18, 7.11 GiB). Actual usage is 1.3 GiB for consumed memory (weights + non-torch), 0.52 GiB for peak activation, and 0.0 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=5519309046` (5.14 GiB) to fit into requested memory, or `--kv-cache-memory=39725944832` (37.0 GiB) to fully utilize gpu memory. Current kv cache memory in use is 5.29 GiB.
+(MainProcess pid=16840) INFO 11-14 15:01:39 [core.py:412] init engine (profile, create kv cache, warmup model) took 4.03 s
+(MainProcess pid=16840) INFO 11-14 15:01:40 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:31,  3.39it/s]Loading weights:  97%|█████████▋| 301/311 [00:00<00:00, 974.45it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 773.34it/s]
+(MainProcess pid=16840) INFO 11-14 15:01:46 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Probe] {"sampler_engine": "vLLM V1 (bfloat16, per-row torch.float8_e4m3fn weights, staleness=2)", "trainer_engine": "HF FP32 master + BF16 eager parallel forward", "mean_abs_logp_diff": 0.04435359314084053, "max_abs_logp_diff": 0.9052447080612183, "initial_kl_samp_train": 0.0059641217812895775, "initial_max_is_ratio": 1.8001655340194702}
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:41,  3.05it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 889.69it/s]
+(MainProcess pid=16840) INFO 11-14 15:01:55 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:02:00 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 PG (Vanilla)          ] step=  0/80 | train= 25.0% | eval= 17.2% | kl=+0.0148 | gnorm=6.975 | max_r=1.71 | len=65.8
+(MainProcess pid=16840) INFO 11-14 15:02:31 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:02:42 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:03:12 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:03:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:03:23 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 PG (Vanilla)          ] step= 10/80 | train=  0.0% | eval= 17.2% | kl=+0.1536 | gnorm=0.000 | max_r=2.43 | len=41.4
+(MainProcess pid=16840) INFO 11-14 15:03:41 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:03:52 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:04:03 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:04:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:04:12 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 PG (Vanilla)          ] step= 20/80 | train= 25.0% | eval= 28.1% | kl=+0.1862 | gnorm=13.608 | max_r=9.45 | len=22.5
+(MainProcess pid=16840) INFO 11-14 15:04:16 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:04:27 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:04:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:04:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:04:51 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 PG (Vanilla)          ] step= 30/80 | train= 37.5% | eval= 17.2% | kl=+0.1583 | gnorm=39.696 | max_r=1.60 | len=22.2
+(MainProcess pid=16840) INFO 11-14 15:05:02 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:05:14 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:05:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:05:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:05:30 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 PG (Vanilla)          ] step= 40/80 | train= 62.5% | eval= 40.6% | kl=+0.1487 | gnorm=24.078 | max_r=1.46 | len=21.1
+(MainProcess pid=16840) INFO 11-14 15:05:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:05:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:05:59 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:06:07 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:06:09 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 PG (Vanilla)          ] step= 50/80 | train= 25.0% | eval= 32.8% | kl=+0.2328 | gnorm=25.356 | max_r=1.58 | len=21.9
+(MainProcess pid=16840) INFO 11-14 15:06:13 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:06:24 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:06:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:06:45 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:06:47 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 PG (Vanilla)          ] step= 60/80 | train= 25.0% | eval= 25.0% | kl=+0.3946 | gnorm=27.861 | max_r=1.48 | len=19.4
+(MainProcess pid=16840) INFO 11-14 15:06:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:07:07 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:07:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:07:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:07:33 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 PG (Vanilla)          ] step= 70/80 | train= 12.5% | eval= 35.9% | kl=+0.2453 | gnorm=12.901 | max_r=12.09 | len=37.1
+(MainProcess pid=16840) INFO 11-14 15:07:45 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:07:56 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:08:06 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:08:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:08:11 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 PG (Vanilla)          ] step= 79/80 | train= 50.0% | eval= 26.6% | kl=+0.1026 | gnorm=51.826 | max_r=7.66 | len=27.2
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:38,  3.15it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 823.79it/s]
+(MainProcess pid=16840) INFO 11-14 15:08:20 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:08:25 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Naive IS              ] step=  0/80 | train= 25.0% | eval= 17.2% | kl=+0.0148 | gnorm=7.291 | max_r=1.71 | len=65.8
+(MainProcess pid=16840) INFO 11-14 15:08:56 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:09:07 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:09:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:09:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:09:24 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Naive IS              ] step= 10/80 | train=  0.0% | eval= 20.3% | kl=+0.2374 | gnorm=0.000 | max_r=3.06 | len=21.5
+(MainProcess pid=16840) INFO 11-14 15:09:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:09:42 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:09:53 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:10:01 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:10:02 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Naive IS              ] step= 20/80 | train= 12.5% | eval= 23.4% | kl=+0.1440 | gnorm=4.455 | max_r=2.38 | len=20.6
+(MainProcess pid=16840) INFO 11-14 15:10:06 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:10:16 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:10:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:10:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:10:39 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Naive IS              ] step= 30/80 | train= 37.5% | eval= 35.9% | kl=+0.0930 | gnorm=5.426 | max_r=1.39 | len=21.9
+(MainProcess pid=16840) INFO 11-14 15:10:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:11:01 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:11:13 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:11:17 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:11:19 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Naive IS              ] step= 40/80 | train= 50.0% | eval= 37.5% | kl=+0.0458 | gnorm=63.551 | max_r=12.29 | len=31.1
+(MainProcess pid=16840) INFO 11-14 15:11:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:11:45 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:12:09 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:12:30 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:12:35 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Naive IS              ] step= 50/80 | train= 12.5% | eval= 34.4% | kl=+0.0761 | gnorm=2.267 | max_r=5.04 | len=129.4
+(MainProcess pid=16840) INFO 11-14 15:12:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:13:20 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:13:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:14:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:14:24 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Naive IS              ] step= 60/80 | train=  0.0% | eval= 39.1% | kl=+0.0841 | gnorm=0.000 | max_r=5.15 | len=75.5
+(MainProcess pid=16840) INFO 11-14 15:14:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:15:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:15:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:16:02 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:16:07 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Naive IS              ] step= 70/80 | train= 37.5% | eval= 40.6% | kl=+0.0459 | gnorm=8.922 | max_r=6.78 | len=72.2
+(MainProcess pid=16840) INFO 11-14 15:16:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:16:52 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:17:15 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:17:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:17:30 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 Naive IS              ] step= 79/80 | train= 37.5% | eval= 34.4% | kl=+0.0449 | gnorm=26.817 | max_r=24.41 | len=56.5
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:30,  3.41it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 910.54it/s]
+(MainProcess pid=16840) INFO 11-14 15:17:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:17:48 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS                   ] step=  0/80 | train= 25.0% | eval= 17.2% | kl=+0.0148 | gnorm=6.884 | max_r=1.71 | len=65.8
+(MainProcess pid=16840) INFO 11-14 15:18:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:18:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:18:59 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:19:03 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:19:04 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS                   ] step= 10/80 | train=  0.0% | eval= 21.9% | kl=+0.1488 | gnorm=0.000 | max_r=6.64 | len=24.8
+(MainProcess pid=16840) INFO 11-14 15:19:13 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:19:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:19:33 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:19:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:19:44 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS                   ] step= 20/80 | train= 12.5% | eval= 35.9% | kl=+0.1201 | gnorm=4.190 | max_r=3.10 | len=21.5
+(MainProcess pid=16840) INFO 11-14 15:19:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:19:59 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:20:09 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:20:20 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:20:21 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS                   ] step= 30/80 | train= 62.5% | eval= 39.1% | kl=+0.0314 | gnorm=7.422 | max_r=1.34 | len=17.8
+(MainProcess pid=16840) INFO 11-14 15:20:30 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:20:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:20:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:21:01 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:21:02 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS                   ] step= 40/80 | train= 25.0% | eval= 35.9% | kl=+0.1477 | gnorm=19.981 | max_r=2.17 | len=22.4
+(MainProcess pid=16840) INFO 11-14 15:21:11 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:21:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:21:36 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:21:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:21:45 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS                   ] step= 50/80 | train= 25.0% | eval= 35.9% | kl=+0.0677 | gnorm=7.252 | max_r=3.73 | len=17.0
+(MainProcess pid=16840) INFO 11-14 15:21:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:21:59 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:22:13 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:22:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:22:37 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS                   ] step= 60/80 | train= 12.5% | eval= 40.6% | kl=+0.1379 | gnorm=3.956 | max_r=4.55 | len=19.5
+(MainProcess pid=16840) INFO 11-14 15:22:52 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:23:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:23:14 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:23:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:23:23 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS                   ] step= 70/80 | train= 50.0% | eval= 35.9% | kl=+0.1730 | gnorm=7.498 | max_r=5.11 | len=19.8
+(MainProcess pid=16840) INFO 11-14 15:23:30 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:23:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:24:07 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:24:11 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:24:12 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS                   ] step= 79/80 | train= 50.0% | eval= 40.6% | kl=+0.0268 | gnorm=4.494 | max_r=1.44 | len=17.9
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:42,  3.03it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 850.75it/s]
+(MainProcess pid=16840) INFO 11-14 15:24:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:24:23 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS + Score Centering ] step=  0/80 | train= 25.0% | eval= 17.2% | kl=+0.0148 | gnorm=7.022 | max_r=1.71 | len=65.8
+(MainProcess pid=16840) INFO 11-14 15:24:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:25:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:25:20 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:25:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:25:30 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS + Score Centering ] step= 10/80 | train= 37.5% | eval= 32.8% | kl=+0.0728 | gnorm=8.988 | max_r=11.33 | len=38.6
+(MainProcess pid=16840) INFO 11-14 15:25:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:26:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:26:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:26:44 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:26:45 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS + Score Centering ] step= 20/80 | train= 12.5% | eval= 25.0% | kl=+0.1016 | gnorm=2.559 | max_r=7.87 | len=42.4
+(MainProcess pid=16840) INFO 11-14 15:26:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:27:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:27:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:28:01 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:28:03 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS + Score Centering ] step= 30/80 | train=  0.0% | eval= 18.8% | kl=+0.1389 | gnorm=0.000 | max_r=5.84 | len=49.0
+(MainProcess pid=16840) INFO 11-14 15:28:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:29:02 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:29:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:29:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:29:40 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS + Score Centering ] step= 40/80 | train= 12.5% | eval= 25.0% | kl=+0.2123 | gnorm=2.207 | max_r=2.49 | len=29.1
+(MainProcess pid=16840) INFO 11-14 15:29:56 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:30:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:30:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:31:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:31:15 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS + Score Centering ] step= 50/80 | train= 12.5% | eval= 37.5% | kl=+0.1003 | gnorm=3.273 | max_r=5.90 | len=70.9
+(MainProcess pid=16840) INFO 11-14 15:31:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:31:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:32:05 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:32:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:32:29 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS + Score Centering ] step= 60/80 | train=  0.0% | eval= 34.4% | kl=+0.2102 | gnorm=0.000 | max_r=2.02 | len=18.0
+(MainProcess pid=16840) INFO 11-14 15:32:45 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:33:00 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:33:15 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:33:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:33:24 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS + Score Centering ] step= 70/80 | train= 37.5% | eval= 32.8% | kl=+0.1067 | gnorm=8.056 | max_r=3.24 | len=16.8
+(MainProcess pid=16840) INFO 11-14 15:33:36 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:34:03 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:34:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:34:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=16840) INFO 11-14 15:34:23 [block_pool.py:905] Successfully reset prefix cache
+[RealTIM FP8 TIS + Score Centering ] step= 79/80 | train= 37.5% | eval= 31.2% | kl=+0.1728 | gnorm=2.077 | max_r=2.62 | len=18.4
+Saved /content/exp3/results.json and /content/exp3/plot.png
