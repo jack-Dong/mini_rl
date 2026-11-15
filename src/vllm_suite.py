@@ -13,6 +13,10 @@ import time
 from pathlib import Path
 from typing import Callable
 
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -24,11 +28,16 @@ from src.countdown import CountdownProblem, build_dataset, compute_reward
 from src.engine import (
     build_prompt_ids_list,
     make_fixed_noise,
-    plot_results,
     save_json_checkpoint,
     set_seed,
 )
-from src.losses import METHODS, compute_advantages, make_weight_fn, score_centering_loss
+from src.losses import (
+    METHODS,
+    compute_advantages,
+    make_weight_fn,
+    resolve_correction,
+    score_centering_loss,
+)
 
 FP8_E4M3_MAX = 448.0
 
@@ -99,23 +108,34 @@ def vllm_sample_rollouts(
     device: torch.device,
     temperature: float = 1.0,
     seed: int | None = None,
+    need_topk: bool = True,
 ) -> dict[str, Tensor | list[str]]:
-    """Generate rollouts through real vLLM PagedAttention/FlashInfer and unpack Top-k logprobs."""
+    """Generate rollouts through real vLLM PagedAttention/FlashInfer and unpack logprobs.
+
+    Uses preallocated CPU NumPy buffers and requests logprobs=1 when ``need_topk=False``
+    to avoid per-token CUDA tensor allocations and 128-way Python sorting overhead.
+    """
     prompt_id_lists = build_prompt_ids_list(problems, tokenizer)
     pad_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id
     p_ids, p_mask = _pad_prompt_ids(prompt_id_lists, pad_id, device)
 
-    sp = SamplingParams(
-        temperature=temperature,
-        top_p=1.0,
-        top_k=-1,
-        max_tokens=max_new_tokens,
-        logprobs=topk,
-        seed=seed,
-    )
+    # One SamplingParams per request with a distinct seed: a single shared seed makes
+    # vLLM return identical completions for the group_size copies of each prompt,
+    # which collapses every group to all-correct/all-wrong and zeroes the advantages.
+    sp_list = [
+        SamplingParams(
+            temperature=temperature,
+            top_p=1.0,
+            top_k=-1,
+            max_tokens=max_new_tokens,
+            logprobs=topk if need_topk else 1,
+            seed=None if seed is None else seed * 1000 + i,
+        )
+        for i in range(len(prompt_id_lists))
+    ]
     outputs = llm.generate(
         [{"prompt_token_ids": seq} for seq in prompt_id_lists],
-        sampling_params=sp,
+        sampling_params=sp_list,
         use_tqdm=False,
     )
 
@@ -125,45 +145,56 @@ def vllm_sample_rollouts(
     max_gen_len = max(max_gen_len, 1)
     batch_size = len(problems)
 
-    gen_tokens = torch.full((batch_size, max_gen_len), pad_id, dtype=torch.long, device=device)
-    loss_mask = torch.zeros((batch_size, max_gen_len), dtype=torch.bool, device=device)
-    samp_token_logp = torch.zeros((batch_size, max_gen_len), dtype=torch.float32, device=device)
-    samp_topk_logp = torch.full((batch_size, max_gen_len, topk), -30.0, dtype=torch.float32, device=device)
-    topk_ids = torch.zeros((batch_size, max_gen_len, topk), dtype=torch.long, device=device)
+    gen_tokens_np = np.full((batch_size, max_gen_len), pad_id, dtype=np.int64)
+    loss_mask_np = np.zeros((batch_size, max_gen_len), dtype=bool)
+    samp_token_logp_np = np.zeros((batch_size, max_gen_len), dtype=np.float32)
+    head_width = topk if need_topk else 1
+    samp_topk_logp_np = np.full((batch_size, max_gen_len, head_width), -30.0, dtype=np.float32)
+    topk_ids_np = np.zeros((batch_size, max_gen_len, head_width), dtype=np.int64)
     texts: list[str] = []
 
     for i, (toks, lp_list) in enumerate(zip(tok_seqs, lp_seqs)):
         texts.append(tokenizer.decode(toks, skip_special_tokens=True))
+        row_len = len(toks)
+        if row_len == 0:
+            continue
+        gen_tokens_np[i, :row_len] = toks
+        loss_mask_np[i, :row_len] = True
         for t, tid in enumerate(toks):
-            gen_tokens[i, t] = tid
-            loss_mask[i, t] = True
             if t >= len(lp_list) or not lp_list[t]:
                 continue
             step_dict = lp_list[t]
-            if tid in step_dict:
-                samp_token_logp[i, t] = float(step_dict[tid].logprob)
+            tok_entry = step_dict.get(tid)
+            if tok_entry is not None:
+                samp_token_logp_np[i, t] = float(tok_entry.logprob)
             else:
-                samp_token_logp[i, t] = float(min(v.logprob for v in step_dict.values()))
+                samp_token_logp_np[i, t] = float(min(v.logprob for v in step_dict.values()))
 
-            sorted_items = sorted(step_dict.items(), key=lambda kv: kv[1].logprob, reverse=True)[:topk]
+            if not need_topk:
+                continue
+
+            if len(step_dict) <= topk:
+                sorted_items = sorted(step_dict.items(), key=lambda kv: kv[1].logprob, reverse=True)
+            else:
+                sorted_items = sorted(step_dict.items(), key=lambda kv: kv[1].logprob, reverse=True)[:topk]
             m = len(sorted_items)
             if m > 0:
-                ids_t = torch.tensor([int(k) for k, _ in sorted_items], dtype=torch.long, device=device)
-                lps_t = torch.tensor([float(v.logprob) for _, v in sorted_items], dtype=torch.float32, device=device)
-                topk_ids[i, t, :m] = ids_t
-                samp_topk_logp[i, t, :m] = lps_t
+                ids_arr = [int(k) for k, _ in sorted_items]
+                lps_arr = [float(v.logprob) for _, v in sorted_items]
+                topk_ids_np[i, t, :m] = ids_arr
+                samp_topk_logp_np[i, t, :m] = lps_arr
                 if m < topk:
-                    topk_ids[i, t, m:] = ids_t[-1]
-                    samp_topk_logp[i, t, m:] = -30.0
+                    topk_ids_np[i, t, m:] = ids_arr[-1]
+                    samp_topk_logp_np[i, t, m:] = -30.0
 
     return {
         "prompt_ids": p_ids,
         "prompt_mask": p_mask,
-        "gen_tokens": gen_tokens,
-        "loss_mask": loss_mask,
-        "samp_token_logp": samp_token_logp,
-        "samp_topk_logp": samp_topk_logp,
-        "topk_ids": topk_ids,
+        "gen_tokens": torch.from_numpy(gen_tokens_np).to(device),
+        "loss_mask": torch.from_numpy(loss_mask_np).to(device),
+        "samp_token_logp": torch.from_numpy(samp_token_logp_np).to(device),
+        "samp_topk_logp": torch.from_numpy(samp_topk_logp_np).to(device),
+        "topk_ids": torch.from_numpy(topk_ids_np).to(device),
         "texts": texts,
     }
 
@@ -277,10 +308,11 @@ def probe_vllm_drift(
     abs_diff = (train_lp - samp_lp).abs()[loss_mask]
     kl_val = (samp_lp - train_lp)[loss_mask].mean().item()
     max_r = (train_lp - samp_lp).clamp(-20.0, 20.0).exp()[loss_mask].max().item()
+    trainer_attn = getattr(getattr(trainer, "config", None), "_attn_implementation", "sdpa")
     return {
         "sampler_engine": engine_label
         or f"vLLM V1 ({str(vllm_dtype).replace('torch.', '')}, PagedAttention+FlashInfer)",
-        "trainer_engine": "HF FP32 master + BF16 eager parallel forward",
+        "trainer_engine": f"HF FP32 master + BF16 {trainer_attn} parallel forward",
         "mean_abs_logp_diff": float(abs_diff.mean().item()),
         "max_abs_logp_diff": float(abs_diff.max().item()),
         "initial_kl_samp_train": float(kl_val),
@@ -303,16 +335,19 @@ def run_single_vllm_method(
     noise_scale: float = 0.0,
     log_prefix: str = "vLLM TIM",
     checkpoint_cb: Callable[[dict[str, object]], None] | None = None,
+    init_eval: tuple[float, dict[str, list[dict[str, object]]]] | None = None,
 ) -> dict[str, object]:
     """Train one RL method with the shared vLLM sampler and HF trainer."""
     spec = METHODS[method_key]
+    corr = resolve_correction(method_key, tis_max=args.tis_max)
     weight_fn = make_weight_fn(spec.weight_kind, tis_max=args.tis_max)
     set_seed(args.seed)
 
+    attn_impl = "sdpa" if device.type == "cuda" else "eager"
     trainer = AutoModelForCausalLM.from_pretrained(
         args.model_id,
         dtype=torch.float32,
-        attn_implementation="eager",
+        attn_implementation=attn_impl,
     ).to(device)
     trainer.load_state_dict(base_state)
     trainer.train()
@@ -326,40 +361,60 @@ def run_single_vllm_method(
     history: list[dict[str, float]] = []
     eval_samples: dict[str, dict[str, list[dict[str, object]]]] = {}
     cached_sampler_weights: list[tuple[str, Tensor]] | None = None
+    weights_dirty = True
+    vllm_has_sampler_weights = False
+
+    sample_steps_set: set[int] = {0, args.steps - 1}
+    if args.steps > 300:
+        sample_steps_set.add(300)
+    extra_sample_steps = getattr(args, "sample_steps", None) or []
+    sample_steps_set.update(int(s) for s in extra_sample_steps if 0 <= int(s) < args.steps)
+
     t0 = time.time()
 
     for step in range(args.steps):
         need_sync = step % (args.staleness + 1) == 0 or cached_sampler_weights is None
-        if need_sync:
+        if need_sync and weights_dirty:
             cached_sampler_weights = build_sampler_weights(
                 trainer, vllm_dtype, fixed_noise=fixed_noise, fp8_quant=fp8_quant
             )
+            weights_dirty = False
+            vllm_has_sampler_weights = False
 
         eval_reward = None
-        if step % args.eval_every == 0 or step == args.steps - 1:
-            trainer.eval()
-            capture = step == 0 or step == args.steps - 1
-            res_eval = vllm_evaluate_policy(
-                llm=llm,
-                trainer_model=trainer,
-                vllm_dtype=vllm_dtype,
-                eval_problems=eval_problems,
-                eval_extra_problems=eval_extra_problems,
-                tokenizer=tokenizer,
-                max_new_tokens=args.max_new_tokens,
-                return_samples=capture,
-                target_per_bucket=10,
-            )
-            if capture:
-                eval_reward, samp_buckets = res_eval  # type: ignore[misc]
-                eval_samples[f"step_{step}"] = samp_buckets
+        do_eval = step % args.eval_every == 0 or step in sample_steps_set
+        if do_eval:
+            capture = step in sample_steps_set
+            if step == 0 and init_eval is not None:
+                eval_reward = float(init_eval[0])
+                if capture:
+                    eval_samples["step_0"] = init_eval[1]
             else:
-                eval_reward = float(res_eval)  # type: ignore[arg-type]
-            trainer.train()
-            # Restore stale/noisy sampler weights because evaluation loaded clean trainer weights.
+                trainer.eval()
+                res_eval = vllm_evaluate_policy(
+                    llm=llm,
+                    trainer_model=trainer,
+                    vllm_dtype=vllm_dtype,
+                    eval_problems=eval_problems,
+                    eval_extra_problems=eval_extra_problems,
+                    tokenizer=tokenizer,
+                    max_new_tokens=args.max_new_tokens,
+                    return_samples=capture,
+                    target_per_bucket=10,
+                )
+                if capture:
+                    eval_reward, samp_buckets = res_eval  # type: ignore[misc]
+                    eval_samples[f"step_{step}"] = samp_buckets
+                else:
+                    eval_reward = float(res_eval)  # type: ignore[arg-type]
+                trainer.train()
+                # Eval loaded clean weights into vLLM; restore sampler weights below.
+                vllm_has_sampler_weights = False
+
+        if not vllm_has_sampler_weights:
+            assert cached_sampler_weights is not None
             load_weights_into_vllm(llm, cached_sampler_weights)
-        elif need_sync:
-            load_weights_into_vllm(llm, cached_sampler_weights)
+            vllm_has_sampler_weights = True
 
         batch_probs = [
             train_problems[(step * args.num_prompts + i) % len(train_problems)]
@@ -374,11 +429,15 @@ def run_single_vllm_method(
             topk=args.topk,
             device=device,
             seed=args.seed + step * 31,
+            need_topk=spec.use_sc,
         )
 
         rewards_list = [compute_reward(txt, prob) for txt, prob in zip(roll["texts"], grouped_probs)]
         rewards = torch.tensor(rewards_list, dtype=torch.float32, device=device)
-        advantages = compute_advantages(rewards, args.group_size, args.reward_mode).unsqueeze(-1)
+        method_reward_mode = spec.reward_mode_override or args.reward_mode
+        advantages = compute_advantages(rewards, args.group_size, method_reward_mode).unsqueeze(-1)
+        frac_nonzero_adv = float((advantages.abs() > 1e-8).float().mean().item())
+        has_signal = float(advantages.abs().max().item()) > 1e-8
 
         p_ids: Tensor = roll["prompt_ids"]  # type: ignore[assignment]
         p_mask: Tensor = roll["prompt_mask"]  # type: ignore[assignment]
@@ -398,58 +457,98 @@ def run_single_vllm_method(
         full_pos = (full_mask.cumsum(dim=-1) - 1).clamp_min(0)
         total_tokens = loss_mask.sum().clamp_min(1.0)
 
-        optimizer.zero_grad(set_to_none=True)
         total_loss_val = 0.0
         total_kl_val = 0.0
+        total_masked_val = 0.0
         max_ratio_val = 1.0
 
-        for s_idx in range(0, full_ids.size(0), args.micro_batch_size):
-            e_idx = min(s_idx + args.micro_batch_size, full_ids.size(0))
-            mb_bool = loss_mask[s_idx:e_idx]
-            if mb_bool.sum().item() == 0:
-                continue
+        if has_signal:
+            optimizer.zero_grad(set_to_none=True)
+            for s_idx in range(0, full_ids.size(0), args.micro_batch_size):
+                e_idx = min(s_idx + args.micro_batch_size, full_ids.size(0))
+                mb_bool = loss_mask[s_idx:e_idx]
+                if mb_bool.sum().item() == 0:
+                    continue
 
-            with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
-                out = trainer(
-                    input_ids=full_ids[s_idx:e_idx],
-                    attention_mask=full_mask[s_idx:e_idx],
-                    position_ids=full_pos[s_idx:e_idx],
-                    use_cache=False,
+                with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
+                    out = trainer(
+                        input_ids=full_ids[s_idx:e_idx],
+                        attention_mask=full_mask[s_idx:e_idx],
+                        position_ids=full_pos[s_idx:e_idx],
+                        use_cache=False,
+                    )
+                gen_logits = out.logits[:, prompt_len - 1 : prompt_len - 1 + gen_len, :].float()
+                train_logp = F.log_softmax(gen_logits, dim=-1)
+
+                mb_tok = gen_tokens[s_idx:e_idx]
+                mb_samp_tok_logp = samp_token_logp[s_idx:e_idx]
+                mb_loss, mb_masked = score_centering_loss(
+                    train_logp=train_logp,
+                    samp_logp=samp_topk_logp[s_idx:e_idx],
+                    topk_ids=topk_ids[s_idx:e_idx],
+                    sampled_token=mb_tok,
+                    samp_token_logp=mb_samp_tok_logp,
+                    advantage=advantages[s_idx:e_idx],
+                    weight_fn=weight_fn,
+                    use_sc=spec.use_sc,
+                    correction=corr,
+                    loss_mask=mb_bool,
+                    return_stats=True,
                 )
-            gen_logits = out.logits[:, prompt_len - 1 : prompt_len - 1 + gen_len, :].float()
-            train_logp = F.log_softmax(gen_logits, dim=-1)
+                if spec.seq_norm:
+                    mb_seq_lens = mb_bool.sum(dim=-1, keepdim=True).to(torch.float32).clamp_min(1.0)
+                    scaled_loss = (torch.where(mb_bool, mb_loss, 0.0) / mb_seq_lens).sum() / float(full_ids.size(0))
+                else:
+                    scaled_loss = torch.where(mb_bool, mb_loss, 0.0).sum() / total_tokens
+                scaled_loss.backward()
 
-            mb_tok = gen_tokens[s_idx:e_idx]
-            mb_samp_tok_logp = samp_token_logp[s_idx:e_idx]
-            mb_loss = score_centering_loss(
-                train_logp=train_logp,
-                samp_logp=samp_topk_logp[s_idx:e_idx],
-                topk_ids=topk_ids[s_idx:e_idx],
-                sampled_token=mb_tok,
-                samp_token_logp=mb_samp_tok_logp,
-                advantage=advantages[s_idx:e_idx],
-                weight_fn=weight_fn,
-                use_sc=spec.use_sc,
+                with torch.no_grad():
+                    mb_train_tok_logp = train_logp.gather(-1, mb_tok.unsqueeze(-1)).squeeze(-1)
+                    mb_kl = torch.where(mb_bool, mb_samp_tok_logp - mb_train_tok_logp, 0.0).sum()
+                    mb_ratios = (mb_train_tok_logp - mb_samp_tok_logp).clamp(-20.0, 20.0).exp()
+                    mb_max_r = torch.where(mb_bool, mb_ratios, 0.0).max().item()
+                    total_loss_val += float(scaled_loss.item())
+                    total_kl_val += float(mb_kl.item())
+                    total_masked_val += float((mb_masked & mb_bool).sum().item())
+                    max_ratio_val = max(max_ratio_val, mb_max_r)
+                del out, gen_logits, train_logp, mb_loss, mb_masked, scaled_loss, mb_train_tok_logp, mb_kl, mb_ratios
+
+            grad_norm = float(
+                torch.nn.utils.clip_grad_norm_(trainer.parameters(), max_norm=args.max_grad_norm).item()
             )
-            scaled_loss = torch.where(mb_bool, mb_loss, 0.0).sum() / total_tokens
-            scaled_loss.backward()
-
+            optimizer.step()
+            weights_dirty = True
+        else:
+            # Uniform-reward batch produces identically zero policy gradient; skip backward/step.
             with torch.no_grad():
-                mb_train_tok_logp = train_logp.gather(-1, mb_tok.unsqueeze(-1)).squeeze(-1)
-                mb_kl = torch.where(mb_bool, mb_samp_tok_logp - mb_train_tok_logp, 0.0).sum()
-                mb_ratios = (mb_train_tok_logp - mb_samp_tok_logp).clamp(-20.0, 20.0).exp()
-                mb_max_r = torch.where(mb_bool, mb_ratios, 0.0).max().item()
-                total_loss_val += scaled_loss.item()
-                total_kl_val += mb_kl.item()
-                max_ratio_val = max(max_ratio_val, mb_max_r)
-            del out, gen_logits, train_logp, mb_loss, scaled_loss, mb_train_tok_logp, mb_kl, mb_ratios
+                for s_idx in range(0, full_ids.size(0), args.micro_batch_size):
+                    e_idx = min(s_idx + args.micro_batch_size, full_ids.size(0))
+                    mb_bool = loss_mask[s_idx:e_idx]
+                    if mb_bool.sum().item() == 0:
+                        continue
+                    with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
+                        out = trainer(
+                            input_ids=full_ids[s_idx:e_idx],
+                            attention_mask=full_mask[s_idx:e_idx],
+                            position_ids=full_pos[s_idx:e_idx],
+                            use_cache=False,
+                        )
+                    gen_logits = out.logits[:, prompt_len - 1 : prompt_len - 1 + gen_len, :].float()
+                    train_logp = F.log_softmax(gen_logits, dim=-1)
+                    mb_tok = gen_tokens[s_idx:e_idx]
+                    mb_samp_tok_logp = samp_token_logp[s_idx:e_idx]
+                    mb_train_tok_logp = train_logp.gather(-1, mb_tok.unsqueeze(-1)).squeeze(-1)
+                    mb_kl = torch.where(mb_bool, mb_samp_tok_logp - mb_train_tok_logp, 0.0).sum()
+                    mb_ratios = (mb_train_tok_logp - mb_samp_tok_logp).clamp(-20.0, 20.0).exp()
+                    mb_max_r = torch.where(mb_bool, mb_ratios, 0.0).max().item()
+                    total_kl_val += float(mb_kl.item())
+                    max_ratio_val = max(max_ratio_val, mb_max_r)
+                    del out, gen_logits, train_logp, mb_train_tok_logp, mb_kl, mb_ratios
+            grad_norm = 0.0
 
-        grad_norm = float(
-            torch.nn.utils.clip_grad_norm_(trainer.parameters(), max_norm=args.max_grad_norm).item()
-        )
-        optimizer.step()
-
-        kl_mean = total_kl_val / float(total_tokens.item())
+        denom_tok = float(total_tokens.item())
+        kl_mean = total_kl_val / denom_tok
+        frac_masked = total_masked_val / denom_tok
         rec = {
             "step": float(step),
             "train_reward": float(rewards.mean().item()),
@@ -457,19 +556,21 @@ def run_single_vllm_method(
             "kl_samp_train": kl_mean,
             "grad_norm": grad_norm,
             "max_is_ratio": max_ratio_val,
+            "frac_masked": frac_masked,
+            "frac_nonzero_adv": frac_nonzero_adv,
             "mean_len": float(loss_mask.float().sum(dim=1).mean().item()),
         }
         if eval_reward is not None:
             rec["eval_reward"] = eval_reward
         history.append(rec)
 
-        if eval_reward is not None or step % 10 == 0:
+        if eval_reward is not None or step % 10 == 0 or step == args.steps - 1:
             ev_str = f" | eval={eval_reward * 100:5.1f}%" if eval_reward is not None else ""
             print(
                 f"[{log_prefix} {spec.name:<22}] step={step:3d}/{args.steps} | "
                 f"train={rec['train_reward'] * 100:5.1f}%{ev_str} | "
                 f"kl={kl_mean:+.4f} | gnorm={grad_norm:.3f} | max_r={max_ratio_val:.2f} | "
-                f"len={rec['mean_len']:.1f}",
+                f"mask={frac_masked * 100:4.1f}% | len={rec['mean_len']:.1f}",
                 flush=True,
             )
         if checkpoint_cb is not None and (eval_reward is not None or step == args.steps - 1):
@@ -494,6 +595,66 @@ def run_single_vllm_method(
     }
 
 
+METHOD_COLORS: dict[str, str] = {
+    "pg": "#ef4444",
+    "is": "#f59e0b",
+    "tis": "#3b82f6",
+    "mis": "#ec4899",
+    "ppo": "#8b5cf6",
+    "dapo": "#06b6d4",
+    "gspo": "#f97316",
+    "topr": "#84cc16",
+    "dppo": "#6366f1",
+    "grpo": "#e11d48",
+    "sc": "#14b8a6",
+    "tis_sc": "#10b981",
+    "mis_sc": "#22c55e",
+    "ppo_sc": "#a855f7",
+    "dapo_sc": "#0891b2",
+    "grpo_sc": "#059669",
+}
+
+
+def plot_vllm_results(
+    all_results: list[dict[str, object]],
+    out_path: Path,
+    title_prefix: str = "Qwen3-0.6B Countdown",
+) -> None:
+    """Plot eval reward and KL drift curves across arbitrary official RL methods."""
+    fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.0), dpi=150)
+
+    for res in all_results:
+        key = str(res["method"])
+        name = str(res["name"])
+        hist = res["history"]  # type: ignore[assignment]
+        color = METHOD_COLORS.get(key, "#6b7280")
+
+        eval_pts = [(h["step"], h["eval_reward"] * 100.0) for h in hist if "eval_reward" in h]
+        if eval_pts:
+            xs, ys = zip(*eval_pts)
+            axes[0].plot(xs, ys, marker="o", markersize=3.5, linewidth=2.0, label=name, color=color)
+
+        steps = [h["step"] for h in hist]
+        kls = [abs(h["kl_samp_train"]) for h in hist]
+        axes[1].plot(steps, kls, linewidth=1.6, alpha=0.88, label=name, color=color)
+
+    axes[0].set_title(f"{title_prefix}: Eval Solve Rate")
+    axes[0].set_xlabel("Training Step")
+    axes[0].set_ylabel("Solve Rate (%)")
+    axes[0].grid(True, linestyle="--", alpha=0.35)
+    axes[0].legend(frameon=True, fontsize=8, ncol=2)
+
+    axes[1].set_title(f"{title_prefix}: Sampler-Trainer KL Drift |KL(q || p)|")
+    axes[1].set_xlabel("Training Step")
+    axes[1].set_ylabel("|log q - log p|")
+    axes[1].grid(True, linestyle="--", alpha=0.35)
+    axes[1].legend(frameon=True, fontsize=8, ncol=2)
+
+    fig.tight_layout()
+    fig.savefig(out_path)
+    plt.close(fig)
+
+
 def run_vllm_suite(
     args: argparse.Namespace,
     results_filename: str,
@@ -504,16 +665,17 @@ def run_vllm_suite(
     fp8_quant: bool = False,
     noise_scale: float = 0.0,
 ) -> None:
-    """Shared entrypoint executing zero-step probe and 4-method vLLM RL comparison."""
+    """Shared entrypoint executing zero-step probe and multi-method vLLM RL comparison."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"[{log_prefix}] device={device} | model={args.model_id} | steps={args.steps}", flush=True)
+    attn_impl = "sdpa" if device.type == "cuda" else "eager"
+    print(f"[{log_prefix}] device={device} | attn={attn_impl} | model={args.model_id} | steps={args.steps}", flush=True)
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_id)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     eval_pool = build_dataset(
-        max(args.eval_prompts + 128, 192),
+        max(args.eval_prompts + 192, 256),
         seed=args.seed + 1000,
         num_operands=args.num_operands,
         max_number=args.max_number,
@@ -542,7 +704,7 @@ def run_vllm_suite(
     vllm_dtype = torch.float16 if args.vllm_dtype == "float16" else torch.bfloat16
 
     base_model = AutoModelForCausalLM.from_pretrained(
-        args.model_id, dtype=torch.float32, attn_implementation="eager"
+        args.model_id, dtype=torch.float32, attn_implementation=attn_impl
     ).to(device)
     base_state = {k: v.cpu().clone() for k, v in base_model.state_dict().items()}
     probe_noise = make_fixed_noise(base_model, scale=noise_scale, seed=args.seed + 77) if noise_scale > 0.0 else None
@@ -560,6 +722,23 @@ def run_vllm_suite(
         engine_label=engine_label,
     )
     print(f"[{log_prefix} Probe] {json.dumps(probe)}", flush=True)
+
+    init_eval: tuple[float, dict[str, list[dict[str, object]]]] | None = None
+    if args.steps > 0:
+        acc0, buckets0 = vllm_evaluate_policy(
+            llm=llm,
+            trainer_model=base_model,
+            vllm_dtype=vllm_dtype,
+            eval_problems=eval_problems,
+            eval_extra_problems=eval_extra_problems,
+            tokenizer=tokenizer,
+            max_new_tokens=args.max_new_tokens,
+            return_samples=True,
+            target_per_bucket=10,
+        )  # type: ignore[misc]
+        init_eval = (float(acc0), buckets0)
+        print(f"[{log_prefix} InitEval] step_0 eval={acc0 * 100:.1f}%", flush=True)
+
     del base_model, probe_noise
     gc.collect()
     torch.cuda.empty_cache()
@@ -597,6 +776,7 @@ def run_vllm_suite(
             noise_scale=noise_scale,
             log_prefix=log_prefix,
             checkpoint_cb=on_ckpt,
+            init_eval=init_eval,
         )
         results.append(res)
         save_json_checkpoint(
@@ -608,7 +788,7 @@ def run_vllm_suite(
         results_path,
         {"status": "completed", "args": vars(args), "engine_drift_probe": probe, "results": results},
     )
-    plot_results(results, plot_path, title_prefix=title_prefix)
+    plot_vllm_results(results, plot_path, title_prefix=title_prefix)
     print(f"Saved {results_path} and {plot_path}", flush=True)
 
 
@@ -619,6 +799,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--methods", nargs="+", default=["pg", "is", "tis", "tis_sc"])
     parser.add_argument("--steps", type=int, default=80)
     parser.add_argument("--eval-every", type=int, default=10)
+    parser.add_argument("--sample-steps", type=int, nargs="*", default=None)
     parser.add_argument("--num-prompts", type=int, default=8)
     parser.add_argument("--group-size", type=int, default=4)
     parser.add_argument("--eval-prompts", type=int, default=64)
@@ -632,7 +813,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--staleness", type=int, default=2)
     parser.add_argument("--weight-mismatch-sigma", type=float, default=0.015)
     parser.add_argument("--topk", type=int, default=128)
-    parser.add_argument("--tis-max", type=float, default=1.4)
+    parser.add_argument("--tis-max", type=float, default=2.0)
     parser.add_argument("--reward-mode", default="group_centered")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--vllm-dtype", default="float16", choices=["float16", "bfloat16"])
@@ -643,7 +824,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Run Experiment 2: Real vLLM FP16 PagedAttention+FlashInfer vs HF BF16 trainer."""
+    """Run Real vLLM FP16 PagedAttention+FlashInfer vs HF BF16 trainer TIM suite."""
     args = parse_args()
     run_vllm_suite(
         args=args,

@@ -10,6 +10,7 @@ from pathlib import Path
 def launch_job(cmd: str, log_file: Path, done_file: Path, pid_file: Path) -> None:
     """Start a double-forked nohup command writing logs, PID, and exit code markers."""
     for path in (log_file, done_file, pid_file):
+        path.parent.mkdir(parents=True, exist_ok=True)
         if path.exists():
             path.unlink()
 

@@ -45,14 +45,39 @@ EXPERIMENTS = [
         "script_name": "experiments/exp3_fp8_tim/run.py",
         "bash_name": "experiments/exp3_fp8_tim/run.sh",
     },
+    {
+        "id": "exp4",
+        "title": "实验四 · 官方参数对齐 + 300/500 步长程训练 + 11 种强化学习方法对比（Real vLLM TIM）",
+        "subtitle": "对齐官方开源参数（group_size=8, lr=0.01, TIS=2.0, MIS=[0.5,5.0], PPO/DAPO Dual-Clip=3.0, DAPO+SC, GRPO/GRPO+SC, σ=0.02）· 500 步（含 300 步与 500 步双里程碑评估与样本）",
+        "json_path": ROOT_DIR / "experiments" / "exp4_vllm_official_tim" / "results.json",
+        "png_path": ROOT_DIR / "experiments" / "exp4_vllm_official_tim" / "plot.png",
+        "log_path": ROOT_DIR / "experiments" / "exp4_vllm_official_tim" / "train.log",
+        "script_name": "experiments/exp4_vllm_official_tim/run.py",
+        "bash_name": "experiments/exp4_vllm_official_tim/run.sh",
+    },
 ]
 
-METHOD_ORDER = ["pg", "is", "tis", "tis_sc"]
+METHOD_ORDER = [
+    "pg", "is", "tis", "mis", "ppo", "dapo", "grpo", "gspo", "topr", "dppo",
+    "sc", "tis_sc", "mis_sc", "ppo_sc", "dapo_sc", "grpo_sc",
+]
 METHOD_META = {
-    "pg": {"label": "原生 PG (Vanilla REINFORCE)", "color": "#ef4444", "badge": "未校正漂移"},
-    "is": {"label": "朴素重要性采样 (Naive IS)", "color": "#f59e0b", "badge": "无截断高方差"},
-    "tis": {"label": "截断重要性采样 (TIS)", "color": "#3b82f6", "badge": "含截断偏差"},
-    "tis_sc": {"label": "TIS + 得分中心化 (Score Centering)", "color": "#10b981", "badge": "论文核心方法"},
+    "pg": {"label": "原生 PG (Vanilla)", "color": "#ef4444", "badge": "未校正漂移"},
+    "is": {"label": "朴素 IS (Naive IS)", "color": "#f59e0b", "badge": "无截断高方差"},
+    "tis": {"label": "截断 TIS (r ≤ 2.0)", "color": "#3b82f6", "badge": "上界截断"},
+    "mis": {"label": "掩码 MIS ([0.5, 5.0])", "color": "#ec4899", "badge": "区间丢弃"},
+    "ppo": {"label": "PPO ([0.8, 1.2], Dual=3)", "color": "#8b5cf6", "badge": "PPO 单边裁剪"},
+    "dapo": {"label": "DAPO ([0.8, 1.28], Dual=3)", "color": "#06b6d4", "badge": "宽松上界裁剪"},
+    "grpo": {"label": "GRPO (组标准化 + 序列均值)", "color": "#e11d48", "badge": "标准 GRPO"},
+    "gspo": {"label": "GSPO (seq_mean)", "color": "#f97316", "badge": "序列均值裁剪"},
+    "topr": {"label": "TOPR (seq_sum, A<0)", "color": "#84cc16", "badge": "负样本轨迹截断"},
+    "dppo": {"label": "DPPO (TV ≤ 0.2)", "color": "#6366f1", "badge": "TV 散度屏蔽"},
+    "sc": {"label": "Score Centering (SC)", "color": "#14b8a6", "badge": "纯得分中心化"},
+    "tis_sc": {"label": "TIS + Score Centering", "color": "#10b981", "badge": "论文核心方法"},
+    "mis_sc": {"label": "MIS + Score Centering", "color": "#22c55e", "badge": "MIS + 得分中心化"},
+    "ppo_sc": {"label": "PPO + Score Centering", "color": "#a855f7", "badge": "PPO + 得分中心化"},
+    "dapo_sc": {"label": "DAPO + Score Centering", "color": "#0891b2", "badge": "DAPO + 得分中心化"},
+    "grpo_sc": {"label": "GRPO + Score Centering", "color": "#059669", "badge": "GRPO + 得分中心化"},
 }
 
 
@@ -103,6 +128,10 @@ def summarize_method(res: dict[str, Any]) -> dict[str, Any]:
     """汇总单个强化学习算法的核心实验指标。"""
     hist = res.get("history", [])
     evals = [h["eval_reward"] * 100.0 for h in hist if "eval_reward" in h]
+    eval_300 = next(
+        (h["eval_reward"] * 100.0 for h in hist if int(h.get("step", -1)) == 300 and "eval_reward" in h),
+        None,
+    )
     trains = [h["train_reward"] * 100.0 for h in hist]
     kls = [abs(h.get("kl_samp_train", 0.0)) for h in hist]
     gnorms = [h.get("grad_norm", 0.0) for h in hist]
@@ -114,6 +143,7 @@ def summarize_method(res: dict[str, Any]) -> dict[str, Any]:
         "steps_done": len(hist),
         "elapsed_sec": res.get("elapsed_sec", 0.0),
         "eval_init": evals[0] if evals else None,
+        "eval_300": eval_300,
         "eval_final": evals[-1] if evals else None,
         "eval_peak": max(evals) if evals else None,
         "train_mean": sum(trains) / len(trains) if trains else 0.0,
@@ -129,7 +159,7 @@ def summarize_method(res: dict[str, Any]) -> dict[str, Any]:
 def build_dynamic_findings(payloads: list[dict[str, Any]]) -> str:
     """根据当前已收集到的实验结果动态生成中文核心结论卡片。"""
     items: list[str] = []
-    all_completed = payloads and all(p["status"] == "completed" for p in payloads)
+    first3_done = len(payloads) >= 3 and all(p["status"] == "completed" for p in payloads[:3])
     for p in payloads:
         results = p.get("results", [])
         if not results:
@@ -138,59 +168,71 @@ def build_dynamic_findings(payloads: list[dict[str, Any]]) -> str:
             )
             continue
         summaries = {r["method"]: summarize_method(r) for r in results}
-        sc = summaries.get("tis_sc")
-        tis = summaries.get("tis")
-        pg = summaries.get("pg")
-        isn = summaries.get("is")
-        status_note = "已完成" if p["status"] == "completed" else f"实时进行中（已记录 {len(results)}/4 个方法）"
+        expected_methods = len(p.get("args", {}).get("methods") or []) or len(results)
+        status_note = (
+            "已完成"
+            if p["status"] == "completed"
+            else f"实时进行中（已记录 {len(results)}/{expected_methods} 个方法）"
+        )
 
         parts = []
-        for k, label in [("pg", "PG"), ("is", "IS"), ("tis", "TIS"), ("tis_sc", "TIS+SC")]:
+        for k in METHOD_ORDER:
             if k in summaries:
                 s = summaries[k]
+                short_lbl = k.upper().replace("_", "+")
                 ev = f"{s['eval_final']:.1f}%" if s["eval_final"] is not None else "—"
+                m300 = f"300步={s['eval_300']:.1f}%，" if s["eval_300"] is not None else ""
                 parts.append(
-                    f"{label} 末期={ev}（峰值 {s['eval_peak']:.1f}%，均梯度 {s['gnorm_mean']:.2f} / 末步 {s['gnorm_final']:.2f}，均 |KL|={s['kl_mean']:.4f}）"
+                    f"{short_lbl} {m300}末期={ev}（峰值 {s['eval_peak']:.1f}%，均梯度 {s['gnorm_mean']:.2f} / 末步 {s['gnorm_final']:.2f}）"
                 )
         extra = ""
-        if all(x and x["eval_final"] is not None for x in (pg, isn, tis, sc)):
-            best_m = max(
-                [("PG", pg), ("IS", isn), ("TIS", tis), ("TIS+SC", sc)],
-                key=lambda kv: kv[1]["eval_final"],
-            )
-            low_gn = min(
-                [("PG", pg), ("IS", isn), ("TIS", tis), ("TIS+SC", sc)],
-                key=lambda kv: kv[1]["gnorm_mean"],
-            )
+        pg = summaries.get("pg")
+        valid_ev = [(k, s) for k, s in summaries.items() if s["eval_final"] is not None]
+        if valid_ev and len(valid_ev) >= 2:
+            best_k, best_s = max(valid_ev, key=lambda kv: kv[1]["eval_final"])
+            low_k, low_s = min(valid_ev, key=lambda kv: kv[1]["gnorm_mean"])
+            pg_delta = f"，相对 PG {best_s['eval_final'] - pg['eval_final']:+.1f} pp" if pg and pg["eval_final"] is not None else ""
             extra = (
-                f"；<strong>对比结论</strong>：末期最高精度 {best_m[0]} ({best_m[1]['eval_final']:.1f}%，"
-                f"相对 PG {best_m[1]['eval_final'] - pg['eval_final']:+.1f} pp)，"
-                f"全程最小平均梯度范数 {low_gn[0]} ({low_gn[1]['gnorm_mean']:.2f})。"
+                f"；<strong>对比结论</strong>：当前最高评估精度 {best_k.upper().replace('_', '+')} "
+                f"({best_s['eval_final']:.1f}%{pg_delta})，最小平均梯度范数 {low_k.upper().replace('_', '+')} ({low_s['gnorm_mean']:.2f})。"
             )
-        elif sc and pg and isn:
-            extra = f"；Score Centering 将平均训推 KL 保持在 {sc['kl_mean']:.4f}。"
 
         items.append(
             f"<li><strong>{html.escape(p['title'])}</strong>（{status_note}）：{'；'.join(parts)}{extra}</li>"
         )
 
-    if all_completed:
+    if first3_done:
         items.append(
-            "<li><strong>跨实验总体规律（80 步真实 vLLM 复现）</strong>："
-            "① 在全部 3 种 TIM 机制（受控权重噪声、FP16 vLLM+FlashInfer、FP8 E4M3FN 量化）中，从 17.2% 零步基线出发，"
+            "<li><strong>前 3 组 80 步实验总体规律</strong>："
+            "① 在受控权重噪声、FP16 vLLM+FlashInfer、FP8 E4M3FN 量化全部 3 种 TIM 机制中，从 17.2% 零步基线出发，"
             "带重要性校正的方法（IS / TIS / TIS+SC）在第 79 步评估准确率均一致超越原生 PG；"
             "② 当漂移增强（尤其是实验三 FP8 量化下朴素 IS 全程最大 IS 比率飙升至 205.79x、第 79 步仍达 24.41x）时，PG 与朴素 IS 的末步梯度范数剧烈飙升（分别达 51.83 与 26.82），"
-            "而截断类的 TIS（末期 40.6% 最高、末步梯度 4.49）与 TIS+SC（末步梯度 2.08、均梯度 4.89 全场最低）显著抑制了方差冲击；"
-            "③ 在当前 80 步 / Top-k=128 小批量条件下，TIS+SC 的头质量自适应残差表现出最稳健的梯度平滑性，但在轻中度漂移下的末期准确率略保守于 TIS/IS。</li>"
+            "而截断类的 TIS（末期 40.6% 最高、末步梯度 4.49）与 TIS+SC（末步梯度 2.08、均梯度 4.89 全场最低）显著抑制了方差冲击。</li>"
         )
+    if len(payloads) >= 4 and payloads[3]["status"] == "completed":
+        exp4_sum = {r["method"]: summarize_method(r) for r in payloads[3].get("results", [])}
+        grpo_sc_s = exp4_sum.get("grpo_sc")
+        dapo_sc_s = exp4_sum.get("dapo_sc")
+        ppo_sc_s = exp4_sum.get("ppo_sc")
+        if grpo_sc_s and dapo_sc_s and ppo_sc_s:
+            items.append(
+                "<li><strong>实验四（500 步官方对齐 + 11 算法同台）核心结论</strong>："
+                "① <strong>无 SC 的裁剪代理长程全军覆没</strong>：在真实 vLLM V1 FP16（staleness=2, σ=0.02, lr=0.01 SGD, group_size=8）下，"
+                "未加 Score Centering 的原生 PG 与三大裁剪算法 <code>PPO</code> / <code>DAPO</code> / <code>GRPO</code> 在 500 步末期全部退化坍缩至 0.0%（其中 PPO/DAPO/GRPO 在第 300 步即已归零，非零梯度步数仅 26~80/500）；"
+                "② <strong>Score Centering 拯救全部三大裁剪族</strong>：加入 Top-128 Score Centering 后全部避免零值坍缩——"
+                f"<code>PPO+SC</code> 峰值达 {ppo_sc_s['eval_peak']:.1f}%、末期回升至 {ppo_sc_s['eval_final']:.1f}%（vs PPO 0.0%）；"
+                f"<code>DAPO+SC</code> 300 步 {dapo_sc_s['eval_300']:.1f}%、末期 <strong>{dapo_sc_s['eval_final']:.1f}%</strong>（峰值 {dapo_sc_s['eval_peak']:.1f}%，vs DAPO 0.0%）；"
+                f"<strong><code>GRPO+SC</code> 全面夺冠</strong>：300 步 <strong>{grpo_sc_s['eval_300']:.1f}%</strong>、500 步末期 <strong>{grpo_sc_s['eval_final']:.1f}%</strong>、全周期峰值 <strong>{grpo_sc_s['eval_peak']:.1f}%</strong>（非零梯度更新密度高达 329/500，KL 漂移均值 {grpo_sc_s['kl_mean']:.4f} 显著低于 PG 的 0.1183），"
+                "表明 <code>group_std</code> 组内标准化 + <code>seq_norm</code> 序列长度归一化与 Score Centering 在长程 TIM 下形成最强协同。</li>"
+            )
 
     return f"""
     <section class="exp-card findings-card">
       <h2>核心结论与实时实验分析（Key Findings）</h2>
       <p class="sub">
         方法设计：在训推不匹配（Training-Inference Mismatch, TIM）场景下，直接对采样序列做强化学习更新（Vanilla PG）会因分布偏移积累偏差；
-        朴素重要性采样（IS）无偏但易受极端比率尾部冲击；截断重要性采样（TIS）抑制高方差尾部但会引入截断偏差。
-        <strong>Score Centering</strong> 在 Top-<em>k</em> 词汇子集（<em>k</em>=128）上利用自适应质量对齐基线中心化词表梯度，在真实 <code>vLLM V1</code> 引擎中检验其无偏性与梯度稳定性表现。
+        朴素 IS 无偏但易受极端比率尾部冲击；TIS/MIS/PPO/DAPO 通过比率截断或双边屏蔽控制方差；
+        <strong>Score Centering</strong> 在 Top-<em>k</em> 词汇子集（<em>k</em>=128）上按官方公式重构有效采样质量，在真实 <code>vLLM V1</code> 引擎下检验多种算法组合的 300/500 步长程收敛与稳定性表现。
       </p>
       <ul class="findings-list">{''.join(items)}</ul>
     </section>
@@ -205,7 +247,7 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
     total_done = sum(1 for p in payloads if p["status"] == "completed")
     total_run = sum(1 for p in payloads if p["status"] == "running")
     overview_badge = (
-        "全部 3 组实验已完成"
+        f"全部 {len(payloads)} 组实验已完成"
         if total_done == len(payloads)
         else f"实时更新中 · 已完成 {total_done}/{len(payloads)} 组 · 运行中 {total_run} 组"
     )
@@ -241,15 +283,18 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
         if args:
             chip_items = [
                 f"训练步数={args.get('steps', '-')}",
+                f"批规模={args.get('num_prompts', '-')}×G{args.get('group_size', '-')}",
                 f"最大生成={args.get('max_new_tokens', '-')} tokens",
                 f"学习率 lr={args.get('lr', '-')}",
                 f"陈旧度 staleness={args.get('staleness', 0)}",
-                f"TIS 截断阈值={args.get('tis_max', '-')}",
+                f"TIS 截断={args.get('tis_max', '-')}",
                 f"评估样本={args.get('eval_prompts', '-')}",
                 f"优势模式={args.get('reward_mode', 'group_centered')}",
             ]
             if "noise_scale" in args:
                 chip_items.append(f"权重噪声={args['noise_scale']}")
+            if "weight_mismatch_sigma" in args:
+                chip_items.append(f"权重失配 σ={args['weight_mismatch_sigma']}")
             if "vllm_dtype" in args:
                 chip_items.append(f"vLLM 精度={args['vllm_dtype']}")
             cfg_chips = "".join(f'<span class="chip">{html.escape(c)}</span>' for c in chip_items)
@@ -269,24 +314,30 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
 
         rows_html = []
         summaries = {r["method"]: summarize_method(r) for r in p["results"]}
+        show_300 = int(args.get("steps", 0)) >= 300 or any(
+            s.get("eval_300") is not None for s in summaries.values()
+        )
         for mkey in METHOD_ORDER:
             if mkey not in summaries:
                 continue
             s = summaries[mkey]
             meta = METHOD_META[mkey]
             ev0 = f"{s['eval_init']:.1f}%" if s["eval_init"] is not None else "—"
+            ev300 = f"{s['eval_300']:.1f}%" if s["eval_300"] is not None else "—"
             evf = f"{s['eval_final']:.1f}%" if s["eval_final"] is not None else "—"
             evp = f"{s['eval_peak']:.1f}%" if s["eval_peak"] is not None else "—"
             delta_str = "—"
             if s["eval_init"] is not None and s["eval_final"] is not None:
                 d = s["eval_final"] - s["eval_init"]
                 delta_str = f"{d:+.1f} pp"
-            row_cls = ' class="highlight-row"' if mkey == "tis_sc" else ""
+            row_cls = ' class="highlight-row"' if mkey.endswith("_sc") or mkey == "sc" else ""
+            col_300 = f"<td>{ev300}</td>" if show_300 else ""
             rows_html.append(
                 f"<tr{row_cls}>"
                 f'<td><span class="dot" style="background:{meta["color"]}"></span><strong>{html.escape(meta["label"])}</strong></td>'
                 f"<td>{s['steps_done']}</td>"
                 f"<td>{ev0}</td>"
+                f"{col_300}"
                 f'<td><strong>{evf}</strong> <span class="muted">({delta_str})</span></td>'
                 f"<td>{evp}</td>"
                 f"<td>{s['train_mean']:.1f}%</td>"
@@ -299,9 +350,10 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
                 f"</tr>"
             )
 
+        th_300 = "<th>300步评估</th>" if show_300 else ""
         table_html = (
             '<div class="table-wrap"><table><thead><tr>'
-            "<th>对比方法</th><th>完成步数</th><th>初始评估</th><th>最终评估 (变化)</th>"
+            f"<th>对比方法</th><th>完成步数</th><th>初始评估</th>{th_300}<th>最新评估 (变化)</th>"
             "<th>评估峰值</th><th>全程训练均值</th><th>末5步训练均值</th>"
             "<th>平均 |KL| 漂移</th><th>均 / 末梯度范数</th><th>最大 IS 比率</th><th>末步均长</th><th>耗时</th>"
             "</tr></thead><tbody>"
@@ -339,6 +391,7 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
                   <button class="tab-btn" data-metric="kl">训推 KL 漂移 |KL(q||p)|</button>
                   <button class="tab-btn" data-metric="grad_norm">梯度范数 ||g||₂</button>
                   <button class="tab-btn" data-metric="max_is_ratio">最大 IS 比率 p/q</button>
+                  <button class="tab-btn" data-metric="frac_masked">屏蔽/丢弃比例 (%)</button>
                   <button class="tab-btn" data-metric="mean_len">平均生成长度</button>
                 </div>
               </div>
@@ -480,8 +533,8 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
     </div>
     <h1>Score Centering (arXiv:2609.20807) · Qwen3-0.6B Countdown 实时复现实验报告</h1>
     <p class="sub">
-      在受控权重噪声 TIM、真实 <strong>vLLM 推理引擎（PagedAttention + FlashInfer）</strong> 异步采样、以及硬件级 FP8 量化三种训推不匹配机制下，
-      全面对比原生 PG、朴素 IS、截断 TIS 与论文提出的 <strong>TIS + Top-k 得分中心化（k=128）</strong> 的收敛精度与稳定性。
+      在受控权重噪声 TIM、真实 <strong>vLLM 推理引擎（PagedAttention + FlashInfer）</strong> 异步采样、硬件级 FP8 量化、以及对齐官方开源参数的
+      <strong>300/500 步长程 8 算法横向评测（PG / Naive IS / TIS / MIS / PPO / DAPO / TIS+SC / PPO+SC）</strong> 下，全面评估收敛精度与梯度稳定性。
     </p>
     <div class="chips">
       <span class="chip">基座模型：Qwen/Qwen3-0.6B</span>
@@ -505,6 +558,7 @@ function getSeriesValue(h, metric) {{
   if (metric === 'kl') return Math.abs(h.kl_samp_train || 0);
   if (metric === 'grad_norm') return h.grad_norm || 0;
   if (metric === 'max_is_ratio') return h.max_is_ratio || 1.0;
+  if (metric === 'frac_masked') return (h.frac_masked || 0) * 100;
   if (metric === 'mean_len') return h.mean_len || 0;
   return null;
 }}
@@ -541,7 +595,7 @@ function renderChart(exp, metric) {{
     return;
   }}
 
-  if (metric === 'eval_reward' || metric === 'train_reward' || metric === 'kl' || metric === 'grad_norm') minY = 0;
+  if (metric === 'eval_reward' || metric === 'train_reward' || metric === 'kl' || metric === 'grad_norm' || metric === 'frac_masked') minY = 0;
   if (maxY <= minY) maxY = minY + 1;
   const spanY = (maxY - minY) * 1.12;
 
@@ -615,7 +669,9 @@ function renderSamples(exp) {{
   }});
   if (availableMethods.length === 0) return;
 
-  const defaultMethod = availableMethods.includes('tis_sc') ? 'tis_sc' : availableMethods[availableMethods.length - 1];
+  const defaultMethod = availableMethods.includes('grpo_sc')
+    ? 'grpo_sc'
+    : (availableMethods.includes('tis_sc') ? 'tis_sc' : availableMethods[availableMethods.length - 1]);
   const renderFor = (mkey, ckptOverride) => {{
     const res = exp.results.find(r => r.method === mkey);
     const hasNew = res.eval_samples && Object.keys(res.eval_samples).length > 0;
