@@ -19,6 +19,7 @@ REWARD_MODES: dict[str, tuple[float, float]] = {
     "zero_minus": (0.0, -1.0),
     "group_centered": (1.0, -1.0),
     "group_std": (1.0, 0.0),
+    "group_std_raw": (1.0, 0.0),
 }
 
 
@@ -176,6 +177,15 @@ METHODS: dict[str, MethodSpec] = {
         reward_mode_override="group_std",
         seq_norm=True,
     ),
+    "grpo_dapo_sc": MethodSpec(
+        key="grpo_dapo_sc",
+        name="GRPO (Clip-Higher) + Score Centering",
+        use_sc=True,
+        weight_kind="dapo",
+        correction=ISCorrection(level="token", low=0.8, high=1.28, outside="drop", sign="ppo").check(),
+        reward_mode_override="group_std",
+        seq_norm=True,
+    ),
 }
 
 
@@ -209,15 +219,18 @@ def compute_advantages(
     group_size: int,
     reward_mode: str = "group_centered",
 ) -> Tensor:
-    """Map binary rewards into RL advantages following REWARD_MODES or GRPO group z-score."""
+    """Map binary or shaped rewards into RL advantages following REWARD_MODES or GRPO z-score."""
     if reward_mode not in REWARD_MODES:
         raise ValueError(f"Unsupported reward_mode: {reward_mode!r}")
-    solved, unsolved = REWARD_MODES[reward_mode]
-    raw = torch.where(rewards > 0.5, solved, unsolved).to(torch.float32)
+    if reward_mode == "group_std_raw":
+        raw = rewards.to(torch.float32)
+    else:
+        solved, unsolved = REWARD_MODES[reward_mode]
+        raw = torch.where(rewards > 0.5, solved, unsolved).to(torch.float32)
     if reward_mode == "group_centered":
         groups = raw.view(-1, group_size)
         return (groups - groups.mean(dim=1, keepdim=True)).reshape(-1)
-    if reward_mode == "group_std":
+    if reward_mode in ("group_std", "group_std_raw"):
         groups = raw.view(-1, group_size)
         mean = groups.mean(dim=1, keepdim=True)
         std = groups.std(dim=1, keepdim=True)

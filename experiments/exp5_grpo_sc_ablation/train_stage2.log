@@ -1,0 +1,706 @@
+W1116 03:05:07.324000 1363 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1116 03:05:07.325000 1363 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1116 03:05:07.326000 1363 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+[Exp5] device=cuda | attn=sdpa | model=Qwen/Qwen3-0.6B | steps=500
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+(MainProcess pid=1363) INFO 11-16 03:05:33 [startup.py:96] non-default args: {'dtype': 'float16', 'max_model_len': 768, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.25, 'max_logprobs': 132, 'disable_log_stats': True}
+(MainProcess pid=1363) WARNING 11-16 03:05:33 [arg_utils.py:1984] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.
+(MainProcess pid=1363) INFO 11-16 03:05:54 [model.py:744] Resolved architecture: Qwen3ForCausalLM
+(MainProcess pid=1363) WARNING 11-16 03:05:54 [model.py:2516] Casting torch.bfloat16 to torch.float16.
+(MainProcess pid=1363) INFO 11-16 03:05:54 [model.py:2170] Using max model len 768
+(MainProcess pid=1363) INFO 11-16 03:05:54 [scheduler.py:310] Chunked prefill is enabled with max_num_batched_tokens=8192.
+(MainProcess pid=1363) INFO 11-16 03:05:55 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]Fetching 9 files:  67%|██████▋   | 6/9 [00:00<00:00, 24.04it/s]Fetching 9 files: 100%|██████████| 9/9 [00:00<00:00, 34.24it/s]
+(MainProcess pid=1363) INFO 11-16 03:05:59 [core.py:139] Initializing a V1 LLM engine (v0.33.0) with config: model='Qwen/Qwen3-0.6B', speculative_config=None, tokenizer='Qwen/Qwen3-0.6B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=main, tokenizer_revision=main, trust_remote_code=False, dtype=torch.float16, max_seq_len=768, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, custom_histogram_buckets=None, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=Qwen/Qwen3-0.6B, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::qwen4_exp_qsa_prepare_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'cudagraph_decoder_replay': True, 'decoder_replay_cudagraph_capture_sizes': [], 'decoder_replay_trim_threshold': 768, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_rocm_segmented_attn_autotune=False, enable_cutedsl_warmup=True, enable_jit_warmup=True, monokernel=False, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(MainProcess pid=1363) INFO 11-16 03:06:04 [parallel_state.py:1929] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_f5986eb41abb49299a3d1cf7ae3b32b0 backend=nccl
+(MainProcess pid=1363) INFO 11-16 03:06:04 [parallel_state.py:2385] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(MainProcess pid=1363) INFO 11-16 03:06:04 [gpu_worker.py:513] Using V2 Model Runner
+(MainProcess pid=1363) INFO 11-16 03:06:06 [model_runner.py:399] Loading model from scratch...
+(MainProcess pid=1363) INFO 11-16 03:06:09 [cuda.py:508] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(MainProcess pid=1363) INFO 11-16 03:06:09 [flash_attn.py:1122] Using FlashAttention version 2
+(MainProcess pid=1363) INFO 11-16 03:06:10 [base_loader.py:82] Initializing model took 3.959620 seconds
+(MainProcess pid=1363) INFO 11-16 03:06:18 [weight_utils.py:537] Time spent downloading weights for Qwen/Qwen3-0.6B: 8.260424 seconds
+(MainProcess pid=1363) INFO 11-16 03:06:18 [weight_utils.py:1144] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 1.40 GiB. Available RAM: 161.65 GiB.
+(MainProcess pid=1363) INFO 11-16 03:06:18 [weight_utils.py:1167] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+(MainProcess pid=1363) WARNING 11-16 03:06:18 [utils.py:333] Attempted to load weight lm_head.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight embed_tokens.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.0.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.0.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.0.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.0.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.0.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.0.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.1.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.1.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.1.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.1.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.1.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.1.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.10.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.10.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.10.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.10.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.10.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.10.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.11.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.11.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.11.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.11.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.11.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.11.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.12.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.12.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.12.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.12.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.12.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.12.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.13.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.13.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.13.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.13.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.13.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.13.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.14.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.14.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.14.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.14.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.14.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.14.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.15.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.15.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.15.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.15.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.15.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.15.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.16.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.16.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.16.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.16.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.16.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.16.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.17.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.17.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.17.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.17.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.17.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.17.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.18.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.18.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.18.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.18.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.18.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.18.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.19.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.19.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.19.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.19.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.19.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.19.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.2.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.2.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.2.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.2.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.2.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.2.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.20.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.20.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.20.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.20.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.20.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.20.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.21.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.21.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.21.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.21.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.21.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.21.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.22.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.22.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.22.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.22.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.22.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.22.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.23.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.23.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.23.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.23.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.23.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.23.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.24.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.24.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.24.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.24.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.24.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.24.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.25.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.25.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.25.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.25.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.25.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.25.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.26.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.26.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.26.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.26.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.26.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.26.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.27.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.27.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.27.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.27.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.27.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.27.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.3.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.3.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.3.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.3.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.3.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.3.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.4.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.4.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.4.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.4.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.4.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.4.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.5.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.5.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.5.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.5.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.5.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.5.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.6.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.6.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.6.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.6.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.6.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.6.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.7.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.7.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.7.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.7.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.7.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.7.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.8.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.8.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.8.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.8.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.8.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.8.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.9.input_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.9.mlp.down_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.9.post_attention_layernorm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.9.self_attn.k_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.9.self_attn.o_proj.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight layers.9.self_attn.q_norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+(MainProcess pid=1363) WARNING 11-16 03:06:19 [utils.py:333] Attempted to load weight norm.weight with dtype torch.bfloat16 into parameter with dtype torch.float16
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  1.50it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  1.50it/s]
+
+(MainProcess pid=1363) INFO 11-16 03:06:19 [default_loader.py:506] Loading weights took 0.70 seconds
+(MainProcess pid=1363) INFO 11-16 03:06:22 [model_runner.py:428] Model loading took 1.12 GiB memory and 17.051201 seconds
+(MainProcess pid=1363) INFO 11-16 03:06:22 [topk_topp_sampler.py:149] Using FlashInfer for top-p & top-k sampling.
+(MainProcess pid=1363) INFO 11-16 03:06:22 [torch_utils.py:281] Reducing Torch threads from 6 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(MainProcess pid=1363) INFO 11-16 03:06:22 [utils.py:381] Using LBNHC KV cache layout.
+(MainProcess pid=1363) INFO 11-16 03:06:26 [monitor.py:40] [backbone] Starting torch.compile
+(MainProcess pid=1363) INFO 11-16 03:06:35 [backends.py:1125] [backbone] Using cache directory: /root/.cache/vllm/torch_compile_cache/616f0ca2aa/rank_0_0/backbone for vLLM's torch.compile
+(MainProcess pid=1363) INFO 11-16 03:06:35 [backends.py:1187] [backbone] Dynamo bytecode transform time: 8.87 s
+(MainProcess pid=1363) INFO 11-16 03:06:50 [backends.py:417] [backbone] Compiling a graph for compile range (1, 8192) takes 14.74 s
+(MainProcess pid=1363) INFO 11-16 03:06:55 [backends.py:948] collected artifacts: 29 entries, 3 artifacts, 6039442 bytes total
+(MainProcess pid=1363) INFO 11-16 03:06:55 [decorators.py:752] [backbone] saved AOT compiled function to /root/.cache/vllm/torch_compile_cache/torch_aot_compile/4998a19c62c60f35995c9d2c6ce4f1785821e37a55e0fc2336a374794f021d67/rank_0_0/model
+(MainProcess pid=1363) INFO 11-16 03:06:55 [monitor.py:62] [backbone] torch.compile took 28.34 s in total
+(MainProcess pid=1363) INFO 11-16 03:06:55 [monitor.py:91] [backbone] Initial profiling/warmup run took 0.03 s
+2026-11-16 03:06:57,078 - INFO - core.py:594 - flashinfer.jit: Building JIT module sampling; this can take several minutes on first use.
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]Capturing CUDA graphs (PIECEWISE):   4%|▍         | 2/51 [00:00<00:03, 13.86it/s]Capturing CUDA graphs (PIECEWISE):   8%|▊         | 4/51 [00:00<00:02, 16.65it/s]Capturing CUDA graphs (PIECEWISE):  14%|█▎        | 7/51 [00:00<00:02, 18.76it/s]Capturing CUDA graphs (PIECEWISE):  20%|█▉        | 10/51 [00:00<00:02, 19.56it/s]Capturing CUDA graphs (PIECEWISE):  25%|██▌       | 13/51 [00:00<00:01, 20.05it/s]Capturing CUDA graphs (PIECEWISE):  31%|███▏      | 16/51 [00:00<00:01, 20.47it/s]Capturing CUDA graphs (PIECEWISE):  37%|███▋      | 19/51 [00:01<00:01, 18.76it/s]Capturing CUDA graphs (PIECEWISE):  41%|████      | 21/51 [00:01<00:01, 18.18it/s]Capturing CUDA graphs (PIECEWISE):  45%|████▌     | 23/51 [00:01<00:01, 17.65it/s]Capturing CUDA graphs (PIECEWISE):  49%|████▉     | 25/51 [00:01<00:01, 17.10it/s]Capturing CUDA graphs (PIECEWISE):  53%|█████▎    | 27/51 [00:01<00:01, 16.70it/s]Capturing CUDA graphs (PIECEWISE):  57%|█████▋    | 29/51 [00:01<00:01, 16.49it/s]Capturing CUDA graphs (PIECEWISE):  61%|██████    | 31/51 [00:01<00:01, 15.20it/s]Capturing CUDA graphs (PIECEWISE):  65%|██████▍   | 33/51 [00:01<00:01, 15.45it/s]Capturing CUDA graphs (PIECEWISE):  69%|██████▊   | 35/51 [00:02<00:00, 16.21it/s]Capturing CUDA graphs (PIECEWISE):  73%|███████▎  | 37/51 [00:02<00:00, 16.50it/s]Capturing CUDA graphs (PIECEWISE):  76%|███████▋  | 39/51 [00:02<00:00, 16.89it/s]Capturing CUDA graphs (PIECEWISE):  80%|████████  | 41/51 [00:02<00:00, 17.26it/s]Capturing CUDA graphs (PIECEWISE):  84%|████████▍ | 43/51 [00:02<00:00, 17.51it/s]Capturing CUDA graphs (PIECEWISE):  88%|████████▊ | 45/51 [00:02<00:00, 17.57it/s]Capturing CUDA graphs (PIECEWISE):  92%|█████████▏| 47/51 [00:02<00:00, 17.57it/s]Capturing CUDA graphs (PIECEWISE):  96%|█████████▌| 49/51 [00:02<00:00, 17.02it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:03<00:00, 14.20it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:03<00:00, 16.91it/s]
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:00<00:00, 24.06it/s]
+(MainProcess pid=1363) INFO 11-16 03:08:51 [model_runner.py:1163] Graph capturing finished in 5 secs, took 0.28 GiB
+(MainProcess pid=1363) INFO 11-16 03:08:52 [gpu_worker.py:772] Available KV cache memory: 17.61 GiB
+(MainProcess pid=1363) INFO 11-16 03:08:52 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.2500 is equivalent to --gpu-memory-utilization=0.2460 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.2540. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(MainProcess pid=1363) INFO 11-16 03:08:52 [kv_cache_utils.py:1147] GPU KV cache size: 164,832 tokens, Maximum concurrency for 768 tokens per request: 214.62x
+(MainProcess pid=1363) INFO 11-16 03:08:52 [kernel_warmup.py:179] JIT kernel warmup starting.
+(MainProcess pid=1363) INFO 11-16 03:08:52 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]Capturing CUDA graphs (PIECEWISE):   4%|▍         | 2/51 [00:00<00:02, 19.01it/s]Capturing CUDA graphs (PIECEWISE):  10%|▉         | 5/51 [00:00<00:02, 20.38it/s]Capturing CUDA graphs (PIECEWISE):  16%|█▌        | 8/51 [00:00<00:02, 20.60it/s]Capturing CUDA graphs (PIECEWISE):  22%|██▏       | 11/51 [00:00<00:01, 20.92it/s]Capturing CUDA graphs (PIECEWISE):  27%|██▋       | 14/51 [00:00<00:01, 21.09it/s]Capturing CUDA graphs (PIECEWISE):  33%|███▎      | 17/51 [00:00<00:01, 20.67it/s]Capturing CUDA graphs (PIECEWISE):  39%|███▉      | 20/51 [00:01<00:01, 19.19it/s]Capturing CUDA graphs (PIECEWISE):  43%|████▎     | 22/51 [00:01<00:01, 18.58it/s]Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 24/51 [00:01<00:01, 18.13it/s]Capturing CUDA graphs (PIECEWISE):  51%|█████     | 26/51 [00:01<00:01, 17.73it/s]Capturing CUDA graphs (PIECEWISE):  55%|█████▍    | 28/51 [00:01<00:01, 17.56it/s]Capturing CUDA graphs (PIECEWISE):  59%|█████▉    | 30/51 [00:01<00:01, 17.15it/s]Capturing CUDA graphs (PIECEWISE):  63%|██████▎   | 32/51 [00:01<00:01, 16.96it/s]Capturing CUDA graphs (PIECEWISE):  67%|██████▋   | 34/51 [00:01<00:00, 17.19it/s]Capturing CUDA graphs (PIECEWISE):  71%|███████   | 36/51 [00:01<00:00, 17.65it/s]Capturing CUDA graphs (PIECEWISE):  75%|███████▍  | 38/51 [00:02<00:00, 17.95it/s]Capturing CUDA graphs (PIECEWISE):  78%|███████▊  | 40/51 [00:02<00:00, 18.33it/s]Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 42/51 [00:02<00:00, 18.50it/s]Capturing CUDA graphs (PIECEWISE):  86%|████████▋ | 44/51 [00:02<00:00, 18.73it/s]Capturing CUDA graphs (PIECEWISE):  90%|█████████ | 46/51 [00:02<00:00, 19.00it/s]Capturing CUDA graphs (PIECEWISE):  94%|█████████▍| 48/51 [00:02<00:00, 18.88it/s]Capturing CUDA graphs (PIECEWISE):  98%|█████████▊| 50/51 [00:02<00:00, 18.87it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:02<00:00, 18.73it/s]
+Capturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]Capturing CUDA graphs (FULL):   9%|▊         | 3/35 [00:00<00:01, 24.54it/s]Capturing CUDA graphs (FULL):  17%|█▋        | 6/35 [00:00<00:01, 24.37it/s]Capturing CUDA graphs (FULL):  26%|██▌       | 9/35 [00:00<00:01, 24.65it/s]Capturing CUDA graphs (FULL):  34%|███▍      | 12/35 [00:00<00:00, 24.57it/s]Capturing CUDA graphs (FULL):  43%|████▎     | 15/35 [00:00<00:00, 24.63it/s]Capturing CUDA graphs (FULL):  51%|█████▏    | 18/35 [00:00<00:00, 24.73it/s]Capturing CUDA graphs (FULL):  60%|██████    | 21/35 [00:00<00:00, 24.75it/s]Capturing CUDA graphs (FULL):  69%|██████▊   | 24/35 [00:00<00:00, 24.71it/s]Capturing CUDA graphs (FULL):  77%|███████▋  | 27/35 [00:01<00:00, 24.84it/s]Capturing CUDA graphs (FULL):  86%|████████▌ | 30/35 [00:01<00:00, 25.12it/s]Capturing CUDA graphs (FULL):  94%|█████████▍| 33/35 [00:01<00:00, 24.72it/s]Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:01<00:00, 24.77it/s]
+(MainProcess pid=1363) INFO 11-16 03:08:59 [model_runner.py:1163] Graph capturing finished in 6 secs, took 0.18 GiB
+(MainProcess pid=1363) INFO 11-16 03:08:59 [gpu_worker.py:1003] CUDA graph pool memory: 0.18 GiB (actual), 0.32 GiB (estimated), difference: 0.14 GiB (75.3%).
+(MainProcess pid=1363) INFO 11-16 03:08:59 [gpu_worker.py:1066] Free memory on device (78.72/79.25 GiB) on startup. Desired GPU memory utilization is (0.25, 19.81 GiB). Actual usage is 1.36 GiB for consumed memory (weights + non-torch), 0.85 GiB for peak activation, and 0.18 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=18553163776` (17.28 GiB) to fit into requested memory, or `--kv-cache-memory=81808117760` (76.19 GiB) to fully utilize gpu memory. Current kv cache memory in use is 17.61 GiB.
+(MainProcess pid=1363) INFO 11-16 03:09:00 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(MainProcess pid=1363) INFO 11-16 03:09:01 [core.py:405] init engine (profile, create kv cache, warmup model) took 159.02 s (compilation: 28.34 s)
+(MainProcess pid=1363) INFO 11-16 03:09:02 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:32,  3.35it/s]Loading weights:  93%|█████████▎| 290/311 [00:00<00:00, 937.79it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 752.48it/s]
+(MainProcess pid=1363) INFO 11-16 03:09:08 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) WARNING 11-16 03:09:08 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topk_log_softmax_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+[Exp5 Probe] {"sampler_engine": "vLLM V1 (float16, balanced-5stratum, max_tok=512, staleness=2, sigma=0.02)", "trainer_engine": "HF FP32 master + BF16 sdpa parallel forward", "mean_abs_logp_diff": 0.03895319998264313, "max_abs_logp_diff": 0.807464599609375, "initial_kl_samp_train": 0.008097772486507893, "initial_max_is_ratio": 1.7698924541473389}
+(MainProcess pid=1363) INFO 11-16 03:09:13 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 InitEval] step_0 eval=10.9% | metrics={"eval_addsub_reward": 0.125, "eval_mul_reward": 0.0625, "eval_div_reward": 0.125, "eval_parens_reward": 0.125, "eval_muldiv_reward": 0.09375, "eval_expr_muldiv_frac": 0.42857142857142855, "eval_strict_fmt_rate": 0.765625, "eval_skill_addsub": 0.125, "eval_skill_mul_flat": 0.0, "eval_skill_div_flat": 0.125, "eval_skill_mul_parens": 0.125, "eval_skill_div_parens": 0.125, "eval_orig_reward": 0.1875}
+[Exp5 Resume] Reusing completed orig_data_500 (500 steps)
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:41,  3.05it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 870.41it/s]
+(MainProcess pid=1363) INFO 11-16 03:09:21 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=  0/500 | train= 12.5% | eval= 10.9% (orig=18.8% as=12.5% mul= 6.2% div=12.5% par=12.5%) | kl=+0.0041 | gnorm=4.407 | max_r=1.90 | mask= 2.0% | len=113.2
+(MainProcess pid=1363) INFO 11-16 03:09:44 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:10:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:11:15 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 10/500 | train= 53.1% | kl=+0.0283 | gnorm=2.239 | max_r=14.04 | mask= 8.3% | len=290.3
+(MainProcess pid=1363) INFO 11-16 03:12:06 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:13:05 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:14:04 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 20/500 | train= 43.8% | kl=+0.0201 | gnorm=1.493 | max_r=5.58 | mask= 6.4% | len=381.7
+(MainProcess pid=1363) INFO 11-16 03:15:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:16:06 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:16:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:16:29 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 25/500 | train= 50.0% | eval= 57.8% (orig=64.1% as=90.6% mul=37.5% div=12.5% par=18.8%) | kl=+0.0109 | gnorm=1.103 | max_r=7.37 | mask= 4.1% | len=394.2
+(MainProcess pid=1363) INFO 11-16 03:17:12 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:18:14 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 30/500 | train= 50.0% | kl=+0.0073 | gnorm=1.557 | max_r=11.24 | mask= 3.0% | len=376.0
+(MainProcess pid=1363) INFO 11-16 03:19:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:20:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:21:20 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 40/500 | train= 28.1% | kl=+0.0240 | gnorm=1.692 | max_r=15.29 | mask= 8.1% | len=478.7
+(MainProcess pid=1363) INFO 11-16 03:22:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:23:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:24:55 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:25:48 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:25:53 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 50/500 | train= 37.5% | eval= 39.1% (orig=39.1% as=71.9% mul= 0.0% div=12.5% par=12.5%) | kl=+0.0302 | gnorm=1.780 | max_r=24.82 | mask= 9.0% | len=460.7
+(MainProcess pid=1363) INFO 11-16 03:26:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:27:37 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:28:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:30:11 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 60/500 | train= 34.4% | kl=+0.0297 | gnorm=1.757 | max_r=7.71 | mask= 8.4% | len=403.9
+(MainProcess pid=1363) INFO 11-16 03:31:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:32:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:33:26 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 70/500 | train= 25.0% | kl=+0.0288 | gnorm=1.716 | max_r=9.26 | mask= 8.1% | len=422.5
+(MainProcess pid=1363) INFO 11-16 03:34:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:35:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:35:39 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 75/500 | train= 46.9% | eval= 42.2% (orig=46.9% as=81.2% mul= 0.0% div= 6.2% par= 6.2%) | kl=+0.0271 | gnorm=2.340 | max_r=10.65 | mask= 8.8% | len=326.0
+(MainProcess pid=1363) INFO 11-16 03:36:35 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 80/500 | train= 50.0% | kl=+0.1416 | gnorm=1.689 | max_r=17.03 | mask=15.2% | len=304.8
+(MainProcess pid=1363) INFO 11-16 03:37:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:38:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:39:07 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:39:59 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step= 90/500 | train= 81.2% | kl=+0.0242 | gnorm=2.462 | max_r=5.96 | mask= 6.1% | len=207.3
+<string>:1: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+(MainProcess pid=1363) INFO 11-16 03:40:45 [block_pool.py:905] Successfully reset prefix cache
+<string>:1: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+(MainProcess pid=1363) INFO 11-16 03:41:37 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:42:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:42:37 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:42:41 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=100/500 | train= 37.5% | eval= 45.3% (orig=59.4% as=78.1% mul=12.5% div=12.5% par= 0.0%) | kl=+0.0518 | gnorm=1.936 | max_r=16.93 | mask= 9.3% | len=405.6
+(MainProcess pid=1363) INFO 11-16 03:43:16 [block_pool.py:905] Successfully reset prefix cache
+<string>:1: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+(MainProcess pid=1363) INFO 11-16 03:44:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:45:05 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=110/500 | train= 31.2% | kl=+0.0672 | gnorm=1.695 | max_r=27.01 | mask=10.7% | len=429.5
+(MainProcess pid=1363) INFO 11-16 03:46:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:46:52 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:47:52 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:48:52 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=120/500 | train= 37.5% | kl=+0.0323 | gnorm=1.762 | max_r=9.45 | mask= 5.8% | len=342.7
+(MainProcess pid=1363) INFO 11-16 03:49:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:50:16 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:50:21 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=125/500 | train= 53.1% | eval= 46.9% (orig=68.8% as=75.0% mul=31.2% div= 6.2% par= 0.0%) | kl=+0.0675 | gnorm=1.386 | max_r=14.50 | mask= 7.0% | len=307.5
+(MainProcess pid=1363) INFO 11-16 03:50:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:51:27 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=130/500 | train= 56.2% | kl=+0.0785 | gnorm=1.525 | max_r=32.41 | mask= 5.4% | len=212.1
+(MainProcess pid=1363) INFO 11-16 03:52:08 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:52:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:53:49 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=140/500 | train= 43.8% | kl=+0.1487 | gnorm=2.630 | max_r=148.89 | mask= 8.2% | len=324.3
+(MainProcess pid=1363) INFO 11-16 03:54:36 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:55:53 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:57:07 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:58:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 03:58:28 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=150/500 | train= 50.0% | eval= 37.5% (orig=42.2% as=65.6% mul=18.8% div= 0.0% par= 6.2%) | kl=+0.0399 | gnorm=0.000 | max_r=18.28 | mask= 0.0% | len=472.2
+(MainProcess pid=1363) INFO 11-16 03:59:37 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:00:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:01:53 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=160/500 | train= 62.5% | kl=+0.0833 | gnorm=1.475 | max_r=21.82 | mask= 8.7% | len=319.4
+(MainProcess pid=1363) INFO 11-16 04:02:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:03:40 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:04:35 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=170/500 | train= 15.6% | kl=+0.1553 | gnorm=1.004 | max_r=31.84 | mask=10.6% | len=406.1
+(MainProcess pid=1363) INFO 11-16 04:05:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:06:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:06:44 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:06:49 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=175/500 | train= 31.2% | eval= 59.4% (orig=50.0% as=87.5% mul=43.8% div=18.8% par=43.8%) | kl=+0.1034 | gnorm=1.002 | max_r=35.78 | mask=10.3% | len=409.8
+(MainProcess pid=1363) INFO 11-16 04:07:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:08:38 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=180/500 | train= 56.2% | kl=+0.0938 | gnorm=1.087 | max_r=17.31 | mask= 8.4% | len=336.7
+(MainProcess pid=1363) INFO 11-16 04:09:39 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:10:41 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:11:53 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=190/500 | train= 43.8% | kl=+0.1849 | gnorm=1.647 | max_r=68.15 | mask= 7.8% | len=386.3
+(MainProcess pid=1363) INFO 11-16 04:13:00 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:14:02 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:15:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:15:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:15:56 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=200/500 | train= 25.0% | eval= 29.7% (orig=26.6% as=53.1% mul=12.5% div= 0.0% par= 0.0%) | kl=+0.3167 | gnorm=0.000 | max_r=21.94 | mask= 0.0% | len=201.2
+(MainProcess pid=1363) INFO 11-16 04:16:08 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:16:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:17:44 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:18:42 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=210/500 | train= 25.0% | kl=+0.1175 | gnorm=0.000 | max_r=25.75 | mask= 0.0% | len=276.5
+(MainProcess pid=1363) INFO 11-16 04:19:33 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:20:30 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:21:44 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=220/500 | train=  0.0% | kl=+0.4393 | gnorm=0.000 | max_r=90.10 | mask= 0.0% | len=409.8
+(MainProcess pid=1363) INFO 11-16 04:23:55 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:24:00 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=225/500 | train=  0.0% | eval=  3.1% (orig= 0.0% as= 3.1% mul= 6.2% div= 0.0% par= 0.0%) | kl=+0.4384 | gnorm=0.000 | max_r=149.27 | mask= 0.0% | len=486.2
+[Exp5 Base Balanced (grpo_sc 500) ] step=230/500 | train=  0.0% | kl=+0.3560 | gnorm=0.000 | max_r=42.76 | mask= 0.0% | len=495.3
+(MainProcess pid=1363) INFO 11-16 04:29:29 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=240/500 | train=  0.0% | kl=+0.2865 | gnorm=0.000 | max_r=58.81 | mask= 0.0% | len=328.9
+(MainProcess pid=1363) INFO 11-16 04:32:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:32:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:33:00 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=250/500 | train=  0.0% | eval=  0.0% (orig= 0.0% as= 0.0% mul= 0.0% div= 0.0% par= 0.0%) | kl=+0.3855 | gnorm=0.000 | max_r=276.46 | mask= 0.0% | len=487.6
+(MainProcess pid=1363) INFO 11-16 04:33:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:36:02 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=260/500 | train=  0.0% | kl=+0.4069 | gnorm=0.000 | max_r=40.43 | mask= 0.0% | len=478.4
+(MainProcess pid=1363) INFO 11-16 04:39:31 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=270/500 | train=  0.0% | kl=+0.3216 | gnorm=0.000 | max_r=297.02 | mask= 0.0% | len=438.3
+(MainProcess pid=1363) INFO 11-16 04:42:37 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:42:42 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=275/500 | train=  0.0% | eval=  0.0% (orig= 0.0% as= 0.0% mul= 0.0% div= 0.0% par= 0.0%) | kl=+0.3108 | gnorm=0.000 | max_r=72.18 | mask= 0.0% | len=377.2
+[Exp5 Base Balanced (grpo_sc 500) ] step=280/500 | train=  0.0% | kl=+0.5225 | gnorm=0.000 | max_r=391.32 | mask= 0.0% | len=432.9
+[Exp5 Base Balanced (grpo_sc 500) ] step=290/500 | train=  0.0% | kl=+0.3885 | gnorm=0.000 | max_r=55.74 | mask= 0.0% | len=395.2
+(MainProcess pid=1363) INFO 11-16 04:52:15 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 04:52:23 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=300/500 | train=  0.0% | eval=  0.0% (orig= 0.0% as= 0.0% mul= 0.0% div= 0.0% par= 0.0%) | kl=+0.3536 | gnorm=0.000 | max_r=393.92 | mask= 0.0% | len=500.9
+[Exp5 Base Balanced (grpo_sc 500) ] step=310/500 | train=  0.0% | kl=+0.2880 | gnorm=0.000 | max_r=199.90 | mask= 0.0% | len=450.0
+[Exp5 Base Balanced (grpo_sc 500) ] step=320/500 | train=  0.0% | kl=+0.4069 | gnorm=0.000 | max_r=227.33 | mask= 0.0% | len=510.6
+(MainProcess pid=1363) INFO 11-16 05:01:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:01:55 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=325/500 | train=  0.0% | eval=  0.0% (orig= 0.0% as= 0.0% mul= 0.0% div= 0.0% par= 0.0%) | kl=+0.3917 | gnorm=0.000 | max_r=38.07 | mask= 0.0% | len=387.8
+[Exp5 Base Balanced (grpo_sc 500) ] step=330/500 | train=  0.0% | kl=+0.4273 | gnorm=0.000 | max_r=112.41 | mask= 0.0% | len=445.2
+[Exp5 Base Balanced (grpo_sc 500) ] step=340/500 | train=  0.0% | kl=+0.4396 | gnorm=0.000 | max_r=25.69 | mask= 0.0% | len=488.3
+(MainProcess pid=1363) INFO 11-16 05:10:40 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:11:27 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:11:33 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=350/500 | train=  0.0% | eval=  1.6% (orig= 0.0% as= 3.1% mul= 0.0% div= 0.0% par= 0.0%) | kl=+0.3190 | gnorm=0.000 | max_r=21.04 | mask= 0.0% | len=292.1
+(MainProcess pid=1363) INFO 11-16 05:12:52 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=360/500 | train=  0.0% | kl=+0.2156 | gnorm=0.000 | max_r=34.44 | mask= 0.0% | len=485.2
+(MainProcess pid=1363) INFO 11-16 05:16:23 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=370/500 | train=  0.0% | kl=+0.3046 | gnorm=0.000 | max_r=512.13 | mask= 0.0% | len=397.1
+(MainProcess pid=1363) INFO 11-16 05:20:59 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:21:04 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=375/500 | train=  0.0% | eval=  3.1% (orig= 0.0% as= 6.2% mul= 0.0% div= 0.0% par= 0.0%) | kl=+0.4529 | gnorm=0.000 | max_r=104.68 | mask= 0.0% | len=509.1
+[Exp5 Base Balanced (grpo_sc 500) ] step=380/500 | train=  6.2% | kl=+0.4531 | gnorm=1.046 | max_r=52.10 | mask= 6.0% | len=451.0
+(MainProcess pid=1363) INFO 11-16 05:23:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:27:03 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=390/500 | train= 15.6% | kl=+0.1862 | gnorm=0.920 | max_r=170.80 | mask= 7.3% | len=405.5
+(MainProcess pid=1363) INFO 11-16 05:28:11 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:30:35 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:31:00 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:31:05 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=400/500 | train=  0.0% | eval=  3.1% (orig= 0.0% as= 6.2% mul= 0.0% div= 0.0% par= 0.0%) | kl=+0.2533 | gnorm=0.000 | max_r=43.85 | mask= 0.0% | len=491.9
+(MainProcess pid=1363) INFO 11-16 05:33:05 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=410/500 | train=  0.0% | kl=+0.3785 | gnorm=0.000 | max_r=62.25 | mask= 0.0% | len=511.3
+(MainProcess pid=1363) INFO 11-16 05:39:01 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=420/500 | train=  0.0% | kl=+0.1731 | gnorm=0.000 | max_r=81.58 | mask= 0.0% | len=437.4
+(MainProcess pid=1363) INFO 11-16 05:40:56 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:41:01 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=425/500 | train=  0.0% | eval=  6.2% (orig= 0.0% as= 9.4% mul= 6.2% div= 0.0% par= 0.0%) | kl=+0.3488 | gnorm=0.000 | max_r=70.82 | mask= 0.0% | len=449.5
+(MainProcess pid=1363) INFO 11-16 05:41:24 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:42:34 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=430/500 | train=  0.0% | kl=+0.2482 | gnorm=0.000 | max_r=56.71 | mask= 0.0% | len=497.8
+(MainProcess pid=1363) INFO 11-16 05:43:44 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:46:04 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=440/500 | train=  0.0% | kl=+0.3551 | gnorm=0.000 | max_r=134.42 | mask= 0.0% | len=499.0
+(MainProcess pid=1363) INFO 11-16 05:47:15 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:50:45 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:50:50 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=450/500 | train=  0.0% | eval=  3.1% (orig= 1.6% as= 3.1% mul= 6.2% div= 0.0% par= 0.0%) | kl=+0.1711 | gnorm=0.000 | max_r=210.30 | mask= 0.0% | len=437.1
+(MainProcess pid=1363) INFO 11-16 05:52:39 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=460/500 | train=  6.2% | kl=+0.2051 | gnorm=1.070 | max_r=41.23 | mask= 6.8% | len=378.0
+(MainProcess pid=1363) INFO 11-16 05:54:44 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:55:47 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:56:53 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=470/500 | train=  0.0% | kl=+0.2713 | gnorm=0.000 | max_r=159.75 | mask= 0.0% | len=422.1
+(MainProcess pid=1363) INFO 11-16 05:57:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:59:02 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:59:21 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 05:59:27 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=475/500 | train=  6.2% | eval=  0.0% (orig= 0.0% as= 0.0% mul= 0.0% div= 0.0% par= 0.0%) | kl=+0.2046 | gnorm=2.233 | max_r=53.67 | mask= 6.9% | len=389.1
+(MainProcess pid=1363) INFO 11-16 06:00:12 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=480/500 | train=  0.0% | kl=+0.2097 | gnorm=0.000 | max_r=245.04 | mask= 0.0% | len=502.9
+[Exp5 Base Balanced (grpo_sc 500) ] step=490/500 | train=  0.0% | kl=+0.2134 | gnorm=0.000 | max_r=530.70 | mask= 0.0% | len=512.0
+(MainProcess pid=1363) INFO 11-16 06:09:01 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:09:08 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Base Balanced (grpo_sc 500) ] step=499/500 | train=  0.0% | eval=  0.0% (orig= 0.0% as= 0.0% mul= 0.0% div= 0.0% par= 0.0%) | kl=+0.2057 | gnorm=0.000 | max_r=331.52 | mask= 0.0% | len=505.2
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:38,  3.13it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 794.85it/s]
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 6396.42it/s]
+(MainProcess pid=1363) INFO 11-16 06:09:39 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:09:44 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=  0/500 | train= 12.5% | eval= 10.9% (orig=18.8% as=12.5% mul= 6.2% div=12.5% par=12.5%) | kl=+0.0036 | gnorm=6.088 | max_r=2.14 | mask= 1.7% | len=88.8
+(MainProcess pid=1363) INFO 11-16 06:10:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:13:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:16:02 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 10/500 | train= 70.3% | kl=+0.0297 | gnorm=3.775 | max_r=9.76 | mask= 6.5% | len=195.5
+(MainProcess pid=1363) INFO 11-16 06:17:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:19:26 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:21:31 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 20/500 | train= 65.6% | kl=+0.0528 | gnorm=1.167 | max_r=30.12 | mask= 7.1% | len=243.9
+(MainProcess pid=1363) INFO 11-16 06:23:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:26:52 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:27:53 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:27:57 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 25/500 | train= 43.8% | eval= 60.9% (orig=68.8% as=84.4% mul=50.0% div=25.0% par=25.0%) | kl=+0.0095 | gnorm=1.382 | max_r=7.47 | mask= 3.8% | len=363.4
+(MainProcess pid=1363) INFO 11-16 06:30:08 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:32:09 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 30/500 | train= 71.9% | kl=+0.0093 | gnorm=1.831 | max_r=4.40 | mask= 2.6% | len=283.1
+(MainProcess pid=1363) INFO 11-16 06:34:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:36:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:38:09 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 40/500 | train= 40.6% | kl=+0.1217 | gnorm=3.008 | max_r=42.02 | mask= 7.5% | len=78.2
+(MainProcess pid=1363) INFO 11-16 06:39:12 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:41:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:43:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:44:41 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:44:45 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 50/500 | train= 75.0% | eval= 67.2% (orig=68.8% as=90.6% mul=25.0% div=62.5% par=43.8%) | kl=+0.0423 | gnorm=5.327 | max_r=17.71 | mask= 6.8% | len=214.2
+(MainProcess pid=1363) INFO 11-16 06:45:35 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:47:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:49:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:51:06 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 60/500 | train= 65.6% | kl=+0.0083 | gnorm=1.870 | max_r=21.33 | mask= 3.3% | len=362.3
+(MainProcess pid=1363) INFO 11-16 06:53:52 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:56:20 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 06:58:23 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 70/500 | train= 68.8% | kl=+0.0314 | gnorm=2.582 | max_r=19.14 | mask= 6.8% | len=352.2
+(MainProcess pid=1363) INFO 11-16 07:00:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:02:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:02:47 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 75/500 | train= 45.3% | eval= 35.9% (orig=43.8% as=31.2% mul=37.5% div=43.8% par=37.5%) | kl=+0.0326 | gnorm=2.064 | max_r=12.55 | mask= 5.4% | len=393.9
+(MainProcess pid=1363) INFO 11-16 07:05:59 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 80/500 | train= 42.2% | kl=+0.0668 | gnorm=0.844 | max_r=36.53 | mask= 9.5% | len=383.4
+(MainProcess pid=1363) INFO 11-16 07:08:48 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:10:47 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:13:14 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:16:15 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step= 90/500 | train= 81.2% | kl=+0.0254 | gnorm=1.966 | max_r=7.86 | mask= 2.8% | len=271.1
+(MainProcess pid=1363) INFO 11-16 07:18:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:21:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:24:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:25:41 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:25:45 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=100/500 | train= 57.8% | eval= 70.3% (orig=68.8% as=93.8% mul=43.8% div=50.0% par=18.8%) | kl=+0.0623 | gnorm=0.970 | max_r=23.91 | mask= 9.0% | len=261.7
+(MainProcess pid=1363) INFO 11-16 07:27:45 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:30:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:32:42 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=110/500 | train= 68.8% | kl=+0.1000 | gnorm=1.169 | max_r=27.22 | mask= 7.5% | len=213.3
+(MainProcess pid=1363) INFO 11-16 07:34:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:36:42 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:38:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:40:31 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=120/500 | train= 81.2% | kl=+0.0126 | gnorm=2.311 | max_r=8.52 | mask= 3.8% | len=241.5
+(MainProcess pid=1363) INFO 11-16 07:43:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:44:41 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:44:45 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=125/500 | train= 53.1% | eval= 62.5% (orig=78.1% as=84.4% mul=37.5% div=43.8% par=37.5%) | kl=+0.0708 | gnorm=1.082 | max_r=31.76 | mask= 9.2% | len=337.1
+(MainProcess pid=1363) INFO 11-16 07:45:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:47:28 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=130/500 | train= 95.3% | kl=+0.0379 | gnorm=1.683 | max_r=12.99 | mask= 5.2% | len=250.7
+(MainProcess pid=1363) INFO 11-16 07:49:33 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:52:09 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:54:25 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=140/500 | train= 59.4% | kl=+0.0561 | gnorm=1.194 | max_r=15.31 | mask= 9.2% | len=326.7
+(MainProcess pid=1363) INFO 11-16 07:57:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 07:59:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:02:17 [block_pool.py:905] Successfully reset prefix cache
+<string>:1: SyntaxWarning: 'int' object is not callable; perhaps you missed a comma?
+(MainProcess pid=1363) INFO 11-16 08:05:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:05:23 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=150/500 | train= 78.1% | eval= 67.2% (orig=71.9% as=90.6% mul=37.5% div=50.0% par=31.2%) | kl=+0.0112 | gnorm=1.237 | max_r=5.62 | mask= 4.0% | len=350.5
+(MainProcess pid=1363) INFO 11-16 08:08:45 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:12:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:15:48 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=160/500 | train= 81.2% | kl=+0.0281 | gnorm=1.602 | max_r=19.35 | mask= 5.0% | len=310.8
+(MainProcess pid=1363) INFO 11-16 08:18:59 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:21:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:25:10 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=170/500 | train= 81.2% | kl=+0.0708 | gnorm=0.944 | max_r=18.94 | mask= 7.1% | len=336.0
+(MainProcess pid=1363) INFO 11-16 08:27:55 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:31:13 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:31:47 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:31:52 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=175/500 | train= 76.6% | eval= 71.9% (orig=76.6% as=93.8% mul=43.8% div=56.2% par=37.5%) | kl=+0.0178 | gnorm=1.222 | max_r=7.29 | mask= 3.9% | len=333.7
+(MainProcess pid=1363) INFO 11-16 08:33:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:36:37 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=180/500 | train= 87.5% | kl=+0.0110 | gnorm=1.063 | max_r=11.69 | mask= 3.5% | len=328.9
+(MainProcess pid=1363) INFO 11-16 08:39:24 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:42:09 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:45:21 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=190/500 | train= 82.8% | kl=+0.0292 | gnorm=1.065 | max_r=30.43 | mask= 6.2% | len=337.0
+(MainProcess pid=1363) INFO 11-16 08:47:52 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:50:56 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:54:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:56:21 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:56:25 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=200/500 | train= 79.7% | eval= 82.8% (orig=79.7% as=96.9% mul=68.8% div=68.8% par=75.0%) | kl=+0.0495 | gnorm=0.947 | max_r=13.95 | mask= 7.5% | len=279.7
+(MainProcess pid=1363) INFO 11-16 08:57:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 08:58:55 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:01:53 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:04:07 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=210/500 | train= 81.2% | kl=+0.0117 | gnorm=1.600 | max_r=5.94 | mask= 2.9% | len=226.3
+(MainProcess pid=1363) INFO 11-16 09:06:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:09:15 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:11:55 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=220/500 | train= 71.9% | kl=+0.0238 | gnorm=1.499 | max_r=11.03 | mask= 5.1% | len=253.4
+(MainProcess pid=1363) INFO 11-16 09:14:47 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:18:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:18:32 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=225/500 | train= 62.5% | eval= 68.8% (orig=89.1% as=90.6% mul=43.8% div=50.0% par=62.5%) | kl=+0.0082 | gnorm=1.086 | max_r=13.95 | mask= 2.8% | len=340.9
+(MainProcess pid=1363) INFO 11-16 09:20:58 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=230/500 | train= 67.2% | kl=+0.0278 | gnorm=1.064 | max_r=8.88 | mask= 6.1% | len=367.0
+(MainProcess pid=1363) INFO 11-16 09:24:11 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:27:22 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:30:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:33:21 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=240/500 | train= 82.8% | kl=+0.0092 | gnorm=1.320 | max_r=6.03 | mask= 3.3% | len=272.4
+(MainProcess pid=1363) INFO 11-16 09:36:14 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:39:06 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:40:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:41:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:41:27 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=250/500 | train= 71.9% | eval= 75.0% (orig=87.5% as=87.5% mul=56.2% div=68.8% par=56.2%) | kl=+0.0245 | gnorm=1.229 | max_r=19.73 | mask= 5.6% | len=379.5
+(MainProcess pid=1363) INFO 11-16 09:42:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:45:40 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:48:31 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=260/500 | train= 81.2% | kl=+0.0479 | gnorm=1.106 | max_r=19.26 | mask= 8.5% | len=342.9
+(MainProcess pid=1363) INFO 11-16 09:51:24 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:54:30 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 09:57:27 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:00:46 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=270/500 | train= 75.0% | kl=+0.0135 | gnorm=1.463 | max_r=26.26 | mask= 4.1% | len=312.8
+(MainProcess pid=1363) INFO 11-16 10:04:05 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:05:32 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:05:36 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=275/500 | train= 76.6% | eval= 68.8% (orig=87.5% as=78.1% mul=68.8% div=50.0% par=50.0%) | kl=+0.0249 | gnorm=1.677 | max_r=7.73 | mask= 5.3% | len=238.7
+(MainProcess pid=1363) INFO 11-16 10:06:06 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:08:54 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=280/500 | train= 96.9% | kl=+0.0281 | gnorm=0.939 | max_r=12.25 | mask= 4.5% | len=223.0
+(MainProcess pid=1363) INFO 11-16 10:12:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:15:47 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:19:07 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=290/500 | train= 62.5% | kl=+0.0651 | gnorm=0.903 | max_r=31.81 | mask= 6.8% | len=287.2
+(MainProcess pid=1363) INFO 11-16 10:22:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:25:46 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:28:16 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:31:08 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:31:12 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=300/500 | train= 73.4% | eval= 73.4% (orig=81.2% as=100.0% mul=56.2% div=37.5% par=50.0%) | kl=+0.0127 | gnorm=1.182 | max_r=9.49 | mask= 3.6% | len=368.2
+(MainProcess pid=1363) INFO 11-16 10:35:50 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:39:31 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:42:09 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=310/500 | train= 70.3% | kl=+0.0303 | gnorm=1.047 | max_r=10.68 | mask= 5.6% | len=314.4
+(MainProcess pid=1363) INFO 11-16 10:45:37 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:48:02 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:51:04 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=320/500 | train= 81.2% | kl=+0.0554 | gnorm=1.420 | max_r=18.18 | mask= 7.1% | len=281.7
+(MainProcess pid=1363) INFO 11-16 10:54:14 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:57:05 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:58:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 10:58:32 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=325/500 | train= 62.5% | eval= 73.4% (orig=78.1% as=93.8% mul=56.2% div=50.0% par=43.8%) | kl=+0.0174 | gnorm=1.752 | max_r=7.17 | mask= 3.2% | len=262.5
+(MainProcess pid=1363) INFO 11-16 11:01:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:04:15 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=330/500 | train= 76.6% | kl=+0.0103 | gnorm=1.077 | max_r=3.99 | mask= 2.8% | len=282.7
+(MainProcess pid=1363) INFO 11-16 11:06:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:10:00 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:12:37 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=340/500 | train= 95.3% | kl=+0.0148 | gnorm=0.863 | max_r=12.99 | mask= 2.7% | len=286.1
+(MainProcess pid=1363) INFO 11-16 11:16:14 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:18:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:22:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:24:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:24:32 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=350/500 | train= 75.0% | eval= 71.9% (orig=85.9% as=90.6% mul=43.8% div=62.5% par=50.0%) | kl=+0.0230 | gnorm=0.966 | max_r=8.47 | mask= 4.9% | len=301.4
+(MainProcess pid=1363) INFO 11-16 11:25:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:28:20 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:31:01 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:34:05 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=360/500 | train= 59.4% | kl=+0.0181 | gnorm=1.191 | max_r=7.85 | mask= 3.8% | len=352.4
+(MainProcess pid=1363) INFO 11-16 11:36:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:39:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:42:26 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=370/500 | train= 48.4% | kl=+0.0229 | gnorm=1.076 | max_r=14.48 | mask= 5.0% | len=312.5
+(MainProcess pid=1363) INFO 11-16 11:45:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:47:57 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:48:01 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=375/500 | train= 89.1% | eval= 84.4% (orig=89.1% as=96.9% mul=62.5% div=81.2% par=81.2%) | kl=+0.0151 | gnorm=1.204 | max_r=9.59 | mask= 2.9% | len=285.3
+(MainProcess pid=1363) INFO 11-16 11:50:36 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=380/500 | train= 59.4% | kl=+0.0406 | gnorm=1.025 | max_r=65.99 | mask= 6.8% | len=390.6
+(MainProcess pid=1363) INFO 11-16 11:53:11 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:55:41 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 11:58:25 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:01:59 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=390/500 | train= 87.5% | kl=+0.0094 | gnorm=1.079 | max_r=6.81 | mask= 2.3% | len=271.6
+(MainProcess pid=1363) INFO 11-16 12:05:15 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:07:38 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:10:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:11:16 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:11:20 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=400/500 | train= 96.9% | eval= 81.2% (orig=85.9% as=90.6% mul=75.0% div=68.8% par=68.8%) | kl=+0.0137 | gnorm=1.068 | max_r=6.38 | mask= 2.9% | len=235.5
+(MainProcess pid=1363) INFO 11-16 12:13:10 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:16:05 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:18:11 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=410/500 | train= 82.8% | kl=+0.0256 | gnorm=0.926 | max_r=20.79 | mask= 6.0% | len=303.9
+(MainProcess pid=1363) INFO 11-16 12:21:05 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:24:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:27:41 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:31:41 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=420/500 | train= 68.8% | kl=+0.0115 | gnorm=1.204 | max_r=7.15 | mask= 3.1% | len=323.8
+(MainProcess pid=1363) INFO 11-16 12:34:54 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:37:35 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:37:39 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=425/500 | train= 73.4% | eval= 79.7% (orig=89.1% as=93.8% mul=75.0% div=56.2% par=62.5%) | kl=+0.0173 | gnorm=0.795 | max_r=9.50 | mask= 4.9% | len=427.5
+(MainProcess pid=1363) INFO 11-16 12:38:40 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:41:37 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=430/500 | train= 98.4% | kl=+0.0137 | gnorm=0.797 | max_r=12.59 | mask= 3.9% | len=302.3
+(MainProcess pid=1363) INFO 11-16 12:44:31 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:47:02 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:49:49 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=440/500 | train= 85.9% | kl=+0.0136 | gnorm=0.803 | max_r=12.75 | mask= 3.1% | len=241.0
+(MainProcess pid=1363) INFO 11-16 12:52:53 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:56:23 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 12:59:28 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:02:34 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:02:38 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=450/500 | train= 81.2% | eval= 90.6% (orig=92.2% as=96.9% mul=87.5% div=81.2% par=68.8%) | kl=+0.0103 | gnorm=0.846 | max_r=5.49 | mask= 2.7% | len=381.8
+(MainProcess pid=1363) INFO 11-16 13:05:45 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:09:06 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:12:34 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=460/500 | train= 64.1% | kl=+0.0139 | gnorm=0.940 | max_r=9.42 | mask= 3.0% | len=341.3
+(MainProcess pid=1363) INFO 11-16 13:16:18 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:20:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:23:37 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=470/500 | train= 84.4% | kl=+0.0361 | gnorm=0.654 | max_r=34.89 | mask= 3.7% | len=357.8
+(MainProcess pid=1363) INFO 11-16 13:26:49 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:29:43 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:30:37 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:30:41 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=475/500 | train= 90.6% | eval= 79.7% (orig=89.1% as=93.8% mul=62.5% div=68.8% par=75.0%) | kl=+0.0196 | gnorm=0.728 | max_r=18.53 | mask= 3.1% | len=329.3
+(MainProcess pid=1363) INFO 11-16 13:32:51 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:35:59 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=480/500 | train= 98.4% | kl=+0.0088 | gnorm=0.827 | max_r=8.87 | mask= 2.1% | len=226.5
+(MainProcess pid=1363) INFO 11-16 13:39:27 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:42:29 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:44:55 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=490/500 | train= 95.3% | kl=+0.0186 | gnorm=1.197 | max_r=20.05 | mask= 2.4% | len=233.2
+(MainProcess pid=1363) INFO 11-16 13:47:55 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:51:04 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:54:35 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:55:19 [block_pool.py:905] Successfully reset prefix cache
+(MainProcess pid=1363) INFO 11-16 13:55:24 [block_pool.py:905] Successfully reset prefix cache
+[Exp5 Best Combo (dapo_clip+kl_ref_soft+sample_var+stop_answer+strict_fmt)] step=499/500 | train=100.0% | eval= 85.9% (orig=85.9% as=93.8% mul=81.2% div=75.0% par=68.8%) | kl=+0.0185 | gnorm=0.890 | max_r=31.77 | mask= 2.9% | len=270.2
+Saved /content/mini_rl/experiments/exp5_grpo_sc_ablation/results_stage2.json and /content/mini_rl/experiments/exp5_grpo_sc_ablation/plot_stage2.png

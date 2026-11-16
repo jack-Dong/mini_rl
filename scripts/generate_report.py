@@ -55,11 +55,33 @@ EXPERIMENTS = [
         "script_name": "experiments/exp4_vllm_official_tim/run.py",
         "bash_name": "experiments/exp4_vllm_official_tim/run.sh",
     },
+    {
+        "id": "exp5",
+        "title": "实验五 · Stage 1：GRPO+SC 均衡数据集 5 组 200 步消融（max_new_tokens=512）",
+        "subtitle": "50% 纯加减 : 50% 必用乘除（* 与 ÷ 各半、扁平与必用括号各半）分层均衡评估 · 逐组运行对比 5 组改进因子",
+        "json_path": ROOT_DIR / "experiments" / "exp5_grpo_sc_ablation" / "results.json",
+        "png_path": ROOT_DIR / "experiments" / "exp5_grpo_sc_ablation" / "plot.png",
+        "log_path": ROOT_DIR / "experiments" / "exp5_grpo_sc_ablation" / "train_g5.log",
+        "script_name": "experiments/exp5_grpo_sc_ablation/run.py",
+        "bash_name": "experiments/exp5_grpo_sc_ablation/run.sh",
+    },
+    {
+        "id": "exp5_stage2",
+        "title": "实验五 · Stage 2：500 步终局全面对比（未均衡原数据 vs 均衡基线 vs 最优组合）",
+        "subtitle": "Orig Unbalanced (grpo_sc 500) vs Base Balanced (grpo_sc 500) vs Best Combo (Group16+DynSample + StopAnswer + StrictFmt + DAPO ClipHigher + SoftKLRef 0.008)",
+        "json_path": ROOT_DIR / "experiments" / "exp5_grpo_sc_ablation" / "results_stage2.json",
+        "png_path": ROOT_DIR / "experiments" / "exp5_grpo_sc_ablation" / "plot_stage2.png",
+        "log_path": ROOT_DIR / "experiments" / "exp5_grpo_sc_ablation" / "train_stage2.log",
+        "script_name": "experiments/exp5_grpo_sc_ablation/run.py",
+        "bash_name": "experiments/exp5_grpo_sc_ablation/run.sh",
+    },
 ]
 
 METHOD_ORDER = [
     "pg", "is", "tis", "mis", "ppo", "dapo", "grpo", "gspo", "topr", "dppo",
     "sc", "tis_sc", "mis_sc", "ppo_sc", "dapo_sc", "grpo_sc",
+    "base_bal", "fmt_stop_dedup", "kl_ent_dapo", "sample_var", "sft_adamw",
+    "orig_data_500", "base_bal_500", "best_combo_500",
 ]
 METHOD_META = {
     "pg": {"label": "原生 PG (Vanilla)", "color": "#ef4444", "badge": "未校正漂移"},
@@ -78,6 +100,14 @@ METHOD_META = {
     "ppo_sc": {"label": "PPO + Score Centering", "color": "#a855f7", "badge": "PPO + 得分中心化"},
     "dapo_sc": {"label": "DAPO + Score Centering", "color": "#0891b2", "badge": "DAPO + 得分中心化"},
     "grpo_sc": {"label": "GRPO + Score Centering", "color": "#059669", "badge": "GRPO + 得分中心化"},
+    "base_bal": {"label": "1. Base Balanced (grpo_sc)", "color": "#64748b", "badge": "均衡基线"},
+    "fmt_stop_dedup": {"label": "2. StopEOS + StrictFmt + Dedup", "color": "#2563eb", "badge": "格式/停止/去重"},
+    "kl_ent_dapo": {"label": "3. ClipHigher + KLRef + Entropy", "color": "#059669", "badge": "策略与熵正则"},
+    "sample_var": {"label": "4. Group16 + DynSample", "color": "#d97706", "badge": "大组动态重采样"},
+    "sft_adamw": {"label": "5. BalSFT50 + AdamW(Cosine)", "color": "#7c3aed", "badge": "均衡SFT+AdamW"},
+    "orig_data_500": {"label": "Orig Unbalanced (grpo_sc 500)", "color": "#ef4444", "badge": "未均衡原数据"},
+    "base_bal_500": {"label": "Base Balanced (grpo_sc 500)", "color": "#64748b", "badge": "均衡基线 500"},
+    "best_combo_500": {"label": "Best Combo (DynG16+Stop+DAPO+SoftKL 500)", "color": "#10b981", "badge": "最优组合 500"},
 }
 
 
@@ -127,16 +157,19 @@ def load_experiment_payload(spec: dict[str, Any]) -> dict[str, Any]:
 def summarize_method(res: dict[str, Any]) -> dict[str, Any]:
     """汇总单个强化学习算法的核心实验指标。"""
     hist = res.get("history", [])
-    evals = [h["eval_reward"] * 100.0 for h in hist if "eval_reward" in h]
+    eval_rows = [h for h in hist if "eval_reward" in h]
+    evals = [h["eval_reward"] * 100.0 for h in eval_rows]
     eval_300 = next(
-        (h["eval_reward"] * 100.0 for h in hist if int(h.get("step", -1)) == 300 and "eval_reward" in h),
+        (h["eval_reward"] * 100.0 for h in eval_rows if int(h.get("step", -1)) == 300),
         None,
     )
+    last_ev = eval_rows[-1] if eval_rows else {}
     trains = [h["train_reward"] * 100.0 for h in hist]
     kls = [abs(h.get("kl_samp_train", 0.0)) for h in hist]
     gnorms = [h.get("grad_norm", 0.0) for h in hist]
     ratios = [h.get("max_is_ratio", 1.0) for h in hist]
     lens = [h.get("mean_len", 0.0) for h in hist]
+    nz_vals = [100.0 if h.get("frac_nonzero_adv", 0.0) > 0 else 0.0 for h in hist]
     return {
         "method": res["method"],
         "name": res.get("name", res["method"]),
@@ -146,6 +179,13 @@ def summarize_method(res: dict[str, Any]) -> dict[str, Any]:
         "eval_300": eval_300,
         "eval_final": evals[-1] if evals else None,
         "eval_peak": max(evals) if evals else None,
+        "eval_orig": last_ev["eval_orig_reward"] * 100.0 if "eval_orig_reward" in last_ev else None,
+        "eval_addsub": last_ev["eval_addsub_reward"] * 100.0 if "eval_addsub_reward" in last_ev else None,
+        "eval_mul": last_ev["eval_mul_reward"] * 100.0 if "eval_mul_reward" in last_ev else None,
+        "eval_div": last_ev["eval_div_reward"] * 100.0 if "eval_div_reward" in last_ev else None,
+        "eval_parens": last_ev["eval_parens_reward"] * 100.0 if "eval_parens_reward" in last_ev else None,
+        "eval_strict_fmt": last_ev["eval_strict_fmt_rate"] * 100.0 if "eval_strict_fmt_rate" in last_ev else None,
+        "nz_pct": sum(nz_vals) / len(nz_vals) if nz_vals else 0.0,
         "train_mean": sum(trains) / len(trains) if trains else 0.0,
         "train_last5": sum(trains[-5:]) / len(trains[-5:]) if trains else 0.0,
         "kl_mean": sum(kls) / len(kls) if kls else 0.0,
@@ -224,6 +264,47 @@ def build_dynamic_findings(payloads: list[dict[str, Any]]) -> str:
                 f"<code>DAPO+SC</code> 300 步 {dapo_sc_s['eval_300']:.1f}%、末期 <strong>{dapo_sc_s['eval_final']:.1f}%</strong>（峰值 {dapo_sc_s['eval_peak']:.1f}%，vs DAPO 0.0%）；"
                 f"<strong><code>GRPO+SC</code> 全面夺冠</strong>：300 步 <strong>{grpo_sc_s['eval_300']:.1f}%</strong>、500 步末期 <strong>{grpo_sc_s['eval_final']:.1f}%</strong>、全周期峰值 <strong>{grpo_sc_s['eval_peak']:.1f}%</strong>（非零梯度更新密度高达 329/500，KL 漂移均值 {grpo_sc_s['kl_mean']:.4f} 显著低于 PG 的 0.1183），"
                 "表明 <code>group_std</code> 组内标准化 + <code>seq_norm</code> 序列长度归一化与 Score Centering 在长程 TIM 下形成最强协同。</li>"
+            )
+
+    if len(payloads) >= 5 and payloads[4]["status"] == "completed":
+        e5_sum = {r["method"]: summarize_method(r) for r in payloads[4].get("results", [])}
+        b = e5_sum.get("base_bal")
+        f = e5_sum.get("fmt_stop_dedup")
+        k = e5_sum.get("kl_ent_dapo")
+        sv = e5_sum.get("sample_var")
+        sa = e5_sum.get("sft_adamw")
+        if b and f and k and sv and sa:
+            items.append(
+                "<li><strong>实验五 Stage 1（200 步均衡数据集 5 组机制消融）核心归因</strong>："
+                f"① <strong><code>sample_var</code> (Group16+DynSample) 绝对领跑</strong>：有效优势更新步占比 <strong>{sv['nz_pct']:.0f}% (200/200)</strong>，"
+                f"第 140 步峰值飙升至 <strong>{sv['eval_peak']:.1f}%</strong>（末期 <strong>{sv['eval_final']:.1f}%</strong>，"
+                f"原分布 {sv['eval_orig']:.1f}%、加减 {sv['eval_addsub']:.1f}%、乘 {sv['eval_mul']:.1f}%、除 {sv['eval_div']:.1f}%、括号 {sv['eval_parens']:.1f}%），"
+                f"唯一瑕疵是无 <code>stop=&lt;/answer&gt;</code> 导致末期标签后继续絮叨（<code>strict_fmt={sv['eval_strict_fmt']:.1f}%</code>）及尾部高比率漂移（最大比率 {sv['max_ratio']:.1f}x）；"
+                f"② <strong><code>fmt_stop_dedup</code> 反例归因</strong>：早期严格格式曾达 96.9%（第 40 步），但负向重复惩罚（-0.25）+ <code>group_std_raw</code> 放大噪声使第 48 步坍缩为 14-token 直接猜数（末期 {f['eval_final']:.1f}%，<code>strict_fmt=0%</code>），"
+                f"因此 Stage 2 仅保留无负惩罚的 <code>stop=&lt;/answer&gt; + strict_fmt</code>；"
+                f"③ <strong><code>kl_ent_dapo</code> 反例归因</strong>：<code>kl_ref</code> + <code>DAPO ClipHigher</code> 防止了 <code>base_bal</code> 的晚期失控坍缩（末期 {k['eval_final']:.1f}% vs 基线 {b['eval_final']:.1f}%），"
+                "但正熵系数 <code>entropy_coef=0.01</code> 推高熵至 4.3~5.4 并注入多语种乱码 token，故 Stage 2 保留软 <code>kl_beta=0.008</code> + <code>ClipHigher</code> 并彻底剔除正熵项；"
+                f"④ <strong><code>sft_adamw</code> 诊断</strong>：SFT50 + AdamW 保持了极低 KL（均值 {sa['kl_mean']:.4f}）与高格式率（末期 {sa['eval_final']:.1f}%），但因 <code>G=8</code> 无动态采样约 {100 - sa['nz_pct']:.1f}% 步陷入双峰零梯度饱和。</li>"
+            )
+
+    if len(payloads) >= 6 and payloads[5]["results"]:
+        e5s2 = {r["method"]: summarize_method(r) for r in payloads[5].get("results", [])}
+        orig_s = e5s2.get("orig_data_500")
+        bal_s = e5s2.get("base_bal_500")
+        best_s = e5s2.get("best_combo_500")
+        if orig_s and bal_s and best_s:
+            orig_300 = f"{orig_s['eval_300']:.1f}%" if orig_s.get("eval_300") is not None else "—"
+            bal_300 = f"{bal_s['eval_300']:.1f}%" if bal_s.get("eval_300") is not None else "—"
+            best_300 = f"{best_s['eval_300']:.1f}%" if best_s.get("eval_300") is not None else "—"
+            items.append(
+                "<li><strong>实验五 Stage 2（500 步终局全面对比）结论</strong>："
+                f"在 <code>max_new_tokens=512</code> 均衡 5 分层（加减 50% / 乘 25% / 除 25%，必含括号 25%）长程评测下："
+                f"① 未均衡原数据 <code>Orig</code>（{orig_300} @300 步，第 300 步乘除括号均归 0% 并循环截断至 512 token）末期 <strong>{orig_s['eval_final']:.1f}%</strong>（峰值 {orig_s['eval_peak']:.1f}%，原分布 {orig_s['eval_orig']:.1f}%，×:{orig_s['eval_mul']:.1f}% / ÷:{orig_s['eval_div']:.1f}% / ():{orig_s['eval_parens']:.1f}%，<code>strict_fmt={orig_s['eval_strict_fmt']:.1f}%</code>，非零梯度步 {orig_s['nz_pct']:.0f}%）；"
+                f"② 均衡基线 <code>Base Balanced</code>（{bal_300} @300 步）第 250~499 步彻底坍塌至 <strong>{bal_s['eval_final']:.1f}%</strong>（峰值 {bal_s['eval_peak']:.1f}%，最大 IS 比率飙至 {bal_s['max_ratio']:.0f}x，非零梯度步跌至 {bal_s['nz_pct']:.0f}%）；"
+                f"③ <strong>最优组合 <code>Best Combo</code>（<code>Group16+DynSample + Stop&lt;/answer&gt; + StrictFmt + DAPO ClipHigher + SoftKLRef 0.008</code>）全程零坍塌且后期持续走高</strong>："
+                f"300 步 <strong>{best_300}</strong>、450 步峰值 <strong>{best_s['eval_peak']:.1f}%</strong>（原分布 92.2%）、500 步终局 <strong>{best_s['eval_final']:.1f}%</strong>"
+                f"（原分布 {best_s['eval_orig']:.1f}% · ±:{best_s['eval_addsub']:.1f}% · ×:{best_s['eval_mul']:.1f}% · ÷:{best_s['eval_div']:.1f}% · ():{best_s['eval_parens']:.1f}%），"
+                f"同时保持 <strong>{best_s['nz_pct']:.0f}% (500/500)</strong> 有效梯度更新、<strong>strict_fmt={best_s['eval_strict_fmt']:.1f}%</strong> 与极低 KL 漂移（均值 {best_s['kl_mean']:.4f}）。</li>"
             )
 
     return f"""
@@ -317,6 +398,7 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
         show_300 = int(args.get("steps", 0)) >= 300 or any(
             s.get("eval_300") is not None for s in summaries.values()
         )
+        show_skill_cols = any(s.get("eval_mul") is not None for s in summaries.values())
         for mkey in METHOD_ORDER:
             if mkey not in summaries:
                 continue
@@ -330,8 +412,21 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
             if s["eval_init"] is not None and s["eval_final"] is not None:
                 d = s["eval_final"] - s["eval_init"]
                 delta_str = f"{d:+.1f} pp"
-            row_cls = ' class="highlight-row"' if mkey.endswith("_sc") or mkey == "sc" else ""
+            row_cls = (
+                ' class="highlight-row"'
+                if mkey.endswith("_sc") or mkey in ("sc", "sample_var", "best_combo_500")
+                else ""
+            )
             col_300 = f"<td>{ev300}</td>" if show_300 else ""
+            col_skills = ""
+            if show_skill_cols:
+                skill_txt = (
+                    f"原:{s['eval_orig']:.0f}% · ±:{s['eval_addsub']:.0f}% · ×:{s['eval_mul']:.0f}% · "
+                    f"÷:{s['eval_div']:.0f}% · ():{s['eval_parens']:.0f}% · fmt:{s['eval_strict_fmt']:.0f}%"
+                    if s.get("eval_mul") is not None
+                    else "—"
+                )
+                col_skills = f"<td>{skill_txt}</td><td>{s['nz_pct']:.0f}%</td>"
             rows_html.append(
                 f"<tr{row_cls}>"
                 f'<td><span class="dot" style="background:{meta["color"]}"></span><strong>{html.escape(meta["label"])}</strong></td>'
@@ -340,6 +435,7 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
                 f"{col_300}"
                 f'<td><strong>{evf}</strong> <span class="muted">({delta_str})</span></td>'
                 f"<td>{evp}</td>"
+                f"{col_skills}"
                 f"<td>{s['train_mean']:.1f}%</td>"
                 f"<td>{s['train_last5']:.1f}%</td>"
                 f"<td>{s['kl_mean']:.4f}</td>"
@@ -351,10 +447,11 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
             )
 
         th_300 = "<th>300步评估</th>" if show_300 else ""
+        th_skills = "<th>末步能力拆解 (原/±/×/÷/()/fmt)</th><th>非零梯度步%</th>" if show_skill_cols else ""
         table_html = (
             '<div class="table-wrap"><table><thead><tr>'
             f"<th>对比方法</th><th>完成步数</th><th>初始评估</th>{th_300}<th>最新评估 (变化)</th>"
-            "<th>评估峰值</th><th>全程训练均值</th><th>末5步训练均值</th>"
+            f"<th>评估峰值</th>{th_skills}<th>全程训练均值</th><th>末5步训练均值</th>"
             "<th>平均 |KL| 漂移</th><th>均 / 末梯度范数</th><th>最大 IS 比率</th><th>末步均长</th><th>耗时</th>"
             "</tr></thead><tbody>"
             + "".join(rows_html)
@@ -368,6 +465,16 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
             f'<pre>{html.escape(p["log_tail"] or "暂未拉取到本地日志，实验运行后将实时同步。")}</pre></details>'
         )
 
+        extra_skill_tabs = (
+            '<button class="tab-btn" data-metric="eval_orig_reward">原分布评估 (%)</button>'
+            '<button class="tab-btn" data-metric="eval_addsub_reward">纯加减 (%)</button>'
+            '<button class="tab-btn" data-metric="eval_mul_reward">必用乘法 (%)</button>'
+            '<button class="tab-btn" data-metric="eval_div_reward">必用除法 (%)</button>'
+            '<button class="tab-btn" data-metric="eval_parens_reward">必用括号 (%)</button>'
+            '<button class="tab-btn" data-metric="eval_strict_fmt_rate">严格格式率 (%)</button>'
+            if eid.startswith("exp5")
+            else ""
+        )
         exp_cards_html.append(
             f"""
             <section class="exp-card" id="card-{eid}">
@@ -387,6 +494,7 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
               <div class="chart-toolbar">
                 <div class="tabs" data-exp="{eid}">
                   <button class="tab-btn active" data-metric="eval_reward">评估集解题率 (%)</button>
+                  {extra_skill_tabs}
                   <button class="tab-btn" data-metric="train_reward">训练集解题率 (%)</button>
                   <button class="tab-btn" data-metric="kl">训推 KL 漂移 |KL(q||p)|</button>
                   <button class="tab-btn" data-metric="grad_norm">梯度范数 ||g||₂</button>
@@ -554,6 +662,12 @@ const ORDER = {json.dumps(METHOD_ORDER)};
 
 function getSeriesValue(h, metric) {{
   if (metric === 'eval_reward') return h.eval_reward !== undefined ? h.eval_reward * 100 : null;
+  if (metric === 'eval_orig_reward') return h.eval_orig_reward !== undefined ? h.eval_orig_reward * 100 : null;
+  if (metric === 'eval_addsub_reward') return h.eval_addsub_reward !== undefined ? h.eval_addsub_reward * 100 : null;
+  if (metric === 'eval_mul_reward') return h.eval_mul_reward !== undefined ? h.eval_mul_reward * 100 : null;
+  if (metric === 'eval_div_reward') return h.eval_div_reward !== undefined ? h.eval_div_reward * 100 : null;
+  if (metric === 'eval_parens_reward') return h.eval_parens_reward !== undefined ? h.eval_parens_reward * 100 : null;
+  if (metric === 'eval_strict_fmt_rate') return h.eval_strict_fmt_rate !== undefined ? h.eval_strict_fmt_rate * 100 : null;
   if (metric === 'train_reward') return h.train_reward * 100;
   if (metric === 'kl') return Math.abs(h.kl_samp_train || 0);
   if (metric === 'grad_norm') return h.grad_norm || 0;
@@ -595,7 +709,7 @@ function renderChart(exp, metric) {{
     return;
   }}
 
-  if (metric === 'eval_reward' || metric === 'train_reward' || metric === 'kl' || metric === 'grad_norm' || metric === 'frac_masked') minY = 0;
+  if (metric.startsWith('eval_') || metric === 'train_reward' || metric === 'kl' || metric === 'grad_norm' || metric === 'frac_masked') minY = 0;
   if (maxY <= minY) maxY = minY + 1;
   const spanY = (maxY - minY) * 1.12;
 
@@ -669,9 +783,13 @@ function renderSamples(exp) {{
   }});
   if (availableMethods.length === 0) return;
 
-  const defaultMethod = availableMethods.includes('grpo_sc')
-    ? 'grpo_sc'
-    : (availableMethods.includes('tis_sc') ? 'tis_sc' : availableMethods[availableMethods.length - 1]);
+  const defaultMethod = availableMethods.includes('best_combo_500')
+    ? 'best_combo_500'
+    : (availableMethods.includes('sample_var')
+      ? 'sample_var'
+      : (availableMethods.includes('grpo_sc')
+        ? 'grpo_sc'
+        : (availableMethods.includes('tis_sc') ? 'tis_sc' : availableMethods[availableMethods.length - 1])));
   const renderFor = (mkey, ckptOverride) => {{
     const res = exp.results.find(r => r.method === mkey);
     const hasNew = res.eval_samples && Object.keys(res.eval_samples).length > 0;

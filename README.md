@@ -1,6 +1,6 @@
 # mini_rl · Score Centering（arXiv:2609.20807）真实 vLLM 复现项目
 
-本项目在 `Qwen/Qwen3-0.6B` 模型与 3 操作数 `Countdown`（数字范围 `1..25`，目标 `1..200`）推理任务上，基于真实 **vLLM V1 采样引擎** 与 **HuggingFace FP32 主权重 / BF16 训练器**，针对三种训推不匹配（Training-Inference Mismatch, TIM）场景完成了 **80 步 4 方法对比**，并进一步对齐开源实现 `martin-marek/score-centering` 的核心超参完成了 **500 步 11 方法同台长程评测**（自动采集 `step_0`、`step_300`、`step_499` 保留集上的 **10 条成功 + 10 条失败样本**）。
+本项目在 `Qwen/Qwen3-0.6B` 模型与 3 操作数 `Countdown`（数字范围 `1..25`，目标 `1..200`）推理任务上，基于真实 **vLLM V1 采样引擎** 与 **HuggingFace FP32 主权重 / BF16 训练器**，针对三种训推不匹配（Training-Inference Mismatch, TIM）场景完成了 **80 步 4 方法对比**，对齐开源实现 `martin-marek/score-centering` 的核心超参完成了 **500 步 11 方法同台长程评测**，并在 **实验五** 中构建了 **5 层技能均衡 Countdown 数据集与 `max_new_tokens=512` 长上下文消融框架**，完成 Stage 1（5 组 200 步消融）与 Stage 2（500 步旗舰对比），全程自动采集 `step_0`、`step_300`、`step_499` 等关键检查点样本。
 
 ## 目录结构
 
@@ -18,7 +18,7 @@ mini_rl/
 │   └── vllm_suite.py                      # 真实 vLLM V1 采样（热更新、逐行 FP8 量化、微批反传、GRPO 序列均值）
 ├── scripts/                               # 工程工具与报告生成脚本
 │   ├── colab_bg_runner.py                 # 远程 Colab 后台执行与实时进度记录脚本
-│   └── generate_report.py                 # 自动聚合四组实验 JSON/日志生成中文 HTML 报告
+│   └── generate_report.py                 # 自动聚合六组实验（实验一~实验五 Stage 1/2）JSON/日志生成中文 HTML 报告
 └── experiments/                           # 分实验独立目录（脚本 + 日志 + 结果图全自洽）
     ├── exp1_controlled_tim/               # 实验一：受控权重噪声 TIM（vLLM BF16，80 步）
     │   ├── run.sh                         # 独立一键启动与环境校验脚本
@@ -30,8 +30,12 @@ mini_rl/
     │   └── run.sh / run.py / results.json / plot.png / train.log
     ├── exp3_fp8_tim/                      # 实验三：逐行 FP8 (torch.float8_e4m3fn) + vLLM 异步采样 TIM（80 步）
     │   └── run.sh / run.py / results.json / plot.png / train.log
-    └── exp4_vllm_official_tim/            # 实验四：官方超参对齐 + 500 步长程 11 算法对比（vLLM V1 FP16）
-        └── run.sh / run.py / results.json / plot.png / train.log
+    ├── exp4_vllm_official_tim/            # 实验四：官方超参对齐 + 500 步长程 11 算法对比（vLLM V1 FP16）
+    │   └── run.sh / run.py / results.json / plot.png / train.log
+    └── exp5_grpo_sc_ablation/             # 实验五：GRPO+SC 均衡数据集 5 组消融 (Stage 1) 与 500 步最优组合 (Stage 2)
+        ├── run.sh / run.py                # 支持 stage1 (200 步) / stage2 (500 步) 与原子组合参数
+        ├── results.json / plot.png / train_g5.log                   # Stage 1 结果与日志
+        └── results_stage2.json / plot_stage2.png / train_stage2.log # Stage 2 结果与日志
 ```
 
 ## 对比方法与核心配置
@@ -85,6 +89,34 @@ mini_rl/
 1. **80 步横向对比**：在全部 3 种 TIM 机制下，带重要性校正方法（`IS` / `TIS` / `TIS+SC`）在第 79 步均超越原生 `PG`；在硬件 FP8 严苛 TIM 下，`TIS` 与 `TIS+SC` 将末步梯度范数从 `PG` 的 `51.83` 压低至 `4.49` / `2.08`。
 2. **500 步长程抗坍缩与 Score Centering 的决定性作用**：未加 Score Centering 的原生 `PG` 与三大裁剪算法（`PPO` / `DAPO` / `GRPO`）在第 500 步全部坍缩归零（`PPO`/`DAPO`/`GRPO` 在第 300 步已提前归零且后续几乎无有效梯度）。加入 Top-128 Score Centering 后全部避免归零：`DAPO+SC` 末期回稳至 `31.2%`，而结合 `group_std` 组内标准化 + `seq_norm` 序列均值的 **`GRPO+SC`** 以 **`51.6%`（300 步）/ `46.9%`（500 步）/ `56.2%`（峰值）** 与最高有效梯度密度（`329/500`）全程领跑。
 
+## 实验五（GRPO+SC 均衡数据集 5 组机制消融 + 500 步最优组合）核心结果
+
+为解决原始随机生成 Countdown 样本中纯加减占比过高（约 72%）、乘除与必含括号样本偏少导致的难题能力退化与后半程坍缩问题，实验五构建了 **5 层严格均衡且与验证集签名去重的数据集**（`BALANCED_SKILL_CYCLE`：`addsub=50%`, `mul_flat=12.5%`, `mul_parens=12.5%`, `div_flat=12.5%`, `div_parens=12.5%`，即加减 vs 乘除各占 50%，必含括号占总样本 25%），并将生成上限提升至 **`max_new_tokens=512`**（`max_model_len=768`, `num_prompts=4`, `staleness=2`, `weight_mismatch_sigma=0.02`, `topk=128`）。
+
+### Stage 1：200 步均衡数据集 5 组压缩消融（`eval_every=20`）
+
+| 组别 | 核心改进机制 | 0 步基线 | 200 步评估 (`step_199`) | 评估峰值 | 原分布 / 加减 / 乘 / 除 / 括号 (@199) | `strict_fmt` (@199) | 非零梯度步 | 平均 $\|\mathrm{KL}\|$ | 最大 IS 比率 | 末步长度 |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `base_bal` | 均衡数据 + `grpo_sc` (`G=8`) | 10.9% | 31.2% | 62.5% @40 | 34.4% / 53.1% / 12.5% / 6.2% / 12.5% | 20.3% | 92.0% | 0.05 | 240.80x | 388.8 |
+| `fmt_stop_dedup` | `stop="</answer>"` + `fmt_dedup` (`-0.25`) + `group_std_raw` | 10.9% | 21.9% | 39.1% @20 | 31.2% / 43.8% / 0.0% / 0.0% / 0.0% | 0.0% | 23.5% | 0.02 | 74.61x | 14.0 |
+| `kl_ent_dapo` | `grpo_dapo_sc` (`[0.8,1.28]`) + `kl_beta=0.02` + `entropy=0.01` | 10.9% | 43.8% | 57.8% @140 | 56.2% / 68.8% / 18.8% / 18.8% / 25.0% | 48.4% | 99.5% | 0.02 | 401.88x | 246.0 |
+| **`sample_var`** | **`group_size=16` + `dynamic_sampling=True`** | 10.9% | **68.8%** | **79.7% @140** | **71.9% / 93.8% / 37.5% / 50.0% / 25.0%** | 1.6% | **100.0%** | 0.05 | 593.47x | 415.3 |
+| `sft_adamw` | 均衡 `SFT 50步` + `AdamW(5e-6, warmup=20+cosine)` | 17.2% | 48.4% | 50.0% @120 | 62.5% / 78.1% / 25.0% / 12.5% / 18.8% | 48.4% | 74.5% | **0.01** | **48.65x** | 394.8 |
+
+### Stage 2：500 步终局对比（`eval_every=25`）
+
+基于 Stage 1 归因诊断，Stage 2 将 `best_combo_500` 定为 **`sample_var` (`G=16 + DynSample`) + `stop_answer` (`"</answer>"`) + `strict_fmt`（纯 `{0,1}` 门控，剔除 `-0.25` 重复负惩罚与 `group_std_raw`）+ `dapo_clip` (`[0.8, 1.28]`) + `kl_ref_soft` (`kl_beta=0.008`，剔除导致乱码的 `entropy_coef=0.01` 与抑制乘除探索的 `SFT50`)**：
+
+| 组别 | 数据与配置 | 0 步基线 | 300 步 (`step_300`) | **500 步 (`step_499`)** | **评估峰值** | 原分布 / 加减 / 乘 / 除 / 括号 (@499) | `strict_fmt` (@499) | 非零梯度步 | 平均 $\|\mathrm{KL}\|$ | 最大 IS 比率 (末步) | 末步长度 |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `orig_data_500` | 原始非均衡 + `grpo_sc` (`G=8`) | 10.9% | 46.9% | 70.3% | 81.2% @150 | 73.4% / 96.9% / 37.5% / 50.0% / 31.2% | 29.7% | 88.4% | 0.02 | 580.61x (41.42x) | 183.0 |
+| `base_bal_500` | 5 层均衡 + `grpo_sc` (`G=8`) | 10.9% | 0.0% | 0.0% | 59.4% @175 | 0.0% / 0.0% / 0.0% / 0.0% / 0.0% | 1.6% | 48.8% | 0.21 | 9074.15x (331.52x) | 505.2 |
+| **`best_combo_500`** | **5 层均衡 + 最优 5 因子组合 (`G=16`)** | 10.9% | **73.4%** | **85.9%** | **90.6% @450** | **85.9% / 93.8% / 81.2% / 75.0% / 68.8%** | **90.6%** | **100.0%** | 0.03 | 1433.52x (**31.77x**) | **270.2** |
+
+**实验五关键结论**：
+1. **单靠数据均衡不足以支撑长程 GRPO+SC**：`base_bal_500` 在难题占比提高后，因 `group_size=8` 频繁遭遇全错/全对零方差批次（仅 `48.8%` 步有非零梯度）且无 KL 锚定，IS 比率飙升至 `9074.15x`，于第 250 步彻底坍缩至 `0.0%`；而未均衡 `orig_data_500` 在第 300 步同样发生阶段性退化（乘/除/括号全归 `0.0%`、生成死循环至 `512` token），500 步末期乘（`37.5%`）、除（`50.0%`）、括号（`31.2%`）及严格格式率（`29.7%`）均受限。
+2. **五因子协同突破 90% 大关并消除长程退化**：`best_combo_500` 实现 **500/500 步 `100.0%` 有效梯度更新**，第 450 步平衡验证峰值达 **`90.6%`**（原分布 **`92.2%`**），第 499 步终局稳定在 **`85.9%`**（较 `orig_data_500` 提升 **`+15.6 pp`**），其中乘法 **`81.2%`**（`+43.7 pp`）、除法 **`75.0%`**（`+25.0 pp`）、必含括号 **`68.8%`**（`+37.6 pp`）、严格单标签格式率 **`90.6%`**（`+60.9 pp`），参考模型 KL 稳定收敛在 `0.15~0.23`。
+
 ## 本地运行与报告重生成
 
 在配置有 CUDA GPU（及 `vLLM` 环境，各 `run.sh` 内置环境自检与自动安装）的节点上可单独运行任一实验：
@@ -94,9 +126,12 @@ bash experiments/exp1_controlled_tim/run.sh
 bash experiments/exp2_vllm_tim/run.sh
 bash experiments/exp3_fp8_tim/run.sh
 bash experiments/exp4_vllm_official_tim/run.sh
+bash experiments/exp5_grpo_sc_ablation/run.sh                                          # Stage 1 (200 步 5 组消融)
+STAGE=stage2 STEPS=500 EVAL_EVERY=25 bash experiments/exp5_grpo_sc_ablation/run.sh \
+  --results-filename results_stage2.json --plot-filename plot_stage2.png               # Stage 2 (500 步最优组合对比)
 ```
 
-重新汇总全部四组实验结果与样本生成中文交互式报告：
+重新汇总全部六组实验结果与样本生成中文交互式报告：
 
 ```bash
 python3 -B scripts/generate_report.py
