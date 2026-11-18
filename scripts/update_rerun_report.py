@@ -36,21 +36,34 @@ def render_summary(payload: dict, environment: dict) -> str:
     def percent(key: str) -> str:
         return f"{final[key] * 100:.1f}%" if key in final else "未记录"
     peak_step = int(peak.get("eval_step", peak["step"]))
-    versions = "、".join(f"{key} {environment.get(key, '未记录')}" for key in
-                         ("torch", "vllm", "transformers", "numpy"))
+    artifact_dir = RUN_DIR.relative_to(ROOT).as_posix()
     return "\n".join([
         START,
-        "## 修复后 Best Combo 重跑结果",
+        "## 修复与重跑",
         "",
-        f"- **完成训练**：{steps} 次更新；最终评估在第 {steps} 次更新之后。",
-        f"- **均衡验证集**：末次 {percent('eval_reward')}；峰值 {peak['eval_reward'] * 100:.1f}%（第 {peak_step} 步）。",
-        f"- **原分布验证集**：末次 {percent('eval_orig_reward')}。",
-        f"- **技能指标**：加减 {percent('eval_addsub_reward')}、乘法 {percent('eval_mul_reward')}、除法 {percent('eval_div_reward')}、括号 {percent('eval_parens_reward')}；严格格式率 {percent('eval_strict_fmt_rate')}。",
-        f"- **环境**：{environment.get('gpu', 'GPU 未记录')}；{versions}。",
-        f"- **开源地址**：[{REPOSITORY_URL}]({REPOSITORY_URL})。",
-        f"- **原始数据**：`experiments/exp5_grpo_sc_ablation/rerun_fixed/results.json`；配置指纹 `{payload.get('experiment_fingerprint', '未记录')}`。",
+        "修复了奖励判定、训练与验证数据隔离、零优势批次的正则项、末步评估时点和断点恢复校验。"
+        f"在 Colab（{environment.get('gpu', 'GPU 未记录').split(',')[0]}）上重跑实验五的 `best_combo_500`，完成 {steps} 次参数更新后执行最终评估。",
         "",
-        "旧结果使用修复前代码，两次运行的代码与依赖版本不同，比较时应保留这一限制。",
+        "| 指标 | 重跑结果 |",
+        "| --- | --- |",
+        f"| 均衡验证集末次准确率 | **{percent('eval_reward')}** |",
+        f"| 均衡验证集峰值 | **{peak['eval_reward'] * 100:.1f}%**（第 {peak_step} 步） |",
+        f"| 原分布验证集末次准确率 | **{percent('eval_orig_reward')}** |",
+        f"| 加减 / 乘法 / 除法 / 括号 | {percent('eval_addsub_reward')} / {percent('eval_mul_reward')} / {percent('eval_div_reward')} / {percent('eval_parens_reward')} |",
+        f"| 严格答案格式率 | {percent('eval_strict_fmt_rate')} |",
+        "",
+        "重跑支持原实验关于 Best Combo 长程稳定性的结论。两次运行的代码与依赖版本有差异，详细对比见[实验报告第 8 节](RL_BEST_PRACTICES_REPORT.md#八-修复后补充复跑best-combo-500-步)。",
+        "",
+        f"[指标与抽样回答]({artifact_dir}/results.json) · [训练曲线]({artifact_dir}/plot.png) · "
+        f"[训练日志]({artifact_dir}/train.log) · [环境版本]({artifact_dir}/environment.json)",
+        "",
+        "在依赖已安装的 Colab A100 80GB 环境中，从仓库根目录启动重跑。",
+        "",
+        "```bash",
+        'OUTPUT_DIR="$(mktemp -d)" bash experiments/exp5_grpo_sc_ablation/rerun_fixed.sh',
+        "```",
+        "",
+        "断点恢复时，将 `OUTPUT_DIR` 指向已有运行目录，并保留其中的 `results.json` 和 `*.training.pt`。恢复需通过配置、源码与依赖版本校验。已发布的产物包含评估记录与日志，模型检查点未入库。",
         END,
     ])
 
@@ -108,15 +121,13 @@ def render_supplement(payload: dict, environment: dict) -> str:
 
 
 def update_document(path: Path, summary: str) -> None:
+    """Replace the generated README section and keep it at the end."""
     text = path.read_text(encoding="utf-8")
     if START in text and END in text:
         before, rest = text.split(START, 1)
         _, after = rest.split(END, 1)
-        text = before + summary + after
-    else:
-        first_line, rest = text.split("\n", 1)
-        text = first_line + "\n\n" + summary + "\n" + rest
-    path.write_text(text, encoding="utf-8")
+        text = before.rstrip() + "\n\n" + after.lstrip("\n")
+    path.write_text(text.rstrip() + "\n\n" + summary + "\n", encoding="utf-8")
 
 
 def replace_with_supplement(path: Path, supplement: str) -> None:

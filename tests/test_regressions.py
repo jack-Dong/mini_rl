@@ -63,15 +63,17 @@ class ReportRegressionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             render_summary(payload, {})
 
-    def test_summary_update_is_idempotent(self):
+    def test_readme_summary_moves_to_end_and_update_is_idempotent(self):
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "report.md"
-            path.write_text("# Report\n\nOld content\n")
-            summary = "<!-- BEGIN FIXED RERUN RESULTS -->\nnew\n<!-- END FIXED RERUN RESULTS -->"
+            path = Path(directory) / "README.md"
+            body = "# Project\n\nExperiment overview\n"
+            path.write_text(f"# Project\n\n{START}\nOld results\n{END}\n\nExperiment overview\n")
+            summary = f"{START}\nNew results\n{END}"
+            expected = f"{body}\n{summary}\n"
             update_document(path, summary)
+            self.assertEqual(path.read_text(), expected)
             update_document(path, summary)
-            self.assertEqual(path.read_text().count("<!-- BEGIN FIXED RERUN RESULTS -->"), 1)
-            self.assertIn("Old content", path.read_text())
+            self.assertEqual(path.read_text(), expected)
 
     def test_report_moves_rerun_from_header_to_section_eight(self):
         with tempfile.TemporaryDirectory() as directory:
