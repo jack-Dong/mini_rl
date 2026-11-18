@@ -10,8 +10,11 @@ import argparse
 import gc
 import json
 import math
+import random
+import sys
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from importlib.metadata import version
 from pathlib import Path
 from typing import Any, Callable
 
@@ -74,6 +77,7 @@ from src.losses import (
     resolve_correction,
     score_centering_loss,
 )
+from src.experiment_identity import experiment_fingerprint
 
 FP8_E4M3_MAX = 448.0
 
@@ -697,6 +701,9 @@ def run_single_vllm_method(
     variant: VariantConfig | None = None,
     alt_eval_problems: list[CountdownProblem] | None = None,
     init_eval_metrics: dict[str, float] | None = None,
+    training_state_path: Path | None = None,
+    experiment_id: str | None = None,
+    resume_training: bool = False,
 ) -> dict[str, object]:
     """Train one RL method or VariantConfig ablation with shared vLLM sampler and HF trainer."""
     vcfg = variant or VariantConfig(key=method_key, label=METHODS[method_key].name, base_method=method_key)
@@ -756,6 +763,30 @@ def run_single_vllm_method(
     weights_dirty = True
     vllm_has_sampler_weights = False
 
+    start_step = 0
+    elapsed_before_resume = 0.0
+    if resume_training and training_state_path is not None and training_state_path.exists():
+        state = torch.load(training_state_path, map_location="cpu", weights_only=False)
+        if state.get("experiment_fingerprint") != experiment_id or state.get("method") != vcfg.key:
+            raise ValueError("Cannot resume training: checkpoint does not match this experiment")
+        trainer.load_state_dict(state["trainer"])
+        optimizer.load_state_dict(state["optimizer"])
+        if scheduler is not None:
+            scheduler.load_state_dict(state["scheduler"])
+        history = state["history"]
+        eval_samples = state["eval_samples"]
+        cached_sampler_weights = state["sampler_weights"]
+        weights_dirty = state["weights_dirty"]
+        start_step = state["next_step"]
+        elapsed_before_resume = state.get("elapsed_sec", 0.0)
+        random.setstate(state["python_rng"])
+        np.random.set_state(state["numpy_rng"])
+        torch.set_rng_state(state["torch_rng"])
+        if torch.cuda.is_available():
+            torch.cuda.set_rng_state_all(state["cuda_rng"])
+        del state
+        print(f"[{log_prefix} Resume] Restored {vcfg.key} after {start_step} updates", flush=True)
+
     sample_steps_set: set[int] = {0, args.steps - 1}
     if args.steps > 300:
         sample_steps_set.add(300)
@@ -764,7 +795,7 @@ def run_single_vllm_method(
 
     t0 = time.time()
 
-    for step in range(args.steps):
+    for step in range(start_step, args.steps):
         need_sync = step % (args.staleness + 1) == 0 or cached_sampler_weights is None
         if need_sync and weights_dirty:
             cached_sampler_weights = build_sampler_weights(
@@ -864,7 +895,7 @@ def run_single_vllm_method(
         total_masked_val = 0.0
         max_ratio_val = 1.0
 
-        if has_signal:
+        if has_signal or ref_model is not None or vcfg.entropy_coef > 0.0:
             optimizer.zero_grad(set_to_none=True)
             for s_idx in range(0, full_ids.size(0), args.micro_batch_size):
                 e_idx = min(s_idx + args.micro_batch_size, full_ids.size(0))
@@ -1015,16 +1046,48 @@ def run_single_vllm_method(
                 f"mask={frac_masked * 100:4.1f}% | len={rec['mean_len']:.1f}",
                 flush=True,
             )
+        if (eval_reward is not None or step == args.steps - 1) and training_state_path is not None:
+            training_state_path.parent.mkdir(parents=True, exist_ok=True)
+            state = {
+                "experiment_fingerprint": experiment_id, "method": vcfg.key,
+                "next_step": step + 1, "trainer": {k: v.detach().cpu() for k, v in trainer.state_dict().items()},
+                "optimizer": optimizer.state_dict(),
+                "scheduler": scheduler.state_dict() if scheduler is not None else None,
+                "history": history, "eval_samples": eval_samples,
+                "sampler_weights": cached_sampler_weights, "weights_dirty": weights_dirty,
+                "python_rng": random.getstate(), "numpy_rng": np.random.get_state(),
+                "torch_rng": torch.get_rng_state(),
+                "cuda_rng": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else [],
+                "elapsed_sec": elapsed_before_resume + time.time() - t0,
+            }
+            tmp_state = training_state_path.with_suffix(".tmp")
+            torch.save(state, tmp_state)
+            tmp_state.replace(training_state_path)
+            del state
         if checkpoint_cb is not None and (eval_reward is not None or step == args.steps - 1):
             checkpoint_cb({
                 "method": vcfg.key,
                 "name": vcfg.label,
-                "elapsed_sec": time.time() - t0,
+                "elapsed_sec": elapsed_before_resume + time.time() - t0,
                 "history": list(history),
                 "eval_samples": dict(eval_samples),
             })
 
-    elapsed = time.time() - t0
+    # The loop evaluates before each update. Evaluate once more after the final update.
+    if history:
+        trainer.eval()
+        final_metrics: dict[str, float] = {}
+        final_reward, final_samples = vllm_evaluate_policy(
+            llm, trainer, vllm_dtype, eval_problems, eval_extra_problems, tokenizer,
+            args.max_new_tokens, return_samples=True, target_per_bucket=10,
+            stop_strings=vcfg.stop_strings or None, metrics_out=final_metrics,
+            alt_eval_problems=alt_eval_problems,
+        )
+        history[-1].update(final_metrics)
+        history[-1]["eval_reward"] = final_reward
+        history[-1]["eval_step"] = float(args.steps)
+        eval_samples[f"step_{args.steps}"] = final_samples
+    elapsed = elapsed_before_resume + time.time() - t0
     del trainer, fixed_noise, optimizer, scheduler, cached_sampler_weights, ref_model
     gc.collect()
     torch.cuda.empty_cache()
@@ -1034,6 +1097,7 @@ def run_single_vllm_method(
         "elapsed_sec": elapsed,
         "history": history,
         "eval_samples": eval_samples,
+        "complete": True,
     }
 
 
@@ -1072,7 +1136,8 @@ def plot_vllm_results(
     title_prefix: str = "Qwen3-0.6B Countdown",
 ) -> None:
     """Plot eval reward and KL drift curves across arbitrary official RL methods."""
-    fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.0), dpi=150)
+    fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.0), dpi=150, constrained_layout=True)
+    fig.suptitle(title_prefix, fontsize=12)
 
     for res in all_results:
         key = str(res["method"])
@@ -1080,7 +1145,7 @@ def plot_vllm_results(
         hist = res["history"]  # type: ignore[assignment]
         color = METHOD_COLORS.get(key, "#6b7280")
 
-        eval_pts = [(h["step"], h["eval_reward"] * 100.0) for h in hist if "eval_reward" in h]
+        eval_pts = [(h.get("eval_step", h["step"]), h["eval_reward"] * 100.0) for h in hist if "eval_reward" in h]
         if eval_pts:
             xs, ys = zip(*eval_pts)
             axes[0].plot(xs, ys, marker="o", markersize=3.5, linewidth=2.0, label=name, color=color)
@@ -1089,19 +1154,18 @@ def plot_vllm_results(
         kls = [abs(h["kl_samp_train"]) for h in hist]
         axes[1].plot(steps, kls, linewidth=1.6, alpha=0.88, label=name, color=color)
 
-    axes[0].set_title(f"{title_prefix}: Eval Solve Rate")
+    axes[0].set_title("Eval Solve Rate")
     axes[0].set_xlabel("Training Step")
     axes[0].set_ylabel("Solve Rate (%)")
     axes[0].grid(True, linestyle="--", alpha=0.35)
     axes[0].legend(frameon=True, fontsize=8, ncol=2)
 
-    axes[1].set_title(f"{title_prefix}: Sampler-Trainer KL Drift |KL(q || p)|")
+    axes[1].set_title("Sampler-Trainer KL Drift |KL(q || p)|")
     axes[1].set_xlabel("Training Step")
     axes[1].set_ylabel("|log q - log p|")
     axes[1].grid(True, linestyle="--", alpha=0.35)
     axes[1].legend(frameon=True, fontsize=8, ncol=2)
 
-    fig.tight_layout()
     fig.savefig(out_path)
     plt.close(fig)
 
@@ -1120,6 +1184,26 @@ def run_vllm_suite(
     resume: bool = False,
 ) -> None:
     """Shared entrypoint executing zero-step probe and multi-method vLLM RL comparison."""
+    out_dir = Path(args.output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    results_path = out_dir / results_filename
+    plot_path = out_dir / plot_filename
+    identity_args = {k: v for k, v in vars(args).items() if k not in
+                     {"resume", "output_dir", "results_filename", "plot_filename"}}
+    identity = experiment_fingerprint(
+        {"args": identity_args, "fp8_quant": fp8_quant, "noise_scale": noise_scale,
+         "balanced_data": balanced_data,
+         "variants": {k: asdict(v) for k, v in (variant_specs or {}).items()},
+         "packages": {k: version(k) for k in ("torch", "vllm", "transformers", "numpy")}},
+        [Path(__file__), Path(__file__).with_name("engine.py"),
+         Path(__file__).with_name("countdown.py"), Path(__file__).with_name("losses.py"),
+         Path(__file__).with_name("experiment_identity.py"), Path(sys.argv[0])],
+    )
+    prev = None
+    if resume and results_path.exists():
+        prev = json.loads(results_path.read_text(encoding="utf-8"))
+        if prev.get("experiment_fingerprint") != identity:
+            raise ValueError("Cannot resume: experiment configuration or source differs from saved results; use a new output file.")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     attn_impl = "sdpa" if device.type == "cuda" else "eager"
     print(f"[{log_prefix}] device={device} | attn={attn_impl} | model={args.model_id} | steps={args.steps}", flush=True)
@@ -1136,14 +1220,6 @@ def run_vllm_suite(
         max_target=args.max_target,
     )
     orig_eval_main = orig_eval_pool[: args.eval_prompts]
-    unbalanced_train_pool = build_dataset(
-        max(512, args.steps * args.num_prompts * 2),
-        seed=args.seed,
-        num_operands=args.num_operands,
-        max_number=args.max_number,
-        max_target=args.max_target,
-    )
-
     if balanced_data:
         orig_sigs = {(tuple(sorted(p.numbers)), p.target) for p in orig_eval_main}
         eval_pool = build_balanced_dataset(
@@ -1170,6 +1246,14 @@ def run_vllm_suite(
         eval_problems = orig_eval_main
         eval_extra_problems = orig_eval_pool[args.eval_prompts :]
         alt_eval_problems = None
+        all_eval_sigs = {(tuple(sorted(p.numbers)), p.target) for p in orig_eval_pool}
+
+    unbalanced_train_pool = build_dataset(
+        max(512, args.steps * args.num_prompts * 2), seed=args.seed,
+        num_operands=args.num_operands, max_number=args.max_number,
+        max_target=args.max_target, exclude_sigs=all_eval_sigs,
+    )
+    if not balanced_data:
         train_problems = unbalanced_train_pool[: max(512, args.steps * args.num_prompts)]
 
     llm = LLM(
@@ -1227,23 +1311,15 @@ def run_vllm_suite(
     gc.collect()
     torch.cuda.empty_cache()
 
-    out_dir = Path(args.output_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    results_path = out_dir / results_filename
-    plot_path = out_dir / plot_filename
-
     completed_by_key: dict[str, dict[str, object]] = {}
-    if resume and results_path.exists():
-        try:
-            prev = json.loads(results_path.read_text(encoding="utf-8"))
-            for r in prev.get("results", []):
-                mkey = str(r.get("method", ""))
-                hist = r.get("history", [])
-                if mkey and isinstance(hist, list) and len(hist) >= args.steps:
-                    completed_by_key[mkey] = r
-                    print(f"[{log_prefix} Resume] Reusing completed {mkey} ({len(hist)} steps)", flush=True)
-        except Exception:
-            completed_by_key = {}
+    if prev is not None:
+        for r in prev.get("results", []):
+            mkey = str(r.get("method", ""))
+            hist = r.get("history", [])
+            if (mkey and r.get("complete") is True and isinstance(hist, list) and hist
+                    and len(hist) == args.steps and hist[-1].get("eval_step") == args.steps):
+                completed_by_key[mkey] = r
+                print(f"[{log_prefix} Resume] Reusing completed {mkey} ({len(hist)} steps)", flush=True)
 
     results: list[dict[str, object]] = [completed_by_key[k] for k in args.methods if k in completed_by_key]
     for key in args.methods:
@@ -1261,6 +1337,7 @@ def run_vllm_suite(
                 results_path,
                 {
                     "status": "running",
+                    "experiment_fingerprint": identity,
                     "args": vars(args),
                     "engine_drift_probe": probe,
                     "results": results + [partial],
@@ -1286,18 +1363,21 @@ def run_vllm_suite(
             variant=vcfg,
             alt_eval_problems=alt_eval_problems,
             init_eval_metrics=init_eval_metrics,
+            training_state_path=(out_dir / f"{key}.training.pt") if resume else None,
+            experiment_id=identity,
+            resume_training=resume,
         )
         results.append(res)
         save_json_checkpoint(
             results_path,
-            {"status": "running", "args": vars(args), "engine_drift_probe": probe, "results": results},
+            {"status": "running", "experiment_fingerprint": identity, "args": vars(args), "engine_drift_probe": probe, "results": results},
         )
 
     order_map = {k: i for i, k in enumerate(args.methods)}
     results.sort(key=lambda r: order_map.get(str(r.get("method", "")), 999))
     save_json_checkpoint(
         results_path,
-        {"status": "completed", "args": vars(args), "engine_drift_probe": probe, "results": results},
+        {"status": "completed", "experiment_fingerprint": identity, "args": vars(args), "engine_drift_probe": probe, "results": results},
     )
     plot_vllm_results(results, plot_path, title_prefix=title_prefix)
     print(f"Saved {results_path} and {plot_path}", flush=True)

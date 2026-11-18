@@ -43,7 +43,7 @@ ensure_vm_ready() {
   run_colab exec -s "${sess}" --timeout 30 -f "${ROOT_DIR}/scripts/colab_bg_runner.py" \
     --env ACTION=launch --env LOG_FILE=/tmp/mkdir.log --env DONE_FILE=/tmp/DONE_mkdir --env PID_FILE=/tmp/pid_mkdir \
     --env "CMD=mkdir -p /content/src /content/exp4" || true
-  for f in __init__.py countdown.py losses.py engine.py vllm_suite.py; do
+  for f in __init__.py countdown.py losses.py engine.py experiment_identity.py vllm_suite.py; do
     run_colab upload -s "${sess}" "${ROOT_DIR}/src/${f}" "/content/src/${f}"
   done
   run_colab upload -s "${sess}" "${EXP_DIR}/run.py" "/content/exp4/run.py"

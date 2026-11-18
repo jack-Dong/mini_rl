@@ -75,6 +75,16 @@ EXPERIMENTS = [
         "script_name": "experiments/exp5_grpo_sc_ablation/run.py",
         "bash_name": "experiments/exp5_grpo_sc_ablation/run.sh",
     },
+    {
+        "id": "exp5_rerun_fixed",
+        "title": "实验五 · 修复后重跑：Best Combo 500 步",
+        "subtitle": "修复奖励判定、数据隔离、零优势正则更新及最终评估；独立保存，不覆盖历史数据。",
+        "json_path": ROOT_DIR / "experiments" / "exp5_grpo_sc_ablation" / "rerun_fixed" / "results.json",
+        "png_path": ROOT_DIR / "experiments" / "exp5_grpo_sc_ablation" / "rerun_fixed" / "plot.png",
+        "log_path": ROOT_DIR / "experiments" / "exp5_grpo_sc_ablation" / "rerun_fixed" / "train.log",
+        "script_name": "experiments/exp5_grpo_sc_ablation/run.py",
+        "bash_name": "experiments/exp5_grpo_sc_ablation/rerun_fixed.sh",
+    },
 ]
 
 METHOD_ORDER = [
@@ -160,7 +170,7 @@ def summarize_method(res: dict[str, Any]) -> dict[str, Any]:
     eval_rows = [h for h in hist if "eval_reward" in h]
     evals = [h["eval_reward"] * 100.0 for h in eval_rows]
     eval_300 = next(
-        (h["eval_reward"] * 100.0 for h in eval_rows if int(h.get("step", -1)) == 300),
+        (h["eval_reward"] * 100.0 for h in eval_rows if int(h.get("eval_step", h.get("step", -1))) == 300),
         None,
     )
     last_ev = eval_rows[-1] if eval_rows else {}
@@ -222,8 +232,9 @@ def build_dynamic_findings(payloads: list[dict[str, Any]]) -> str:
                 short_lbl = k.upper().replace("_", "+")
                 ev = f"{s['eval_final']:.1f}%" if s["eval_final"] is not None else "—"
                 m300 = f"300步={s['eval_300']:.1f}%，" if s["eval_300"] is not None else ""
+                eval_label = "末期" if p["status"] == "completed" else "最新"
                 parts.append(
-                    f"{short_lbl} {m300}末期={ev}（峰值 {s['eval_peak']:.1f}%，均梯度 {s['gnorm_mean']:.2f} / 末步 {s['gnorm_final']:.2f}）"
+                    f"{short_lbl} {m300}{eval_label}={ev}（峰值 {s['eval_peak']:.1f}%，均梯度 {s['gnorm_mean']:.2f} / 末步 {s['gnorm_final']:.2f}）"
                 )
         extra = ""
         pg = summaries.get("pg")
@@ -634,6 +645,9 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
 </head>
 <body>
 <div class="container">
+  <div style="padding:16px;margin:16px 0;background:#78350f;color:#fff;border-radius:8px">
+    历史结果提示：原实验在代码审查前运行；部分训练集与验证集重叠、正则更新和末步评估存在缺陷。修复后重跑单独列出，历史数值和结论有待重新验证。
+  </div>
   <header class="hero">
     <div class="hero-top">
       <span class="badge {overview_cls}">{html.escape(overview_badge)}</span>
@@ -695,8 +709,9 @@ function renderChart(exp, metric) {{
     for (const h of res.history) {{
       const y = getSeriesValue(h, metric);
       if (y !== null && Number.isFinite(y)) {{
-        pts.push({{ x: h.step, y }});
-        if (h.step > maxX) maxX = h.step;
+        const pointStep = metric === 'eval_reward' ? (h.eval_step ?? h.step) : h.step;
+        pts.push({{ x: pointStep, y }});
+        if (pointStep > maxX) maxX = pointStep;
         if (y < minY) minY = y;
         if (y > maxY) maxY = y;
       }}
@@ -868,7 +883,7 @@ EXPERIMENTS.forEach(exp => {{
 def main() -> None:
     """在工作区生成中文交互式实验报告并同步到 artifact 目录。"""
     payloads = [load_experiment_payload(spec) for spec in EXPERIMENTS]
-    out_html = build_html(payloads)
+    out_html = "\n".join(line.rstrip() for line in build_html(payloads).split("\n"))
     workspace_html = ROOT_DIR / "experiment_results_report.html"
     workspace_html.write_text(out_html, encoding="utf-8")
     ARTIFACT_HTML.parent.mkdir(parents=True, exist_ok=True)

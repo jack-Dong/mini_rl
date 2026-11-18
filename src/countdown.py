@@ -78,19 +78,29 @@ def build_dataset(
     min_number: int = 1,
     max_number: int = 25,
     max_target: int = 200,
+    exclude_sigs: set[tuple[tuple[int, ...], int]] | None = None,
 ) -> list[CountdownProblem]:
     """Create a deterministic list of Countdown problems."""
     rng = random.Random(seed)
-    return [
-        generate_problem(
+    problems = []
+    excluded = exclude_sigs or set()
+    if size == 0:
+        return problems
+    for _ in range(max(1000, size * 100)):
+        if len(problems) == size:
+            return problems
+        problem = generate_problem(
             rng,
             num_operands=num_operands,
             min_number=min_number,
             max_number=max_number,
             max_target=max_target,
         )
-        for _ in range(size)
-    ]
+        if (tuple(sorted(problem.numbers)), problem.target) not in excluded:
+            problems.append(problem)
+            if len(problems) == size:
+                return problems
+    raise RuntimeError(f"Could not generate {size} problems outside the excluded evaluation set")
 
 
 def format_messages(problem: CountdownProblem) -> list[dict[str, str]]:
@@ -141,14 +151,18 @@ def compute_reward(completion: str, problem: CountdownProblem) -> float:
     expr = extract_answer(completion)
     if expr is None or not _ALLOWED_EXPR.match(expr) or "**" in expr or "//" in expr:
         return 0.0
-    used_numbers = Counter(int(x) for x in re.findall(r"\d+", expr))
-    if used_numbers != Counter(problem.numbers):
-        return 0.0
     try:
-        value = eval(expr, {"__builtins__": {}}, {})  # noqa: S307
-    except Exception:
+        tree = ast.parse(expr, mode="eval")
+        used_numbers = Counter(
+            node.value for node in ast.walk(tree)
+            if isinstance(node, ast.Constant) and type(node.value) is int
+        )
+        if used_numbers != Counter(problem.numbers):
+            return 0.0
+        value = _eval_frac_ast(tree.body)
+    except (SyntaxError, ValueError, TypeError, ZeroDivisionError, OverflowError):
         return 0.0
-    return 1.0 if abs(float(value) - problem.target) < 1e-9 else 0.0
+    return 1.0 if value == problem.target else 0.0
 
 
 def _solve_exact_with_ops(
@@ -203,8 +217,11 @@ def _eval_frac_ast(node: ast.AST) -> Fraction:
     """Safely evaluate a basic binary arithmetic AST in exact rational arithmetic."""
     if isinstance(node, ast.Expression):
         return _eval_frac_ast(node.body)
-    if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+    if isinstance(node, ast.Constant) and type(node.value) is int:
         return Fraction(node.value)
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+        value = _eval_frac_ast(node.operand)
+        return value if isinstance(node.op, ast.UAdd) else -value
     if isinstance(node, ast.BinOp):
         lv = _eval_frac_ast(node.left)
         rv = _eval_frac_ast(node.right)

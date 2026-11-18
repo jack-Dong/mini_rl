@@ -1,5 +1,24 @@
 # mini_rl · Score Centering（arXiv:2609.20807）真实 vLLM 复现项目
 
+<!-- BEGIN FIXED RERUN RESULTS -->
+## 修复后 Best Combo 重跑结果
+
+- **完成训练**：500 次更新；最终评估在第 500 次更新之后。
+- **均衡验证集**：末次 84.4%；峰值 92.2%（第 400 步）。
+- **原分布验证集**：末次 92.2%。
+- **技能指标**：加减 96.9%、乘法 87.5%、除法 56.2%、括号 68.8%；严格格式率 87.5%。
+- **环境**：NVIDIA A100-SXM4-80GB, 81920 MiB；torch 2.14.0、vllm 0.34.0、transformers 5.22.1、numpy 2.4.6。
+- **原始数据**：`experiments/exp5_grpo_sc_ablation/rerun_fixed/results.json`；配置指纹 `fc6ff59b18caee00178ea08f0a48ef09d8f9381203bc71b2d8eb5d8569a0a42f`。
+
+旧结果使用修复前代码，两次运行的代码与依赖版本不同，比较时应保留这一限制。
+<!-- END FIXED RERUN RESULTS -->
+
+> **结果状态（2026-11-17）**：以下表格和报告均为修复前的历史实验结果，不是修复后的重跑结果。审查发现部分原始训练集与验证集有重叠、零优势批次会跳过正则项，且原末步评估发生在最后一次更新之前；因此相关数值与结论有待重新验证。修复后的 `best_combo_500` 将单独输出至 `experiments/exp5_grpo_sc_ablation/rerun_fixed/`，不覆盖原始数据。
+
+修复后的首次重跑因 Colab 会话结束而中断，已保存的第 25 步评估（均衡集 56.2%，原分布 68.8%）位于 `experiments/exp5_grpo_sc_ablation/rerun_interrupted_20261118/`，不是最终结果。中断发生时没有保存模型状态，不能从该次运行继续训练。
+
+在配置好依赖的 Colab A100 80GB 环境中，可从仓库根目录运行 `bash experiments/exp5_grpo_sc_ablation/rerun_fixed.sh`。`--resume` 仅接受配置、源码和依赖版本指纹一致的结果与训练检查点。中断后需将保存的 `*.training.pt` 和 `results.json` 一起放回输出目录，才能从最近一次模型检查点继续；没有模型检查点时会从头训练。模型检查点体积较大，不纳入 Git。
+
 本项目在 `Qwen/Qwen3-0.6B` 模型与 3 操作数 `Countdown`（数字范围 `1..25`，目标 `1..200`）推理任务上，基于真实 **vLLM V1 采样引擎** 与 **HuggingFace FP32 主权重 / BF16 训练器**，针对三种训推不匹配（Training-Inference Mismatch, TIM）场景完成了 **80 步 4 方法对比**，对齐开源实现 `martin-marek/score-centering` 的核心超参完成了 **500 步 11 方法同台长程评测**，并在 **实验五** 中构建了 **5 层技能均衡 Countdown 数据集与 `max_new_tokens=512` 长上下文消融框架**，完成 Stage 1（5 组 200 步消融）与 Stage 2（500 步旗舰对比），全程自动采集 `step_0`、`step_300`、`step_499` 等关键检查点样本。
 
 ## 目录结构

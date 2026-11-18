@@ -40,7 +40,7 @@ done
 run_colab exec -s "${SESSION}" --timeout 30 -f scripts/colab_bg_runner.py \
   --env ACTION=launch --env LOG_FILE=/tmp/mkdir.log --env DONE_FILE=/tmp/DONE_mkdir --env PID_FILE=/tmp/pid_mkdir \
   --env "CMD=mkdir -p /content/src /content/exp2" || true
-for f in __init__.py countdown.py losses.py engine.py vllm_suite.py; do
+for f in __init__.py countdown.py losses.py engine.py experiment_identity.py vllm_suite.py; do
   run_colab upload -s "${SESSION}" "src/${f}" "/content/src/${f}"
 done
 run_colab upload -s "${SESSION}" "experiments/exp2_vllm_tim/run.py" "/content/exp2/run.py"

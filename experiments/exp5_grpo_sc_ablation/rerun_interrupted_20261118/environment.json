@@ -1,0 +1,7 @@
+{
+  "torch": "2.14.0",
+  "vllm": "0.34.0",
+  "transformers": "5.22.1",
+  "numpy": "2.4.6",
+  "gpu": "NVIDIA A100-SXM4-80GB, 81920 MiB"
+}

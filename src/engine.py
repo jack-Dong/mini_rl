@@ -422,6 +422,15 @@ def run_single_method(
                 "sample_completions": dict(sample_completions),
             })
 
+    if history:
+        trainer.eval()
+        final_reward, final_samples = evaluate_policy(
+            trainer, eval_problems, tokenizer, max_new_tokens=args.max_new_tokens,
+            batch_size=min(32, len(eval_problems)), return_samples=True,
+        )
+        history[-1]["eval_reward"] = final_reward
+        history[-1]["eval_step"] = float(args.steps)
+        sample_completions[f"step_{args.steps}"] = final_samples
     elapsed = time.time() - t0
     del trainer, sampler, fixed_noise, optimizer
     gc.collect()
@@ -441,7 +450,8 @@ def plot_results(
     title_prefix: str = "Qwen3-0.6B Countdown",
 ) -> None:
     """Plot eval reward and KL drift curves across the 4 methods."""
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4.6), dpi=150)
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.6), dpi=150, constrained_layout=True)
+    fig.suptitle(title_prefix, fontsize=12)
     colors = {
         "pg": "#ef4444",
         "is": "#f59e0b",
@@ -455,7 +465,7 @@ def plot_results(
         hist = res["history"]  # type: ignore[assignment]
         color = colors.get(key, "#6b7280")
 
-        eval_pts = [(h["step"], h["eval_reward"] * 100.0) for h in hist if "eval_reward" in h]
+        eval_pts = [(h.get("eval_step", h["step"]), h["eval_reward"] * 100.0) for h in hist if "eval_reward" in h]
         if eval_pts:
             xs, ys = zip(*eval_pts)
             axes[0].plot(xs, ys, marker="o", markersize=4, linewidth=2.0, label=name, color=color)
@@ -464,19 +474,18 @@ def plot_results(
         kls = [abs(h["kl_samp_train"]) for h in hist]
         axes[1].plot(steps, kls, linewidth=1.8, alpha=0.9, label=name, color=color)
 
-    axes[0].set_title(f"{title_prefix}: Eval Solve Rate")
+    axes[0].set_title("Eval Solve Rate")
     axes[0].set_xlabel("Training Step")
     axes[0].set_ylabel("Solve Rate (%)")
     axes[0].grid(True, linestyle="--", alpha=0.35)
     axes[0].legend(frameon=True)
 
-    axes[1].set_title(f"{title_prefix}: Sampler-Trainer KL Drift |KL(q || p)|")
+    axes[1].set_title("Sampler-Trainer KL Drift |KL(q || p)|")
     axes[1].set_xlabel("Training Step")
     axes[1].set_ylabel("|log q - log p|")
     axes[1].grid(True, linestyle="--", alpha=0.35)
     axes[1].legend(frameon=True)
 
-    fig.tight_layout()
     fig.savefig(out_path)
     plt.close(fig)
 
@@ -551,6 +560,7 @@ def main() -> None:
         num_operands=args.num_operands,
         max_number=args.max_number,
         max_target=args.max_target,
+        exclude_sigs={(tuple(sorted(p.numbers)), p.target) for p in eval_problems},
     )
 
     base_model = AutoModelForCausalLM.from_pretrained(args.model_id, dtype=torch.float32)
