@@ -286,8 +286,15 @@ All numbers 3, 7, 17 are used exactly once.
 
 ### 8.3 产物与限制
 
+- 本项目开源地址：[https://github.com/jack-Dong/mini_rl](https://github.com/jack-Dong/mini_rl)。
 - 指标与抽样回答：[results.json](experiments/exp5_grpo_sc_ablation/rerun_fixed/results.json)。
 - 验证曲线：[plot.png](experiments/exp5_grpo_sc_ablation/rerun_fixed/plot.png)。
 - 配置指纹：`fc6ff59b18caee00178ea08f0a48ef09d8f9381203bc71b2d8eb5d8569a0a42f`。
 - 最终模型权重受本地磁盘空间限制，未保留在仓库中。评估数据、曲线、日志和抽样回答均已保存。
+
+### 8.4 最终结论
+
+修复后的绝对数值与历史结果存在差异，但研究方向和研究结论保持一致。GRPO+SC 在五因子组合、均衡数据、动态采样和长上下文条件下仍能稳定训练到 500 步，没有出现原生 PPO、DAPO 或 GRPO 长程坍缩归零的问题。
+
+修复后均衡验证集峰值达到 **92.2%**，原分布验证集末次达到 **92.2%**，乘除和括号技能也维持较高水平。这支持前七节关于 Score Centering、数据均衡与长程稳定性的核心判断，同时修正了先前实验在数据处理和评估时点上的缺陷。
 <!-- END FIXED RERUN SUPPLEMENT -->

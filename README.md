@@ -8,6 +8,7 @@
 - **原分布验证集**：末次 92.2%。
 - **技能指标**：加减 96.9%、乘法 87.5%、除法 56.2%、括号 68.8%；严格格式率 87.5%。
 - **环境**：NVIDIA A100-SXM4-80GB, 81920 MiB；torch 2.14.0、vllm 0.34.0、transformers 5.22.1、numpy 2.4.6。
+- **开源地址**：[https://github.com/jack-Dong/mini_rl](https://github.com/jack-Dong/mini_rl)。
 - **原始数据**：`experiments/exp5_grpo_sc_ablation/rerun_fixed/results.json`；配置指纹 `fc6ff59b18caee00178ea08f0a48ef09d8f9381203bc71b2d8eb5d8569a0a42f`。
 
 旧结果使用修复前代码，两次运行的代码与依赖版本不同，比较时应保留这一限制。

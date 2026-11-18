@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
+REPOSITORY_URL = "https://github.com/jack-Dong/mini_rl"
 ARTIFACT_HTML = Path(
     "/Users/dongshizhou/.gemini/antigravity/brain/"
     "b1df9764-79e1-40de-8577-fb4d099e59ef/experiment_results_report.html"
@@ -658,6 +659,7 @@ def build_html(payloads: list[dict[str, Any]]) -> str:
       在受控权重噪声 TIM、真实 <strong>vLLM 推理引擎（PagedAttention + FlashInfer）</strong> 异步采样、硬件级 FP8 量化、以及对齐官方开源参数的
       <strong>300/500 步长程 8 算法横向评测（PG / Naive IS / TIS / MIS / PPO / DAPO / TIS+SC / PPO+SC）</strong> 下，全面评估收敛精度与梯度稳定性。
     </p>
+    <p class="sub"><strong>开源代码：</strong><a href="{REPOSITORY_URL}">{REPOSITORY_URL}</a></p>
     <div class="chips">
       <span class="chip">基座模型：Qwen/Qwen3-0.6B</span>
       <span class="chip">任务环境：3 操作数 Countdown（1..25 → 1..200）</span>

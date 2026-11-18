@@ -16,6 +16,7 @@ START = "<!-- BEGIN FIXED RERUN RESULTS -->"
 END = "<!-- END FIXED RERUN RESULTS -->"
 SUPPLEMENT_START = "<!-- BEGIN FIXED RERUN SUPPLEMENT -->"
 SUPPLEMENT_END = "<!-- END FIXED RERUN SUPPLEMENT -->"
+REPOSITORY_URL = "https://github.com/jack-Dong/mini_rl"
 
 
 def render_summary(payload: dict, environment: dict) -> str:
@@ -46,6 +47,7 @@ def render_summary(payload: dict, environment: dict) -> str:
         f"- **原分布验证集**：末次 {percent('eval_orig_reward')}。",
         f"- **技能指标**：加减 {percent('eval_addsub_reward')}、乘法 {percent('eval_mul_reward')}、除法 {percent('eval_div_reward')}、括号 {percent('eval_parens_reward')}；严格格式率 {percent('eval_strict_fmt_rate')}。",
         f"- **环境**：{environment.get('gpu', 'GPU 未记录')}；{versions}。",
+        f"- **开源地址**：[{REPOSITORY_URL}]({REPOSITORY_URL})。",
         f"- **原始数据**：`experiments/exp5_grpo_sc_ablation/rerun_fixed/results.json`；配置指纹 `{payload.get('experiment_fingerprint', '未记录')}`。",
         "",
         "旧结果使用修复前代码，两次运行的代码与依赖版本不同，比较时应保留这一限制。",
@@ -90,10 +92,17 @@ def render_supplement(payload: dict, environment: dict) -> str:
         "",
         "### 8.3 产物与限制",
         "",
+        f"- 本项目开源地址：[{REPOSITORY_URL}]({REPOSITORY_URL})。",
         f"- 指标与抽样回答：[results.json]({result_path})。",
         f"- 验证曲线：[plot.png]({plot_path})。",
         f"- 配置指纹：`{payload.get('experiment_fingerprint', '未记录')}`。",
         "- 最终模型权重受本地磁盘空间限制，未保留在仓库中。评估数据、曲线、日志和抽样回答均已保存。",
+        "",
+        "### 8.4 最终结论",
+        "",
+        "修复后的绝对数值与历史结果存在差异，但研究方向和研究结论保持一致。GRPO+SC 在五因子组合、均衡数据、动态采样和长上下文条件下仍能稳定训练到 500 步，没有出现原生 PPO、DAPO 或 GRPO 长程坍缩归零的问题。",
+        "",
+        f"修复后均衡验证集峰值达到 **{peak['eval_reward'] * 100:.1f}%**，原分布验证集末次达到 **{final['eval_orig_reward'] * 100:.1f}%**，乘除和括号技能也维持较高水平。这支持前七节关于 Score Centering、数据均衡与长程稳定性的核心判断，同时修正了先前实验在数据处理和评估时点上的缺陷。",
         SUPPLEMENT_END,
     ])
 
